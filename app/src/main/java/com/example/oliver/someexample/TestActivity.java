@@ -18,7 +18,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+public class TestActivity extends AppCompatActivity implements View.OnClickListener{
     public static final String TAG = "tag";
     TextView mResult;
     ProgressBar mLoadProgress;
@@ -26,17 +26,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        Log.d(TAG, "MainActivity onCreate");
+        setContentView(R.layout.activity_test);
+        Log.d(TAG, "TestActivity onCreate");
         findViewById(R.id.btnGetData).setOnClickListener(this);
 
         mResult = (TextView) findViewById(R.id.tvResult);
         mLoadProgress = (ProgressBar) findViewById(R.id.loadProgress);
+
     }
 
     @Override
     public void onClick(View v) {
-        Log.d(TAG, "MainActivity onClick");
+        Log.d(TAG, "TestActivity onClick");
         mLoadProgress.setVisibility(View.VISIBLE);
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint("http://resources.finance.ua")
