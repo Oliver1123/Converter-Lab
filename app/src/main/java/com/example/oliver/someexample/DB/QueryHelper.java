@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.example.oliver.someexample.Constants;
-import com.example.oliver.someexample.Model.CompleteOrganizationModel;
+import com.example.oliver.someexample.Model.OrgInfoModel;
 import com.example.oliver.someexample.Model.MoneyModel;
 import com.example.oliver.someexample.Model.ObjectModel;
 import com.example.oliver.someexample.Model.OrganizationModel;
@@ -221,7 +221,7 @@ public class QueryHelper {
         }
     }
 
-    public Map<String, String> getCurrencies(){
+    public Map<String, String> getCurrenciesDescription(){
         Map<String, String> result = new HashMap<>();
 
         Cursor c = mDataBase.query(DBHelper.CURRENCIES_TABLE_NAME,
@@ -247,7 +247,7 @@ public class QueryHelper {
         return result;
     }
 
-    public Map<String, MoneyModel> getCurrenties4ORG(String orgID) {
+    public Map<String, MoneyModel> getCurrencies4ORG(String orgID) {
         Map<String, MoneyModel> result = new HashMap<>();
 
         Cursor c = mDataBase.query(DBHelper.CURRENCIES4ORG_TABLE_NAME,
@@ -273,8 +273,8 @@ public class QueryHelper {
         }
         return  result;
     }
-    public List<CompleteOrganizationModel> getOrganizations() {
-        List<CompleteOrganizationModel> result = new ArrayList<>();
+    public List<OrgInfoModel> getOrganizations() {
+        List<OrgInfoModel> result = new ArrayList<>();
 //        String select = "SELECT " +
 //                DBHelper.ORGANIZATIONS_TABLE_NAME + "." + DBHelper.ORGANIZATION_ID + ", " +
 //                DBHelper.ORGANIZATIONS_TABLE_NAME + "." + DBHelper.ORGANIZATION_TITLE + ", " +
@@ -325,18 +325,16 @@ public class QueryHelper {
                 String  orgAddress  = c.getString(5);
                 String  orgLink     = c.getString(6);
 
-                Map<String, MoneyModel> currencies4ORG = getCurrenties4ORG(orgID);
+                OrgInfoModel orgInfoModel = new OrgInfoModel();
+                orgInfoModel.setId(orgID)
+                        .setTitle(orgTitle)
+                        .setRegionTitle(orgRegion)
+                        .setCityTitle(orgCity)
+                        .setPhone(orgPhone)
+                        .setAddress(orgAddress)
+                        .setLink(orgLink);
 
-                CompleteOrganizationModel organizationModel = new CompleteOrganizationModel();
-                organizationModel.setId(orgID)
-                                 .setTitle(orgTitle)
-                                .setRegionTitle(orgRegion)
-                                .setCityTitle(orgCity)
-                                .setPhone(orgPhone)
-                                .setAddress(orgAddress)
-                                .setLink(orgLink)
-                                .setCurrencies(currencies4ORG);
-                result.add(organizationModel);
+                result.add(orgInfoModel);
                 Log.d(Constants.TAG, "get org id: " + orgID + ", title: " + orgTitle);
             }
             c.close();

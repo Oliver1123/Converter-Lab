@@ -42,4 +42,13 @@
         android:indeterminate="true"
         android:visibility="gone"/>
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="MainActivity"
+        android:id="@+id/btnMain"
+        android:layout_below="@+id/loadProgress"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"/>
+
 </RelativeLayout>

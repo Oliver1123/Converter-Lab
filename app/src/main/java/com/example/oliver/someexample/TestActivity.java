@@ -1,6 +1,7 @@
 package com.example.oliver.someexample;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -29,6 +30,7 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_test);
         Log.d(TAG, "TestActivity onCreate");
         findViewById(R.id.btnGetData).setOnClickListener(this);
+        findViewById(R.id.btnMain).setOnClickListener(this);
 
         mResult = (TextView) findViewById(R.id.tvResult);
         mLoadProgress = (ProgressBar) findViewById(R.id.loadProgress);
@@ -38,28 +40,30 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         Log.d(TAG, "TestActivity onClick");
-        mLoadProgress.setVisibility(View.VISIBLE);
-        RestAdapter restAdapter = new RestAdapter.Builder()
-                .setEndpoint("http://resources.finance.ua")
-                .build();
+        if (v.getId() == R.id.btnGetData) {
+            mLoadProgress.setVisibility(View.VISIBLE);
+            RestAdapter restAdapter = new RestAdapter.Builder()
+                    .setEndpoint("http://resources.finance.ua")
+                    .build();
 
-        RetrofitInterface retrofitInterface= restAdapter.create(RetrofitInterface.class);
-        retrofitInterface.getObjectModel(new Callback<ObjectModel>() {
-            @Override
-            public void success(ObjectModel t, Response response) {
-                Log.d(TAG, "success");
-                mResult.setText(t.toString());
-                new AsyncDBInsert(getApplicationContext(), mLoadProgress).execute(t);
-//                StringBuilder text = new StringBuilder();
-//                text.append(t.getOrganization(1));
-//                mResult.setText(text.toString());
-            }
+            RetrofitInterface retrofitInterface = restAdapter.create(RetrofitInterface.class);
+            retrofitInterface.getObjectModel(new Callback<ObjectModel>() {
+                @Override
+                public void success(ObjectModel t, Response response) {
+                    Log.d(TAG, "success");
+                    mResult.setText(t.toString());
+                    new AsyncDBInsert(getApplicationContext(), mLoadProgress).execute(t);
+                }
 
-            @Override
-            public void failure(RetrofitError error) {
-                Log.d(TAG, "failure");
-            }
-        });
+                @Override
+                public void failure(RetrofitError error) {
+                    Log.d(TAG, "failure");
+                }
+            });
+        }
+        if (v.getId() == R.id.btnMain) {
+            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+        }
     }
 
     public class AsyncDBInsert extends AsyncTask<ObjectModel, Void, Void> {

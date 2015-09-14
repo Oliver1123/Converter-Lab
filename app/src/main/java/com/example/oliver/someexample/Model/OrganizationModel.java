@@ -12,7 +12,6 @@ import java.util.Map;
  */
 public class OrganizationModel  implements Parcelable{
     private String id;
-//    private String orgType;
     private String title;
     private String regionId;
     private String cityId;
