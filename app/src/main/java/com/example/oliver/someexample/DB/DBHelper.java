@@ -25,7 +25,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     private static final String ORGANIZATIONS_TABLE_CREATE =
             "CREATE TABLE " + ORGANIZATIONS_TABLE_NAME + " (" +
-                    PRIMARY_KEY + " INTEGER PRIMARY KEY AUTOINCREMENT" +
+                    PRIMARY_KEY + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     ORGANIZATION_ID         + " TEXT, " +
                     ORGANIZATION_TITLE      + " TEXT, " +
                     ORGANIZATION_REGION_ID  + " TEXT, " +
@@ -42,7 +42,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     private static final String REGIONS_TABLE_CREATE =
             "CREATE TABLE " + REGIONS_TABLE_NAME + " (" +
-                    PRIMARY_KEY         + " INTEGER PRIMARY KEY AUTOINCREMENT" +
+                    PRIMARY_KEY         + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     REGION_ID           + " TEXT, " +
                     REGION_TITLE        + " TEXT);";
 
@@ -54,7 +54,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     private static final String CITIES_TABLE_CREATE =
             "CREATE TABLE " + CITIES_TABLE_NAME + " (" +
-                    PRIMARY_KEY     + " INTEGER PRIMARY KEY AUTOINCREMENT" +
+                    PRIMARY_KEY     + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     CITY_ID         + " TEXT, " +
                     CITY_TITLE      + " TEXT);";
 
@@ -66,7 +66,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     private static final String CURRENCIES_TABLE_CREATE =
             "CREATE TABLE " + CURRENCIES_TABLE_NAME + " (" +
-                    PRIMARY_KEY          + " INTEGER PRIMARY KEY AUTOINCREMENT" +
+                    PRIMARY_KEY          + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     CURRENCY_ABB         + " TEXT, " +
                     CURRENCY_TITLE       + " TEXT);";
 
@@ -80,7 +80,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     private static final String CURRENCIES4ORG_TABLE_CREATE =
             "CREATE TABLE " + CURRENCIES4ORG_TABLE_NAME + " (" +
-                    PRIMARY_KEY              + " INTEGER PRIMARY KEY AUTOINCREMENT" +
+                    PRIMARY_KEY              + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     CURRENCIES4ORG_ID        + " TEXT, " +
                     CURRENCIES4ORG_ABB       + " TEXT, " +
                     CURRENCIES4ORG_ASK       + " TEXT, " +

@@ -15,7 +15,7 @@ public class OrganizationModel {
     private String phone;
     private String address;
     private String link;
-        // currencies USD = MoneyModel{ack: x; bid y}
+        // currencies USD = [value.ask, value.bid]
     private Map<String, MoneyModel> currencies = new HashMap<>();
 
 
@@ -51,6 +51,35 @@ public class OrganizationModel {
         return currencies;
     }
 
+    public OrganizationModel setId(String _id) {
+        id = _id;
+        return this;
+    }
+
+    public OrganizationModel setTitle(String _title) {
+        title = _title;
+        return this;
+    }
+
+    public OrganizationModel setPhone(String _phone) {
+        phone = _phone;
+        return this;
+    }
+
+    public OrganizationModel setAddress(String _address) {
+        address = _address;
+        return this;
+    }
+
+    public OrganizationModel setLink(String _link) {
+        link = _link;
+        return this;
+    }
+
+    public OrganizationModel setCurrencies(Map<String, MoneyModel> _currencies) {
+        currencies = _currencies;
+        return this;
+    }
 
     @Override
     public String toString() {
