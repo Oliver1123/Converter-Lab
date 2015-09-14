@@ -130,4 +130,33 @@ public class OrgInfoModel implements Parcelable{
             return new OrgInfoModel[size];
         }
     };
+
+    public boolean containStr(String str) {
+        String sourceStr = getTitle() + " " + getRegionTitle() + " " + getCityTitle();
+
+        String[] sourceWords = sourceStr.toLowerCase().trim().split(" ");
+        String searchStr = str.toLowerCase().trim();
+
+        for (String word : sourceWords) {
+            if (word.startsWith(searchStr))
+                return true;
+        }
+
+        String[] searchLetters = searchStr.split("");
+        for (int i = 0; i < searchLetters.length;) {
+            boolean containLetter = false;
+            for (String word : sourceWords) {
+                String searchPart = searchLetters[i].trim();
+                while (word.startsWith(searchPart)) {
+                    containLetter = true;
+                    i++;
+                    if (i == searchLetters.length)
+                        return true;
+                    searchPart = searchPart + searchLetters[i].trim();
+                }
+            }
+            if (!containLetter) return false;
+        }
+        return true;
+    }
 }

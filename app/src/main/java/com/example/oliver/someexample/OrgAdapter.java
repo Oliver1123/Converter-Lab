@@ -18,10 +18,14 @@ public class OrgAdapter extends RecyclerView.Adapter<OrgAdapter.ViewHolder>{
 
 
     private final Context mContext;
-    private final List<OrgInfoModel> mData;
+    private  List<OrgInfoModel> mData;
 
     OrgAdapter(Context _context, List<OrgInfoModel> _data) {
         mContext = _context;
+        mData = _data;
+    }
+
+    public void setData(List<OrgInfoModel> _data) {
         mData = _data;
     }
     @Override

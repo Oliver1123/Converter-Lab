@@ -24,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView mOrgList;
     private OrgAdapter mAdapter;
     private QueryHelper mHelper;
+    private List<OrgInfoModel> mData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,8 +51,8 @@ public class MainActivity extends AppCompatActivity {
         mOrgList = (RecyclerView) findViewById(R.id.rvOrganizations_AM);
         mOrgList.setLayoutManager(mLayoutManager);
 
-        List<OrgInfoModel> orgModels = mHelper.getOrganizations();
-        mAdapter = new OrgAdapter(this, orgModels);
+        mData= mHelper.getOrganizations();
+        mAdapter = new OrgAdapter(this, mData);
         mOrgList.setAdapter(mAdapter);
     }
 
@@ -73,12 +74,13 @@ public class MainActivity extends AppCompatActivity {
             public boolean onQueryTextChange(String newText) {
                 Log.d(Constants.TAG, "search query : " + newText);
                 //TODO: Search
-//                List<ContactItem> searchData = new ArrayList<ContactItem>();
-//                for (ContactItem item : mDataSet) {
-//                    if (item.containStr(newText))
-//                        searchData.add(item);
-//                }
-//                contactList.setContacts(searchData);
+                List<OrgInfoModel> searchData = new ArrayList<>();
+                for (OrgInfoModel model : mData) {
+                    if (model.containStr(newText))
+                        searchData.add(model);
+                }
+                mAdapter.setData(searchData);
+                mAdapter.notifyDataSetChanged();
                 return true;
             }
         });
