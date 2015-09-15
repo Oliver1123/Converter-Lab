@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.github.clans.fab.FloatingActionMenu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+    android:id="@+id/fabMenu"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_alignParentBottom="true"
+    android:layout_alignParentRight="true"
+    android:layout_alignParentEnd="true"
+    android:paddingBottom="15dp"
+    android:paddingRight="15dp"
+    android:paddingLeft="15dp"
+    app:menu_icon="@drawable/fab_menu_icon"
+    app:menu_backgroundColor="@color/menu_on"
+    app:menu_colorNormal="@color/accent"
+    app:menu_colorPressed="@color/accent"
+    app:menu_labels_textColor="@color/primary_text"
+    app:menu_labels_style="@style/fab_label_style"
+    app:menu_labels_colorNormal="@android:color/white"
+    app:menu_labels_colorPressed="@android:color/white">
+
+    <com.github.clans.fab.FloatingActionButton
+        android:id="@+id/fbLink"
+        android:src="@mipmap/ic_link_my"
+        style="@style/fab_button_style"
+        app:fab_label="@string/fab_link_title"/>
+
+    <com.github.clans.fab.FloatingActionButton
+        android:id="@+id/fbMap"
+        android:src="@mipmap/ic_map_my"
+        style="@style/fab_button_style"
+        app:fab_label="@string/fab_map_title"/>
+
+    <com.github.clans.fab.FloatingActionButton
+        android:id="@+id/fbPhone"
+        android:src="@mipmap/ic_phone_my"
+        style="@style/fab_button_style"
+        app:fab_label="@string/fab_phone_title"/>
+
+</com.github.clans.fab.FloatingActionMenu>
