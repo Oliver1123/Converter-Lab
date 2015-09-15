@@ -81,8 +81,8 @@
                     android:src="@drawable/ic_link2"
                     style="@style/menu_icon_style"
                     android:paddingTop="12dp"
-                    android:paddingBottom="12dp"
-                   />
+                    android:paddingBottom="12dp"/>
+
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -92,8 +92,8 @@
                     android:paddingTop="8dp"
                     android:paddingBottom="8dp"
                     android:paddingLeft="@dimen/border_margin_horizontal"
-                    android:paddingRight="@dimen/border_margin_horizontal"
-                    />
+                    android:paddingRight="@dimen/border_margin_horizontal"/>
+
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -104,6 +104,7 @@
                     android:paddingBottom="10dp"
                     android:paddingLeft="@dimen/border_margin_horizontal"
                     android:paddingRight="@dimen/border_margin_horizontal"/>
+
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -112,8 +113,7 @@
                     style="@style/menu_icon_style"
                     android:background="@drawable/ic_more_back"
                     android:paddingTop="16dp"
-                    android:paddingBottom="16dp"
-                    />
+                    android:paddingBottom="16dp"/>
             </LinearLayout>
         </RelativeLayout>
 

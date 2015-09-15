@@ -3,14 +3,37 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
+        <item name="android:colorPrimary">@color/primary</item>
+        <item name="android:colorPrimaryDark">@color/primary_dark</item>
+        <item name="android:textColorPrimary">@color/primary_text</item>
+        <item name="android:textColorSecondary">@color/secondary_text</item>
     </style>
 
     <style name="menu_icon_style">
         <item name="android:layout_weight">1</item>
-        <!--<item name="android:layout_marginLeft">20dp</item>-->
-        <!--<item name="android:layout_marginRight">20dp</item>-->
-        <!--<item name="android:gravity">center</item>-->
-        <!--<item name="android:layout_margin">5dp</item>-->
+    </style>
+
+    <style name="toolbar_style" parent="Base.ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:paddingLeft">@dimen/abc_action_bar_overflow_padding_start_material</item>
+        <item name="android:paddingRight">@dimen/abc_action_bar_overflow_padding_end_material</item>
+        <!--<item name="android:paddingTop">@dimen/abc_action_bar_default_padding_material</item>-->
+        <!--<item name="android:paddingBottom">@dimen/abc_action_bar_default_padding_material</item>-->
+    </style>
+
+    <style name="card_view_style">
+        <item name="android:layout_marginLeft">@dimen/border_margin_horizontal</item>
+        <item name="android:layout_marginRight">@dimen/border_margin_horizontal</item>
+    </style>
+
+    <style name="text_view_org_hint">
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Body1</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+    <style name="text_view_org_info">
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Body2</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
     </style>
 
 </resources>

@@ -1,11 +1,20 @@
 <resources>
-    <string name="app_name">SomeExample</string>
+    <string name="app_name">Converter Lab</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_main">Converter Lab</string>
     <string name="action_search">Search</string>
-    <string name="search_hint">...search</string>
+    <string name="search_hint">Search...</string>
     <string name="phone_info">Тел.:\u0020</string>
     <string name="address_info">Адрес:\u0020</string>
+    <string name="title_activity_detail">DetailActivity</string>
+    <string name="currency_name_title">Название валюты</string>
+    <string name="ask_bid_title">Покупка /\nПродажа</string>
+    <string name="lind_info">Дополнительная информация:\u0020</string>
+    <string name="action_share">Share</string>
+    <string name="full_phone_info">Контактный телефон:\u0020</string>
+    <string name="fab_link_title">Сайт</string>
+    <string name="fab_phone_title">Позвонить</string>
+    <string name="fab_map_title">Карта</string>
 </resources>

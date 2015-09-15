@@ -3,12 +3,17 @@
     package="com.example.oliver.someexample" >
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
 
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyA62BKLoz8VPyYD-wu4IllI8DDin-vT5wI" />
+
         <activity
             android:name=".TestActivity"
             android:label="@string/app_name" >
@@ -19,8 +24,17 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name=".Activities.MainActivity"
             android:label="@string/title_activity_main" >
+        </activity>
+        <activity
+            android:name=".Activities.DetailActivity"
+            android:label="@string/title_activity_detail" >
+            android:parentActivityName="com.example.oliver.someexample.Activities.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.oliver.someexample.Activities.MainActivity" />
+
         </activity>
     </application>
 

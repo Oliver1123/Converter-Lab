@@ -23,23 +23,23 @@ public class OrgInfoModel implements Parcelable{
     }
 
     public String getTitle() {
-        return title;
+        return (title == null)? "" : title;
     }
 
     public String getRegionTitle() {
-        return regionTitle;
+        return (regionTitle == null)? "" : regionTitle;
     }
 
     public String getCityTitle() {
-        return cityTitle;
+        return (cityTitle == null)? "" : cityTitle;
     }
 
     public String getPhone() {
-        return phone;
+        return (phone == null)? "" : phone;
     }
 
     public String getAddress() {
-        return address;
+        return (address == null)? "" : address;
     }
 
     public String getLink() {

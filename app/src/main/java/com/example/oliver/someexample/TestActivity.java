@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.oliver.someexample.Activities.MainActivity;
 import com.example.oliver.someexample.DB.QueryHelper;
 import com.example.oliver.someexample.Model.ObjectModel;
 

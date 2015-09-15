@@ -1,5 +1,6 @@
-package com.example.oliver.someexample;
+package com.example.oliver.someexample.Activities;
 
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -10,21 +11,30 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
+import com.example.oliver.someexample.Constants;
 import com.example.oliver.someexample.DB.DBHelper;
 import com.example.oliver.someexample.DB.QueryHelper;
 import com.example.oliver.someexample.Model.OrgInfoModel;
+import com.example.oliver.someexample.OrgAdapter;
+import com.example.oliver.someexample.R;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.places.Places;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener{
     private Toolbar mToolbar;
     private LinearLayoutManager mLayoutManager;
     private RecyclerView mOrgList;
     private OrgAdapter mAdapter;
     private QueryHelper mHelper;
     private List<OrgInfoModel> mData;
+    private SwipeRefreshLayout mSwipeLayout;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,15 +47,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
     protected void onStop() {
-        super.onStop();
         mHelper.close();
+        super.onStop();
     }
 
     private void initUI() {
          mToolbar = (Toolbar) findViewById(R.id.toolbar_AM);
         setSupportActionBar(mToolbar);
 
+        mSwipeLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_layout_AM);
+        mSwipeLayout.setOnRefreshListener(this);
 
         mLayoutManager = new LinearLayoutManager(this);
         mOrgList = (RecyclerView) findViewById(R.id.rvOrganizations_AM);
@@ -54,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
         mData= mHelper.getOrganizations();
         mAdapter = new OrgAdapter(this, mData);
         mOrgList.setAdapter(mAdapter);
+
     }
 
     @Override
@@ -73,14 +91,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextChange(String newText) {
                 Log.d(Constants.TAG, "search query : " + newText);
-                //TODO: Search
                 List<OrgInfoModel> searchData = new ArrayList<>();
                 for (OrgInfoModel model : mData) {
                     if (model.containStr(newText))
                         searchData.add(model);
                 }
                 mAdapter.setData(searchData);
-                mAdapter.notifyDataSetChanged();
                 return true;
             }
         });
@@ -88,12 +104,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        return super.onOptionsItemSelected(item);
+    public void onRefresh() {
+        // TODO refresh Data
+        Toast.makeText(this, "refresh", Toast.LENGTH_SHORT).show();
+        mSwipeLayout.setRefreshing(false);
     }
 }
