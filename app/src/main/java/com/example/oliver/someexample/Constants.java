@@ -6,4 +6,7 @@ package com.example.oliver.someexample;
 public class Constants {
     public static final String ORG_INFO_MODEL_ARG = "org_info_model_arg";
     public static final String TAG = "tag";
+    public static final int MENU_ITEM_MAP = 100;
+    public static final int MENU_ITEM_LINK = 101;
+    public static final int MENU_ITEM_PHONE = 102;
 }

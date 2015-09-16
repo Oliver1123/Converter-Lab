@@ -36,4 +36,14 @@
         <item name="android:layout_height">wrap_content</item>
     </style>
 
+
+    <style name="fab_button_style">
+        <item name="fab_size">mini</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="fab_colorNormal">@color/icon_menu_background</item>
+        <item name="fab_colorPressed">@color/icon_menu_background</item>
+
+    </style>
+
 </resources>

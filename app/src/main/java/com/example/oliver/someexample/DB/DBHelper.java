@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
  * Created by oliver on 13.09.15.
  */
 public class DBHelper extends SQLiteOpenHelper {
-    private static final String DB_NAME = "CurrenciesDB.";
+    private static final String DB_NAME = "db_finance";
 
     private static final int DB_VERSION = 1;
     public static final String PRIMARY_KEY = "_id";
@@ -77,6 +77,8 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String CURRENCIES4ORG_ABB           = "abb";
     public static final String CURRENCIES4ORG_ASK           = "ask";
     public static final String CURRENCIES4ORG_BID           = "bid";
+    public static final String CURRENCIES4ORG_ASK_RATE      = "ask_rate";
+    public static final String CURRENCIES4ORG_BID_RATE      = "bid_rate";
 
     private static final String CURRENCIES4ORG_TABLE_CREATE =
             "CREATE TABLE " + CURRENCIES4ORG_TABLE_NAME + " (" +
@@ -84,7 +86,9 @@ public class DBHelper extends SQLiteOpenHelper {
                     CURRENCIES4ORG_ID        + " TEXT, " +
                     CURRENCIES4ORG_ABB       + " TEXT, " +
                     CURRENCIES4ORG_ASK       + " TEXT, " +
-                    CURRENCIES4ORG_BID       + " TEXT);";
+                    CURRENCIES4ORG_BID       + " TEXT, " +
+                    CURRENCIES4ORG_ASK_RATE  + " INTEGER, " +
+                    CURRENCIES4ORG_BID_RATE  + " INTEGER);";
 
 
     public DBHelper(Context context) {

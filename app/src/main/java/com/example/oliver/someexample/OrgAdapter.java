@@ -109,8 +109,12 @@ public class OrgAdapter extends RecyclerView.Adapter<OrgAdapter.ViewHolder>{
         }
 
         private void showOnMap(OrgInfoModel _currentModel) {
-            String address = _currentModel.getRegionTitle() + " " + _currentModel.getCityTitle() + " " + _currentModel.getAddress();
-            Uri uri = Uri.parse("geo:0,0?q=" + address + "?z=18");
+            String address = _currentModel.getRegionTitle();
+            if (!address.equals(_currentModel.getCityTitle())) {
+                address = address + " " + _currentModel.getCityTitle();
+            }
+            address = address + " " + _currentModel.getAddress();
+            Uri uri = Uri.parse("geo:0,0?q=" + address);
             Log.d(Constants.TAG, "Show on map uri: " + uri.toString());
 
             mContext.startActivity(new Intent(Intent.ACTION_VIEW, uri));

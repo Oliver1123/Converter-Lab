@@ -35,7 +35,10 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
 
         mResult = (TextView) findViewById(R.id.tvResult);
         mLoadProgress = (ProgressBar) findViewById(R.id.loadProgress);
-
+//        QueryHelper mhelper = new QueryHelper(this);
+//        mhelper.open();
+//        mhelper.dropeTable();
+//        mhelper.close();
     }
 
     @Override

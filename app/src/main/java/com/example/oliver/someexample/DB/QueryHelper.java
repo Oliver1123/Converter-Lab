@@ -44,18 +44,18 @@ public class QueryHelper {
     public void clearAll() {
         clearRegions();
         clearCities();
-        clearCurrencies();
+        clearCurrenciesDesc();
         clearCurrencies4ORG();
         clearOrganizations();
     }
 
 
-    ////////////////////////    CURRENCIES
-    private void clearCurrencies() {
+    ////////////////////////    CURRENCIES DESCRIPTION
+    private void clearCurrenciesDesc() {
         mDataBase.delete(DBHelper.CURRENCIES_TABLE_NAME, null, null);
     }
 
-    private void insertCurrency(Map.Entry<String, String> currency) {
+    private void insertCurrencyDesc(Map.Entry<String, String> currency) {
         String resultTAG = "";
         mDataBase.beginTransaction();
         try {
@@ -74,9 +74,10 @@ public class QueryHelper {
         }
     }
 
-    private void insertCurrencies(Map<String, String> currencies) {
+    private void insertCurrenciesDesc(Map<String, String> currencies) {
+        clearCurrenciesDesc();
         for (Map.Entry<String, String> entry: currencies.entrySet()) {
-            insertCurrency(entry);
+            insertCurrencyDesc(entry);
         }
         Log.d(Constants.TAG, "Total inserted " + currencies.size() + "currencies");
     }
@@ -106,6 +107,7 @@ public class QueryHelper {
     }
 
     private void insertRegions(Map<String, String> regions) {
+        clearRegions();
         for (Map.Entry<String, String> entry: regions.entrySet()) {
             insertRegion(entry);
         }
@@ -137,6 +139,7 @@ public class QueryHelper {
     }
 
     private void insertCities(Map<String, String> cities) {
+        clearCities();
         for (Map.Entry<String, String> entry : cities.entrySet()) {
             insertCity(entry);
         }
@@ -155,7 +158,7 @@ public class QueryHelper {
         Log.d(Constants.TAG, "Currencies4ORG id: " + organizationID + " deleted " + deleted + "records");
     }
 
-    private void insertCurrency4ORG(String orgID, String currencyABB, MoneyModel value) {
+    private void insertCurrency4ORG(String orgID, String currencyABB, MoneyModel money) {
         String resultTAG = "";
         mDataBase.beginTransaction();
         try {
@@ -163,17 +166,50 @@ public class QueryHelper {
 
             cv.put(DBHelper.CURRENCIES4ORG_ID,  orgID);
             cv.put(DBHelper.CURRENCIES4ORG_ABB, currencyABB);
-            cv.put(DBHelper.CURRENCIES4ORG_ASK, value.ask);
-            cv.put(DBHelper.CURRENCIES4ORG_BID, value.bid);
+            cv.put(DBHelper.CURRENCIES4ORG_ASK, money.ask);
+            cv.put(DBHelper.CURRENCIES4ORG_BID, money.bid);
+            cv.put(DBHelper.CURRENCIES4ORG_ASK_RATE, money.ask_rate);
+            cv.put(DBHelper.CURRENCIES4ORG_BID_RATE, money.bid_rate);
 
             mDataBase.insert(DBHelper.CURRENCIES4ORG_TABLE_NAME, null, cv);
 
             mDataBase.setTransactionSuccessful();
-            resultTAG = "inserted currency4ORG id: " + orgID + ", ABB: " + currencyABB + "[" + value + "]";
+            resultTAG = "inserted currency4ORG id: " + orgID + ", ABB: " + currencyABB + "[" + money + "]";
         } finally {
             mDataBase.endTransaction();
             Log.d(Constants.TAG, resultTAG + " == endTransaction");
         }
+    }
+
+    public Map<String, MoneyModel> getCurrencies4ORG(String orgID) {
+        Map<String, MoneyModel> result = new HashMap<>();
+
+        Cursor c = mDataBase.query(DBHelper.CURRENCIES4ORG_TABLE_NAME,
+                null,
+                DBHelper.CURRENCIES4ORG_ID + " = ?",
+                new String[]{orgID},
+                null,
+                null,
+                null);
+
+        if (c != null) {
+            while (c.moveToNext()) {
+
+                String  _ABB = c.getString(c.getColumnIndex(DBHelper.CURRENCIES4ORG_ABB));
+                String  _ask = c.getString(c.getColumnIndex(DBHelper.CURRENCIES4ORG_ASK));
+                String  _bid = c.getString(c.getColumnIndex(DBHelper.CURRENCIES4ORG_BID));
+                int _ask_rate = c.getInt(c.getColumnIndex(DBHelper.CURRENCIES4ORG_ASK_RATE));
+                int _bid_rate = c.getInt(c.getColumnIndex(DBHelper.CURRENCIES4ORG_BID_RATE));
+
+                MoneyModel value = new MoneyModel(_ask, _bid, _ask_rate, _bid_rate);
+                result.put(_ABB, value);
+
+                Log.d(Constants.TAG, "get for id: " + orgID + " "
+                        + _ABB+ ": " + value);
+            }
+            c.close();
+        }
+        return  result;
     }
 //////////////////////////////ORGANIZATIONS
 
@@ -196,9 +232,16 @@ public class QueryHelper {
             cv.put(DBHelper.ORGANIZATION_LINK,      org.getLink());
 
             mDataBase.insert(DBHelper.ORGANIZATIONS_TABLE_NAME, null, cv);
+//            ????
             /////// insert organization currencies
+                Map<String, MoneyModel> prevValues = getCurrencies4ORG(org.getId());
                 deleteCurrencies4ORG(org.getId());
+
                 for (Map.Entry<String, MoneyModel> currency : org.getCurrencies().entrySet()) {
+                    String abb = currency.getKey();
+                    MoneyModel currentMoney = currency.getValue();
+                    MoneyModel prevMoney = prevValues.get(abb);
+                    currentMoney.setRate(prevMoney);
                     insertCurrency4ORG(org.getId(), currency.getKey(), currency.getValue());
                 }
 
@@ -212,10 +255,11 @@ public class QueryHelper {
 ///////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
     public void insertObjectModel(ObjectModel _objectModel) {
-        clearAll();
+//        clearAll();
         insertCities(_objectModel.cities);
         insertRegions(_objectModel.regions);
-        insertCurrencies(_objectModel.currencies);
+        insertCurrenciesDesc(_objectModel.currencies);
+        clearOrganizations();
         for (OrganizationModel org: _objectModel.organizations) {
             insertOrganization(org);
         }
@@ -247,32 +291,7 @@ public class QueryHelper {
         return result;
     }
 
-    public Map<String, MoneyModel> getCurrencies4ORG(String orgID) {
-        Map<String, MoneyModel> result = new HashMap<>();
 
-        Cursor c = mDataBase.query(DBHelper.CURRENCIES4ORG_TABLE_NAME,
-                                    null,
-                                    DBHelper.CURRENCIES4ORG_ID + " = ?",
-                                    new String[]{orgID},
-                                    null,
-                                    null,
-                                    null);
-
-        if (c != null) {
-            while (c.moveToNext()) {
-
-                String  currency4ORG_ABB = c.getString(c.getColumnIndex(DBHelper.CURRENCIES4ORG_ABB));
-                String  currency4ORG_Ask = c.getString(c.getColumnIndex(DBHelper.CURRENCIES4ORG_ASK));
-                String  currency4ORG_Bid = c.getString(c.getColumnIndex(DBHelper.CURRENCIES4ORG_BID));
-
-                result.put(currency4ORG_ABB, new MoneyModel(currency4ORG_Ask, currency4ORG_Bid));
-                Log.d(Constants.TAG, "get for id: " + orgID + " "
-                        + currency4ORG_ABB+ "[ask=" + currency4ORG_Ask + ", bid=" +currency4ORG_Bid);
-            }
-            c.close();
-        }
-        return  result;
-    }
     public List<OrgInfoModel> getOrganizations() {
         List<OrgInfoModel> result = new ArrayList<>();
 //        String select = "SELECT " +

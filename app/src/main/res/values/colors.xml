@@ -10,4 +10,6 @@
     <color name="divider">#B6B6B6</color>
     <color name="icon_layout_background">#b0bfc6</color>
     <color name="icon_menu_background">#cfd8dd</color>
+    <color name="menu_on">#64464646</color>
+
 </resources>

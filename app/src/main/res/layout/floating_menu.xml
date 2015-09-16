@@ -17,7 +17,8 @@
     app:menu_colorNormal="@color/accent"
     app:menu_colorPressed="@color/accent"
     app:menu_labels_textColor="@color/primary_text"
-    app:menu_labels_style="@style/fab_label_style"
+    app:menu_labels_showShadow="true"
+    app:menu_labels_colorRipple="#66FFFFFF"
     app:menu_labels_colorNormal="@android:color/white"
     app:menu_labels_colorPressed="@android:color/white">
 
