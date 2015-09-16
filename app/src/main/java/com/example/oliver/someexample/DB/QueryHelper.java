@@ -62,7 +62,7 @@ public class QueryHelper {
             ContentValues cv = new ContentValues();
 
             cv.put(DBHelper.CURRENCY_ABB,   currency.getKey());
-            cv.put(DBHelper.CURRENCY_TITLE, currency.getValue());
+            cv.put(DBHelper.CURRENCY_TITLE, capWord(currency.getValue()));
 
             mDataBase.insert(DBHelper.CURRENCIES_TABLE_NAME, null, cv);
 
@@ -359,5 +359,19 @@ public class QueryHelper {
             c.close();
         }
         return result;
+    }
+
+    private String capWord(String value) {
+        StringBuffer res = new StringBuffer();
+
+        String[] strArr = value.split(" ");
+        for (String str : strArr) {
+            char[] stringArray = str.trim().toCharArray();
+            stringArray[0] = Character.toUpperCase(stringArray[0]);
+            str = new String(stringArray);
+
+            res.append(str).append(" ");
+        }
+        return res.toString().trim();
     }
 }

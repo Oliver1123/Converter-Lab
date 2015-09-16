@@ -80,8 +80,8 @@
                     android:id="@+id/ivLink_OC"
                     android:src="@drawable/ic_link2"
                     style="@style/menu_icon_style"
-                    android:paddingTop="12dp"
-                    android:paddingBottom="12dp"/>
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"/>
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -89,8 +89,8 @@
                     android:id="@+id/ivMap_OC"
                     android:src="@drawable/ic_map2"
                     style="@style/menu_icon_style"
-                    android:paddingTop="8dp"
-                    android:paddingBottom="8dp"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp"
                     android:paddingLeft="@dimen/border_margin_horizontal"
                     android:paddingRight="@dimen/border_margin_horizontal"/>
 
@@ -100,8 +100,8 @@
                     android:id="@+id/ivCall_OC"
                     android:src="@drawable/ic_phone2"
                     style="@style/menu_icon_style"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp"
+                    android:paddingTop="6dp"
+                    android:paddingBottom="6dp"
                     android:paddingLeft="@dimen/border_margin_horizontal"
                     android:paddingRight="@dimen/border_margin_horizontal"/>
 
@@ -112,8 +112,8 @@
                     android:src="@drawable/ic_next"
                     style="@style/menu_icon_style"
                     android:background="@drawable/ic_more_back"
-                    android:paddingTop="16dp"
-                    android:paddingBottom="16dp"/>
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp"/>
             </LinearLayout>
         </RelativeLayout>
 

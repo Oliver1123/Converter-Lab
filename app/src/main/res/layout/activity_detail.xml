@@ -16,141 +16,53 @@
         style="@style/toolbar_style"/>
 
     <android.support.v4.widget.SwipeRefreshLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/swipe_layout_AD"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/toolbar_AD">
-        <ScrollView
+
+        <!-- place your view here -->
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <LinearLayout
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:id="@+id/llContainer_AD"
+            android:padding="@dimen/abc_button_padding_horizontal_material">
+
+            <android.support.v7.widget.CardView
+                xmlns:card_view="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <android.support.v7.widget.CardView
-                    xmlns:card_view="http://schemas.android.com/apk/res-auto"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    card_view:cardCornerRadius="@dimen/cardview_default_radius"
-                    card_view:cardElevation="@dimen/cardview_default_elevation"
-                    android:layout_marginTop="@dimen/border_margin_vertical"
-                    style="@style/card_view_style">
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:orientation="vertical"
-                        android:layout_height="wrap_content"
-                        android:padding="@dimen/activity_horizontal_margin">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Title"
-                            android:textColor="@color/accent"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Headline"
-                            android:id="@+id/tvTitleInfo_AD"
-                            android:padding="@dimen/abc_button_padding_horizontal_material"
-                            />
-                        <TextView
-
-                            android:id="@+id/tvAddressHint"
-                            android:text="@string/address_info"
-                            android:layout_alignLeft="@+id/tvTitleInfo_AD"
-                            android:layout_alignStart="@+id/tvTitleInfo_AD"
-                            android:layout_below="@+id/tvTitleInfo_AD"
-                            style="@style/text_view_org_hint"/>
-                        <TextView
-                            android:text="Address"
-                            android:id="@+id/tvAddressInfo_AD"
-                            android:layout_alignTop="@+id/tvAddressHint"
-                            android:layout_toRightOf="@+id/tvAddressHint"
-                            android:layout_toEndOf="@+id/tvAddressHint"
-                            style="@style/text_view_org_info"/>
-                        <TextView
-                            android:id="@+id/tvPhoneHint"
-                            android:text="@string/full_phone_info"
-                            android:layout_alignLeft="@+id/tvTitleInfo_AD"
-                            android:layout_alignStart="@+id/tvTitleInfo_AD"
-                            android:layout_below="@+id/tvAddressInfo_AD"
-                            style="@style/text_view_org_hint"/>
-                        <TextView
-                            android:text="Phone"
-                            android:id="@+id/tvPhoneInfo_AD"
-                            android:layout_alignTop="@+id/tvPhoneHint"
-                            android:layout_toRightOf="@+id/tvPhoneHint"
-                            android:layout_toEndOf="@+id/tvAddressHint"
-                            style="@style/text_view_org_info"/>
-                        <TextView
-                            android:id="@+id/tvLinkHint"
-                            android:text="@string/lind_info"
-                            android:layout_alignLeft="@+id/tvTitleInfo_AD"
-                            android:layout_alignStart="@+id/tvTitleInfo_AD"
-                            android:layout_below="@+id/tvPhoneInfo_AD"
-                            style="@style/text_view_org_hint"/>
-                        <TextView
-                            android:text="Link"
-                            android:id="@+id/tvLink_Info_AD"
-                            android:layout_alignTop="@+id/tvLinkHint"
-                            android:layout_toRightOf="@+id/tvLinkHint"
-                            android:layout_toEndOf="@+id/tvAddressHint"
-                            style="@style/text_view_org_info"/>
-                    </RelativeLayout>
-
-                </android.support.v7.widget.CardView>
-
-                <android.support.v7.widget.CardView
-                    xmlns:card_view="http://schemas.android.com/apk/res-auto"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/cvCurrencyInfo"
-                    card_view:cardCornerRadius="@dimen/cardview_default_radius"
-                    card_view:cardElevation="@dimen/cardview_default_elevation"
-                    android:layout_marginTop="@dimen/margin_top"
-                    style="@style/card_view_style">
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="@dimen/activity_horizontal_margin"
-                        android:paddingRight="@dimen/activity_horizontal_margin"
-                        android:paddingTop="@dimen/abc_button_padding_horizontal_material"
-                        android:paddingBottom="@dimen/abc_button_padding_horizontal_material"
-                       >
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/tvCurrencyInfo"
-                            android:text="@string/currency_name_title"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-                            android:layout_centerVertical="true"
-                            android:layout_alignParentLeft="true"
-                            android:layout_alignParentStart="true"
-                            android:layout_toLeftOf="@+id/tvAskBid"
-                            android:layout_toStartOf="@+id/tvAskBid"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/tvAskBid"
-                            android:text="@string/ask_bid_title"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                            android:layout_centerVertical="true"
-
-                            android:layout_alignParentRight="true"
-                            android:layout_alignParentEnd="true"/>
-                    </RelativeLayout>
-                </android.support.v7.widget.CardView>
+                card_view:cardCornerRadius="@dimen/cardview_default_radius"
+                card_view:cardElevation="@dimen/cardview_default_elevation">
 
                 <ListView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:id="@+id/lvCurrencies_AD"
-                    android:layout_marginTop="@dimen/margin_top"
-                    style="@style/card_view_style"/>
-
-
-            </LinearLayout>
-        </ScrollView>
+                    />
+            </android.support.v7.widget.CardView>
+        </LinearLayout>
     </android.support.v4.widget.SwipeRefreshLayout>
 
 
-    <include layout="@layout/floating_menu"/>
+
+    <include
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             layout="@layout/floating_menu"
+             android:layout_below="@+id/toolbar_AD"/>
+
+
+    <ProgressBar
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/pbLoading"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:indeterminate="true"
+        android:visibility="gone"/>
 
 </RelativeLayout>

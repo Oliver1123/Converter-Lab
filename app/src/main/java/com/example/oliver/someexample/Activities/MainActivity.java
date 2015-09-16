@@ -3,25 +3,19 @@ package com.example.oliver.someexample.Activities;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.example.oliver.someexample.Constants;
-import com.example.oliver.someexample.DB.DBHelper;
 import com.example.oliver.someexample.DB.QueryHelper;
 import com.example.oliver.someexample.Model.OrgInfoModel;
-import com.example.oliver.someexample.OrgAdapter;
+import com.example.oliver.someexample.Adapters.OrgAdapter;
 import com.example.oliver.someexample.R;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.places.Places;
 
 import java.util.ArrayList;
 import java.util.List;

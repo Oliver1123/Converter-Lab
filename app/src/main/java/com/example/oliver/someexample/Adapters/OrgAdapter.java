@@ -1,4 +1,4 @@
-package com.example.oliver.someexample;
+package com.example.oliver.someexample.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,7 +11,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.oliver.someexample.Activities.DetailActivity;
+import com.example.oliver.someexample.Constants;
 import com.example.oliver.someexample.Model.OrgInfoModel;
+import com.example.oliver.someexample.R;
 
 import java.util.List;
 
