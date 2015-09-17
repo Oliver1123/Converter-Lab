@@ -17,4 +17,5 @@
     <string name="fab_link_title">Сайт</string>
     <string name="fab_phone_title">Позвонить</string>
     <string name="fab_map_title">Карта</string>
+    <string name="btn_share">Share</string>
 </resources>

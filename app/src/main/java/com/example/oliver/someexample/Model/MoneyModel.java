@@ -50,8 +50,8 @@ public class MoneyModel implements Parcelable{
 
     public void setRate(MoneyModel prevValue){
         if (prevValue == null) {
-            ask_rate = 1;
-            bid_rate = 1;
+            ask_rate = 0;
+            bid_rate = 0;
             return;
         }
         double currentAsk = Double.valueOf(ask);

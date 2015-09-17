@@ -5,6 +5,7 @@ package com.example.oliver.someexample;
  */
 public class Constants {
     public static final String ORG_INFO_MODEL_ARG = "org_info_model_arg";
+    public static final String SHARE_FILE_NAME_ARG = "currencies_map_arg";
     public static final String ORG_ID_ARG = "org_id_arg";
 
     public static final String TAG = "tag";

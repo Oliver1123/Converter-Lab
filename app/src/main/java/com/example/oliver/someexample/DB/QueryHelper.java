@@ -14,6 +14,7 @@ import com.example.oliver.someexample.Model.OrganizationModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -182,7 +183,7 @@ public class QueryHelper {
     }
 
     public Map<String, MoneyModel> getCurrencies4ORG(String orgID) {
-        Map<String, MoneyModel> result = new HashMap<>();
+        Map<String, MoneyModel> result = new LinkedHashMap<>();
 
         Cursor c = mDataBase.query(DBHelper.CURRENCIES4ORG_TABLE_NAME,
                 null,
@@ -232,7 +233,7 @@ public class QueryHelper {
             cv.put(DBHelper.ORGANIZATION_LINK,      org.getLink());
 
             mDataBase.insert(DBHelper.ORGANIZATIONS_TABLE_NAME, null, cv);
-//            ????
+
             /////// insert organization currencies
                 Map<String, MoneyModel> prevValues = getCurrencies4ORG(org.getId());
                 deleteCurrencies4ORG(org.getId());
@@ -266,7 +267,7 @@ public class QueryHelper {
     }
 
     public Map<String, String> getCurrenciesDescription(){
-        Map<String, String> result = new HashMap<>();
+        Map<String, String> result = new LinkedHashMap<>();
 
         Cursor c = mDataBase.query(DBHelper.CURRENCIES_TABLE_NAME,
                 null,
@@ -294,28 +295,6 @@ public class QueryHelper {
 
     public List<OrgInfoModel> getOrganizations() {
         List<OrgInfoModel> result = new ArrayList<>();
-//        String select = "SELECT " +
-//                DBHelper.ORGANIZATIONS_TABLE_NAME + "." + DBHelper.ORGANIZATION_ID + ", " +
-//                DBHelper.ORGANIZATIONS_TABLE_NAME + "." + DBHelper.ORGANIZATION_TITLE + ", " +
-//
-//
-//                DBHelper.REGIONS_TABLE_NAME + "." + DBHelper.REGION_TITLE + ", " +
-//                DBHelper.CITIES_TABLE_NAME + "." + DBHelper.CITY_TITLE + ", " +
-//
-//                DBHelper.ORGANIZATIONS_TABLE_NAME + "." + DBHelper.ORGANIZATION_PHONE + ", " +
-//                DBHelper.ORGANIZATIONS_TABLE_NAME + "." + DBHelper.ORGANIZATION_ADDRESS + ", " +
-//                DBHelper.ORGANIZATIONS_TABLE_NAME + "." + DBHelper.ORGANIZATION_LINK + " ";
-//        String from = "FROM " +
-//                DBHelper.ORGANIZATIONS_TABLE_NAME + ", " +
-//                DBHelper.REGIONS_TABLE_NAME + ", " +
-//                DBHelper.CITIES_TABLE_NAME + " ";
-//        String where = "WHERE " +
-//                "(" + DBHelper.ORGANIZATIONS_TABLE_NAME + "." + DBHelper.ORGANIZATION_REGION_ID + " = " +
-//                DBHelper.REGIONS_TABLE_NAME + "." + DBHelper.REGION_ID + ") AND " +
-//                "(" + DBHelper.ORGANIZATIONS_TABLE_NAME + "." + DBHelper.ORGANIZATION_CITY_ID + " = " +
-//                DBHelper.CITIES_TABLE_NAME + "." + DBHelper.CITY_ID +")";
-//         String sqlQuery = select + from + where;
-
 
         String table = DBHelper.ORGANIZATIONS_TABLE_NAME +
                 " inner join " + DBHelper.REGIONS_TABLE_NAME + " on " +
@@ -362,7 +341,7 @@ public class QueryHelper {
     }
 
     private String capWord(String value) {
-        StringBuffer res = new StringBuffer();
+        StringBuilder res = new StringBuilder();
 
         String[] strArr = value.split(" ");
         for (String str : strArr) {

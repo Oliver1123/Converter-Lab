@@ -1,6 +1,7 @@
 package com.example.oliver.someexample.CustomView;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -40,8 +41,9 @@ public class CurrencyRateView extends RelativeLayout {
 
     public void setCurrency(String _title, MoneyModel _value) {
         mCurrencyTitle.setText(_title);
-        mAskValue.setText(String.format("%-8s", _value.ask));
-        mBidValue.setText(String.format("%-8s", _value.bid));
+
+        mAskValue.setText(String.format("%7.04f", Double.valueOf(_value.ask)));
+        mBidValue.setText(String.format("%7.04f", Double.valueOf(_value.bid)));
         switch (_value.ask_rate) {
             case -1:
                 mAskValue.setTextColor(getResources().getColor(R.color.arrow_down));
@@ -50,6 +52,11 @@ public class CurrencyRateView extends RelativeLayout {
             case 1:
                 mAskValue.setTextColor(getResources().getColor(R.color.arrow_up));
                 mAskRate.setImageResource(R.mipmap.ic_arrow_up);
+                break;
+            case 0:
+                mAskValue.setTextColor(mCurrencyTitle.getCurrentTextColor());
+                mAskRate.setImageBitmap(null);
+                break;
         }
         switch (_value.bid_rate) {
             case -1:
@@ -59,6 +66,11 @@ public class CurrencyRateView extends RelativeLayout {
             case 1:
                 mBidValue.setTextColor(getResources().getColor(R.color.arrow_up));
                 mBidRate.setImageResource(R.mipmap.ic_arrow_up);
+                break;
+            case 0:
+                mBidValue.setTextColor(mCurrencyTitle.getCurrentTextColor());
+                mBidRate.setImageBitmap(null);
+                break;
         }
     }
 

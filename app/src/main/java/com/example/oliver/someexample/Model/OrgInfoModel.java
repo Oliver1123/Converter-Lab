@@ -17,6 +17,7 @@ public class OrgInfoModel implements Parcelable{
     private String phone;
     private String address;
     private String link;
+    private Map<String, MoneyModel> currencies = null;
 
     public String getId() {
         return id;
@@ -44,6 +45,10 @@ public class OrgInfoModel implements Parcelable{
 
     public String getLink() {
         return link;
+    }
+
+    public Map<String, MoneyModel> getCurrencies() {
+        return currencies;
     }
 
     public OrgInfoModel setId(String _id) {
@@ -81,6 +86,11 @@ public class OrgInfoModel implements Parcelable{
         return  this;
     }
 
+    public OrgInfoModel setCurrencies(Map<String, MoneyModel> _currencies) {
+        currencies = _currencies;
+        return  this;
+    }
+
     @Override
     public String toString() {
         return  "id: "          + getId() + "\n" +
@@ -107,6 +117,15 @@ public class OrgInfoModel implements Parcelable{
         dest.writeString(getPhone());
         dest.writeString(getAddress());
         dest.writeString(getLink());
+        if (currencies != null) {
+            dest.writeInt(currencies.size());
+            for (Map.Entry<String, MoneyModel> entry: currencies.entrySet()) {
+                dest.writeString(entry.getKey());
+                dest.writeParcelable(entry.getValue(), flags);
+            }
+        } else {
+            dest.writeInt(-1);
+        }
     }
 
     public static final Parcelable.Creator<OrgInfoModel> CREATOR = new Parcelable.Creator<OrgInfoModel>(){
@@ -121,6 +140,15 @@ public class OrgInfoModel implements Parcelable{
                  .setPhone(source.readString())
                  .setAddress(source.readString())
                  .setLink(source.readString());
+            int mapSize = source.readInt();
+            if (mapSize > -1) {
+                Map<String, MoneyModel> map = new HashMap<>(mapSize);
+                for (int i = 0; i < mapSize; i++) {
+                    String key = source.readString();
+                    MoneyModel value = source.readParcelable(MoneyModel.class.getClassLoader());
+                    map.put(key, value);
+                }
+            }
 
             return model;
         }

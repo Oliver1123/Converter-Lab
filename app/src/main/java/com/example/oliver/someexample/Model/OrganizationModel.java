@@ -5,6 +5,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -19,7 +20,7 @@ public class OrganizationModel  implements Parcelable{
     private String address;
     private String link;
         // currencies USD = [value.ask, value.bid]
-    private Map<String, MoneyModel> currencies = new HashMap<>();
+    private Map<String, MoneyModel> currencies = new LinkedHashMap<>();
 
 
     public String getId() {

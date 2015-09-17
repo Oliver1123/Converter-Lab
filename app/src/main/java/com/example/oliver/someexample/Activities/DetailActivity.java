@@ -1,5 +1,6 @@
 package com.example.oliver.someexample.Activities;
 
+import android.app.DialogFragment;
 import android.app.LoaderManager;
 import android.content.Intent;
 import android.content.Loader;
@@ -21,6 +22,7 @@ import android.widget.Toast;
 
 import com.example.oliver.someexample.Adapters.CurrencyAdapter;
 import com.example.oliver.someexample.Constants;
+import com.example.oliver.someexample.Dialogs.ShareDialog;
 import com.example.oliver.someexample.Loaders.Currencies4ORGLoader;
 import com.example.oliver.someexample.CustomView.CurrencyDescriptionCardView;
 import com.example.oliver.someexample.CustomView.OrgInfoCardView;
@@ -31,6 +33,7 @@ import com.example.oliver.someexample.Model.OrgInfoModel;
 import com.example.oliver.someexample.R;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -45,7 +48,6 @@ public class DetailActivity extends AppCompatActivity implements SwipeRefreshLay
     private SwipeRefreshLayout mSwipeLayout;
     private FABMenuController mFABMenuController;
     private Map<String, String> mCurrenciesDescription;
-    private Map<String, MoneyModel> mCurrencies4ORG;
     private ProgressBar mProgressBar;
     private CurrencyAdapter mAdapter;
     private LinearLayout mContainer;
@@ -108,9 +110,9 @@ public class DetailActivity extends AppCompatActivity implements SwipeRefreshLay
 
     private void setData() {
 
-        List<Pair<String, MoneyModel>> mData = new ArrayList<>(mCurrencies4ORG.size());
-        for (Map.Entry<String, MoneyModel> entry :mCurrencies4ORG.entrySet()) {
-            mData.add(new Pair<String, MoneyModel>(mCurrenciesDescription.get(entry.getKey()), entry.getValue()));
+        List<Pair<String, MoneyModel>> mData = new ArrayList<>(mModel.getCurrencies().size());
+        for (Map.Entry<String, MoneyModel> entry :mModel.getCurrencies().entrySet()) {
+            mData.add(new Pair<>(mCurrenciesDescription.get(entry.getKey()), entry.getValue()));
         }
 
         mAdapter.setData(mData);
@@ -131,7 +133,12 @@ public class DetailActivity extends AppCompatActivity implements SwipeRefreshLay
         // as you specify a parent activity in AndroidManifest.xml.
       switch (item.getItemId()) {
           case R.id.action_share:
-              //TODO show share dialog
+              Bundle args = new Bundle();
+              args.putParcelable(Constants.ORG_INFO_MODEL_ARG, mModel);
+
+              DialogFragment shareDialog = new ShareDialog();
+              shareDialog.setArguments(args);
+              shareDialog.show(getFragmentManager(), "");
               return true;
       }
         return super.onOptionsItemSelected(item);
@@ -139,8 +146,6 @@ public class DetailActivity extends AppCompatActivity implements SwipeRefreshLay
 
     @Override
     public void onRefresh() {
-        // TODO refresh Data
-//        Toast.makeText(this, "refresh", Toast.LENGTH_SHORT).show();
         Log.d(Constants.TAG, "Start refreshing");
         getLoaderManager().getLoader(LOADER_CURRENCIES_ID).forceLoad();
     }
@@ -193,7 +198,7 @@ public class DetailActivity extends AppCompatActivity implements SwipeRefreshLay
                                Pair<Map<String, String>, Map<String, MoneyModel>> data) {
         mProgressBar.setVisibility(View.GONE);
         mCurrenciesDescription = data.first;
-        mCurrencies4ORG = data.second;
+        mModel.setCurrencies(data.second);
         Log.d(Constants.TAG, "End refreshing");
         mSwipeLayout.postDelayed(new Runnable() {
             @Override
