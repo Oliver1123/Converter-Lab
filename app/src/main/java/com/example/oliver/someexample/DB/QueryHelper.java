@@ -70,7 +70,7 @@ public class QueryHelper {
             resultTAG = "inserted currency abb: " + currency.getKey() + ", title: " + currency.getValue();
         } finally {
             mDataBase.endTransaction();
-            Log.d(Constants.TAG, resultTAG + " == endTransaction");
+            Log.d(Constants.DB_TAG, resultTAG + " == endTransaction");
         }
     }
 
@@ -79,7 +79,7 @@ public class QueryHelper {
         for (Map.Entry<String, String> entry: currencies.entrySet()) {
             insertCurrencyDesc(entry);
         }
-        Log.d(Constants.TAG, "Total inserted " + currencies.size() + "currencies");
+        Log.d(Constants.DB_TAG, "Total inserted " + currencies.size() + "currencies");
     }
 
     public String getCurrencyDescription(String currencyABB) {
@@ -121,7 +121,7 @@ public class QueryHelper {
             resultTAG = "inserted region id: " + region.getKey() + ", title: " + region.getValue();
         } finally {
             mDataBase.endTransaction();
-            Log.d(Constants.TAG, resultTAG + " == endTransaction");
+            Log.d(Constants.DB_TAG, resultTAG + " == endTransaction");
         }
     }
 
@@ -130,7 +130,7 @@ public class QueryHelper {
         for (Map.Entry<String, String> entry: regions.entrySet()) {
             insertRegion(entry);
         }
-        Log.d(Constants.TAG, "Total inserted " + regions.size() + "regions");
+        Log.d(Constants.DB_TAG, "Total inserted " + regions.size() + "regions");
     }
 ////////////////////////    CITIES
 
@@ -153,7 +153,7 @@ public class QueryHelper {
             resultTAG = "inserted city id: " + city.getKey() + ", title: " + city.getValue();
         } finally {
             mDataBase.endTransaction();
-            Log.d(Constants.TAG, resultTAG + " == endTransaction");
+            Log.d(Constants.DB_TAG, resultTAG + " == endTransaction");
         }
     }
 
@@ -162,7 +162,7 @@ public class QueryHelper {
         for (Map.Entry<String, String> entry : cities.entrySet()) {
             insertCity(entry);
         }
-        Log.d(Constants.TAG, "Total inserted " + cities.size() + "cities");
+        Log.d(Constants.DB_TAG, "Total inserted " + cities.size() + "cities");
     }
 ///////////////////////// CURRENCIES4ORG
 
@@ -174,7 +174,7 @@ public class QueryHelper {
         int deleted = mDataBase.delete(DBHelper.CURRENCIES4ORG_TABLE_NAME,
                                        DBHelper.CURRENCIES4ORG_ID + " = ?",
                                        new String[]{organizationID});
-        Log.d(Constants.TAG, "Currencies4ORG id: " + organizationID + " deleted " + deleted + "records");
+        Log.d(Constants.DB_TAG, "Currencies4ORG id: " + organizationID + " deleted " + deleted + "records");
     }
 
     private void insertCurrency4ORG(String orgID, String currencyABB, MoneyModel money) {
@@ -196,7 +196,7 @@ public class QueryHelper {
             resultTAG = "inserted currency4ORG id: " + orgID + ", ABB: " + currencyABB + "[" + money + "]";
         } finally {
             mDataBase.endTransaction();
-            Log.d(Constants.TAG, resultTAG + " == endTransaction");
+            Log.d(Constants.DB_TAG, resultTAG + " == endTransaction");
         }
     }
 
@@ -223,7 +223,7 @@ public class QueryHelper {
                 MoneyModel value = new MoneyModel(_ask, _bid, _ask_rate, _bid_rate);
                 result.put(_ABB, value);
 
-                Log.d(Constants.TAG, "get for id: " + orgID + " "
+                Log.d(Constants.DB_TAG, "get for id: " + orgID + " "
                         + _ABB+ ": " + value);
             }
             c.close();
@@ -268,7 +268,7 @@ public class QueryHelper {
             resultTAG = "inserted organization id: " + org.getId() + ", title " + org.getTitle();
         } finally {
             mDataBase.endTransaction();
-            Log.d(Constants.TAG, resultTAG + " == endTransaction");
+            Log.d(Constants.DB_TAG, resultTAG + " == endTransaction");
         }
     }
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -277,7 +277,7 @@ public class QueryHelper {
 //        clearAll();
         String lastUpdate = Constants.getLastUpgrateDate(mContext);
         if (!_objectModel.date.equals(lastUpdate)) {
-            Log.d(Constants.TAG, "Update db date: " + _objectModel.date);
+            Log.d(Constants.DB_TAG, "Update db date: " + _objectModel.date);
             Constants.setLastUpgrateDate(mContext, _objectModel.date);
             insertCities(_objectModel.cities);
             insertRegions(_objectModel.regions);
@@ -287,7 +287,7 @@ public class QueryHelper {
                 insertOrganization(org);
             }
         } else {
-            Log.d(Constants.TAG, "Nothing to update lastUpdate: " + lastUpdate + ", current data date: " + _objectModel.date);
+            Log.d(Constants.DB_TAG, "Nothing to update lastUpdate: " + lastUpdate + ", current data date: " + _objectModel.date);
         }
     }
 
@@ -309,11 +309,11 @@ public class QueryHelper {
                 String  currency_Title = c.getString(c.getColumnIndex(DBHelper.CURRENCY_TITLE));
 
                 result.put(currency_ABB, currency_Title);
-                Log.d(Constants.TAG, "get " + currency_ABB+ ": " + currency_Title);
+                Log.d(Constants.DB_TAG, "get " + currency_ABB+ ": " + currency_Title);
             }
             c.close();
         }
-        Log.d(Constants.TAG, "------------get from DB :" + result.size() + " items(currencies)");
+        Log.d(Constants.DB_TAG, "------------get from DB :" + result.size() + " items(currencies)");
         return result;
     }
 
@@ -358,7 +358,7 @@ public class QueryHelper {
                         .setLink(orgLink);
 
                 result.add(orgInfoModel);
-                Log.d(Constants.TAG, "get org id: " + orgID + ", title: " + orgTitle);
+                Log.d(Constants.DB_TAG, "get org id: " + orgID + ", title: " + orgTitle);
             }
             c.close();
         }

@@ -9,10 +9,12 @@ import android.content.SharedPreferences;
 public class Constants {
     public static final String ORG_INFO_MODEL_ARG = "org_info_model_arg";
     public static final String SHARE_FILE_NAME_ARG = "currencies_map_arg";
-    public static final String LAST_DATE_UPGRADE = "lastDate";
+    public static final String ACTION_LOADING_CALLBACK = "loading_callback";
 
+    public static final String LAST_DATE_UPGRADE = "lastDate";
     public static final String ORG_ID_ARG = "org_id_arg";
     public static final String TAG = "tag";
+    public static final String DB_TAG = "db_tag";
     public static final int MENU_ITEM_MAP   = 100;
     public static final int MENU_ITEM_LINK  = 101;
     public static final int MENU_ITEM_PHONE = 102;
