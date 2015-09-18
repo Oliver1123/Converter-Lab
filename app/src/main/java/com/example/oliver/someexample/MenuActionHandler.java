@@ -25,7 +25,7 @@ public class MenuActionHandler {
                 mContext.startActivity(intent);
                 break;
             case Constants.MENU_ITEM_PHONE:
-                if (!model.getPhone().isEmpty()) {
+                if (!Constants.UNKNOWN_VALUE.equals(model.getPhone())) {
                     intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + model.getPhone()));
                     mContext.startActivity(intent);
                 }
@@ -44,12 +44,19 @@ public class MenuActionHandler {
 
 
     private void showOnMap(OrgInfoModel _currentModel) {
-        String address = _currentModel.getRegionTitle();
-        if (!address.equals(_currentModel.getCityTitle())) {
-            address = address + " " + _currentModel.getCityTitle();
+        StringBuilder address = new StringBuilder();
+        if (!Constants.UNKNOWN_VALUE.equals(_currentModel.getRegionTitle())) {
+            address.append(_currentModel.getRegionTitle());
         }
-        address = address + " " + _currentModel.getAddress();
-        Uri uri = Uri.parse("geo:0,0?q=" + address);
+        if (!Constants.UNKNOWN_VALUE.equals(_currentModel.getCityTitle()) &&
+            !_currentModel.getRegionTitle().equals(_currentModel.getCityTitle())) {
+            address.append(_currentModel.getCityTitle());
+        }
+        if (!Constants.UNKNOWN_VALUE.equals(_currentModel.getAddress())) {
+            address.append(_currentModel.getAddress());
+        }
+
+        Uri uri = Uri.parse("geo:0,0?q=" + address.toString());
         Log.d(Constants.TAG, "Show on map uri: " + uri.toString());
 
         mContext.startActivity(new Intent(Intent.ACTION_VIEW, uri));

@@ -2,6 +2,9 @@ package com.example.oliver.someexample.Model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
+
+import com.example.oliver.someexample.Constants;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,23 +27,23 @@ public class OrgInfoModel implements Parcelable{
     }
 
     public String getTitle() {
-        return (title == null)? "" : title;
+        return (TextUtils.isEmpty(title))? Constants.UNKNOWN_VALUE : title;
     }
 
     public String getRegionTitle() {
-        return (regionTitle == null)? "" : regionTitle;
+        return (TextUtils.isEmpty(regionTitle))? Constants.UNKNOWN_VALUE : regionTitle;
     }
 
     public String getCityTitle() {
-        return (cityTitle == null)? "" : cityTitle;
+        return (TextUtils.isEmpty(cityTitle))? Constants.UNKNOWN_VALUE: cityTitle;
     }
 
     public String getPhone() {
-        return (phone == null)? "" : phone;
+        return (TextUtils.isEmpty(phone))? Constants.UNKNOWN_VALUE : phone;
     }
 
     public String getAddress() {
-        return (address == null)? "" : address;
+        return (TextUtils.isEmpty(address))? Constants.UNKNOWN_VALUE : address;
     }
 
     public String getLink() {

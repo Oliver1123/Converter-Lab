@@ -13,4 +13,5 @@ public class Constants {
     public static final int MENU_ITEM_LINK  = 101;
     public static final int MENU_ITEM_PHONE = 102;
     public static final int MENU_ITEM_MORE  = 103;
+    public static final String UNKNOWN_VALUE = "-";
 }
