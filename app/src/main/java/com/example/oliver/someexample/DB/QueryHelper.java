@@ -275,12 +275,19 @@ public class QueryHelper {
 ///////////////////////////////////////////////////////////////////////////////////////////
     public void insertObjectModel(ObjectModel _objectModel) {
 //        clearAll();
-        insertCities(_objectModel.cities);
-        insertRegions(_objectModel.regions);
-        insertCurrenciesDesc(_objectModel.currencies);
-        clearOrganizations();
-        for (OrganizationModel org: _objectModel.organizations) {
-            insertOrganization(org);
+        String lastUpdate = Constants.getLastUpgrateDate(mContext);
+        if (!_objectModel.date.equals(lastUpdate)) {
+            Log.d(Constants.TAG, "Update db date: " + _objectModel.date);
+            Constants.setLastUpgrateDate(mContext, _objectModel.date);
+            insertCities(_objectModel.cities);
+            insertRegions(_objectModel.regions);
+            insertCurrenciesDesc(_objectModel.currencies);
+            clearOrganizations();
+            for (OrganizationModel org : _objectModel.organizations) {
+                insertOrganization(org);
+            }
+        } else {
+            Log.d(Constants.TAG, "Nothing to update lastUpdate: " + lastUpdate + ", current data date: " + _objectModel.date);
         }
     }
 
@@ -358,6 +365,13 @@ public class QueryHelper {
         return result;
     }
 
+    // some WORD in text -> Some WORD In Text
+
+    /**
+     * Capitalize first letter in each word the given string
+     * @param value string value that need to capitalize
+     * @return string with capitalized first letter in each word
+     */
     private String capWord(String value) {
         StringBuilder res = new StringBuilder();
 
