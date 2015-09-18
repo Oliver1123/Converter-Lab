@@ -11,6 +11,7 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 
@@ -34,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     private List<OrgInfoModel> mData;
     private SwipeRefreshLayout mSwipeLayout;
     private ProgressBar mProgressBar;
+    private MenuItem searchItem;
 
 
     @Override
@@ -80,9 +82,9 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         // SearchView options
-        SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        searchItem = menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView) searchItem.getActionView();
         searchView.setQueryHint(getResources().getString(R.string.search_hint));
-
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -91,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                Log.d(Constants.TAG, "search query : " + newText);
+                Log.d(Constants.TAG, "search query : '" + newText + "'");
                 List<OrgInfoModel> searchData = new ArrayList<>();
                 for (OrgInfoModel model : mData) {
                     if (model.containStr(newText))
@@ -128,6 +130,9 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         mData = data;
         mAdapter.setData(mData);
         mSwipeLayout.setRefreshing(false);
+        if (searchItem.isActionViewExpanded()) {
+            searchItem.collapseActionView();
+        }
         Log.d(Constants.TAG, "End refreshing");
     }
 
