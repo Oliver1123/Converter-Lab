@@ -13,7 +13,6 @@ import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
@@ -47,7 +46,6 @@ public class DetailActivity extends AppCompatActivity implements SwipeRefreshLay
     private Map<String, String> mCurrenciesDescription;
     private ProgressBar mProgressBar;
     private CurrencyAdapter mAdapter;
-    private LinearLayout mContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,14 +55,12 @@ public class DetailActivity extends AppCompatActivity implements SwipeRefreshLay
 
         initUI();
 
-
         Bundle args = new Bundle();
         args.putString(Constants.ORG_ID_ARG, mModel.getId());
         getLoaderManager().initLoader(LOADER_CURRENCIES_ID, args, this);
 
         getLoaderManager().getLoader(LOADER_CURRENCIES_ID).forceLoad();
 
-        setHeaders();
     }
 
     private void initUI() {
@@ -87,22 +83,20 @@ public class DetailActivity extends AppCompatActivity implements SwipeRefreshLay
 
         mCurrenciesList = (ListView) findViewById(R.id.lvCurrencies_AD);
 
+        setHeaders();
+
         mAdapter = new CurrencyAdapter(this);
         mCurrenciesList.setAdapter(mAdapter);
         mProgressBar = (ProgressBar) findViewById(R.id.pbLoading_AD);
-        mContainer = (LinearLayout) findViewById(R.id.llContainer_AD);
     }
 
     private void setHeaders() {
         OrgInfoCardView orgInfoCardView = new OrgInfoCardView(this);
         orgInfoCardView.setOrgInfo(mModel);
-        mContainer.addView(orgInfoCardView, 0);
-//        mCurrenciesList.addHeaderView(orgInfoCardView);
+        mCurrenciesList.addHeaderView(orgInfoCardView);
 
         CurrencyDescriptionCardView descriptionCardView = new CurrencyDescriptionCardView(this);
-        mContainer.addView(descriptionCardView, 1);
-        mSwipeLayout.setMinimumHeight(mContainer.getHeight());
-//        mCurrenciesList.addHeaderView(descriptionCardView);
+        mCurrenciesList.addHeaderView(descriptionCardView);
     }
 
     private void setData() {

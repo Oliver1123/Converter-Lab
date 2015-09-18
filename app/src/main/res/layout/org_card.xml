@@ -111,7 +111,7 @@
                     android:id="@+id/ivMore_OC"
                     android:src="@drawable/ic_next"
                     style="@style/menu_icon_style"
-                    android:background="@drawable/ic_more_back"
+                    android:background="@drawable/ic_more_background"
                     android:paddingTop="12dp"
                     android:paddingBottom="12dp"/>
             </LinearLayout>

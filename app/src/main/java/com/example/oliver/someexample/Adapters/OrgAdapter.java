@@ -82,7 +82,12 @@ public class OrgAdapter extends RecyclerView.Adapter<OrgAdapter.ViewHolder>{
 
             mTitle.setText(_orgInfoModel.getTitle());
             mRegionTitle.setText(_orgInfoModel.getRegionTitle());
-            mCityTitle.setText(_orgInfoModel.getCityTitle());
+            if (!_orgInfoModel.getRegionTitle().equals(_orgInfoModel.getCityTitle())) {
+                mCityTitle.setText(_orgInfoModel.getCityTitle());
+            } else {
+                mCityTitle.setText("");
+            }
+
             mPhone.setText(mContext.getResources().getString(R.string.phone_info) + _orgInfoModel.getPhone());
             mAddress.setText(mContext.getResources().getString(R.string.address_info) + _orgInfoModel.getAddress());
         }
