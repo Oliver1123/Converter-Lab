@@ -7,13 +7,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.example.oliver.someexample.Constants;
-import com.example.oliver.someexample.Model.OrgInfoModel;
 import com.example.oliver.someexample.Model.MoneyModel;
 import com.example.oliver.someexample.Model.ObjectModel;
+import com.example.oliver.someexample.Model.OrgInfoModel;
 import com.example.oliver.someexample.Model.OrganizationModel;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -83,6 +82,25 @@ public class QueryHelper {
         Log.d(Constants.TAG, "Total inserted " + currencies.size() + "currencies");
     }
 
+    public String getCurrencyDescription(String currencyABB) {
+        String result = null;
+
+        Cursor c = mDataBase.query(DBHelper.CURRENCIES_TABLE_NAME,
+                null,
+                DBHelper.CURRENCY_ABB + " = ?",
+                new String[]{currencyABB},
+                null,
+                null,
+                null);
+
+        if (c != null) {
+            while (c.moveToNext()) {
+                result = c.getString(c.getColumnIndex(DBHelper.CURRENCY_TITLE));
+            }
+            c.close();
+        }
+        return  result;
+    }
     ////////////////////////    REGIONS
     private void clearRegions() {
         mDataBase.delete(DBHelper.REGIONS_TABLE_NAME, null, null);

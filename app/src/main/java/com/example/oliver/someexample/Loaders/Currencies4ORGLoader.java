@@ -16,7 +16,6 @@ import java.util.Map;
  * Created by oliver on 16.09.15.
  */
 public class Currencies4ORGLoader extends Loader<Pair<Map<String, String>, Map<String, MoneyModel>>> {
-    private final Context mContext;
     private String mOrgID;
     private GetCurrencies4ORGTask mTask;
 
@@ -32,7 +31,7 @@ public class Currencies4ORGLoader extends Loader<Pair<Map<String, String>, Map<S
      */
     public Currencies4ORGLoader(Context context, Bundle args) {
         super(context);
-        mContext = context;
+
         if (args != null) {
             mOrgID = args.getString(Constants.ORG_ID_ARG);
         }
@@ -44,7 +43,7 @@ public class Currencies4ORGLoader extends Loader<Pair<Map<String, String>, Map<S
         if (mTask != null) {
             mTask.cancel(true);
         }
-        mTask = new GetCurrencies4ORGTask(mContext);
+        mTask = new GetCurrencies4ORGTask(getContext());
         mTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mOrgID);
     }
 

@@ -4,21 +4,16 @@ import android.content.Context;
 import android.content.Loader;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Pair;
 
-import com.example.oliver.someexample.Constants;
 import com.example.oliver.someexample.DB.QueryHelper;
-import com.example.oliver.someexample.Model.MoneyModel;
 import com.example.oliver.someexample.Model.OrgInfoModel;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by oliver on 17.09.15.
  */
 public class OrgInfoModelLoader extends Loader<List<OrgInfoModel>> {
-    private final Context mContext;
     private GetOrgModelsTask mTask;
 
     /**
@@ -33,7 +28,7 @@ public class OrgInfoModelLoader extends Loader<List<OrgInfoModel>> {
      */
     public OrgInfoModelLoader(Context context, Bundle args) {
         super(context);
-        mContext = context;
+
     }
 
     @Override
@@ -42,7 +37,7 @@ public class OrgInfoModelLoader extends Loader<List<OrgInfoModel>> {
         if (mTask != null) {
             mTask.cancel(true);
         }
-        mTask = new GetOrgModelsTask(mContext);
+        mTask = new GetOrgModelsTask(getContext());
         mTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 

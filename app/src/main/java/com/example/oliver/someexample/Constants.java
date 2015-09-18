@@ -9,7 +9,8 @@ public class Constants {
     public static final String ORG_ID_ARG = "org_id_arg";
 
     public static final String TAG = "tag";
-    public static final int MENU_ITEM_MAP = 100;
-    public static final int MENU_ITEM_LINK = 101;
+    public static final int MENU_ITEM_MAP   = 100;
+    public static final int MENU_ITEM_LINK  = 101;
     public static final int MENU_ITEM_PHONE = 102;
+    public static final int MENU_ITEM_MORE  = 103;
 }

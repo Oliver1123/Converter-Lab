@@ -1,17 +1,14 @@
 package com.example.oliver.someexample.Adapters;
 
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.oliver.someexample.Activities.DetailActivity;
 import com.example.oliver.someexample.Constants;
+import com.example.oliver.someexample.MenuActionHandler;
 import com.example.oliver.someexample.Model.OrgInfoModel;
 import com.example.oliver.someexample.R;
 
@@ -29,6 +26,10 @@ public class OrgAdapter extends RecyclerView.Adapter<OrgAdapter.ViewHolder>{
         mContext = _context;
         mData = _data;
     }
+    public OrgAdapter(Context _context) {
+        mContext = _context;
+    }
+
     public void clearData() {
         mData.clear();
         notifyDataSetChanged();
@@ -61,13 +62,14 @@ public class OrgAdapter extends RecyclerView.Adapter<OrgAdapter.ViewHolder>{
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView mTitle, mRegionTitle, mCityTitle, mPhone, mAddress;
         private OrgInfoModel mCurrentModel;
+
         public ViewHolder(View itemView) {
             super(itemView);
-            mTitle          = (TextView) itemView.findViewById(R.id.tvTitle_OC);
-            mRegionTitle    = (TextView) itemView.findViewById(R.id.tvRegionTitle_OC);
-            mCityTitle      = (TextView) itemView.findViewById(R.id.tvCityTitle_OC);
-            mPhone          = (TextView) itemView.findViewById(R.id.tvPhone_OC);
-            mAddress        = (TextView) itemView.findViewById(R.id.tvAddress_OC);
+            mTitle = (TextView) itemView.findViewById(R.id.tvTitle_OC);
+            mRegionTitle = (TextView) itemView.findViewById(R.id.tvRegionTitle_OC);
+            mCityTitle = (TextView) itemView.findViewById(R.id.tvCityTitle_OC);
+            mPhone = (TextView) itemView.findViewById(R.id.tvPhone_OC);
+            mAddress = (TextView) itemView.findViewById(R.id.tvAddress_OC);
 
             itemView.findViewById(R.id.ivCall_OC).setOnClickListener(this);
             itemView.findViewById(R.id.ivLink_OC).setOnClickListener(this);
@@ -78,48 +80,32 @@ public class OrgAdapter extends RecyclerView.Adapter<OrgAdapter.ViewHolder>{
         public void onBind(OrgInfoModel _orgInfoModel) {
             mCurrentModel = _orgInfoModel;
 
-            mTitle.         setText(_orgInfoModel.getTitle());
-            mRegionTitle.   setText(_orgInfoModel.getRegionTitle());
-            mCityTitle.     setText(_orgInfoModel.getCityTitle());
-            mPhone.         setText(mContext.getResources().getString(R.string.phone_info) + _orgInfoModel.getPhone());
-            mAddress.       setText(mContext.getResources().getString(R.string.address_info) + _orgInfoModel.getAddress());
+            mTitle.setText(_orgInfoModel.getTitle());
+            mRegionTitle.setText(_orgInfoModel.getRegionTitle());
+            mCityTitle.setText(_orgInfoModel.getCityTitle());
+            mPhone.setText(mContext.getResources().getString(R.string.phone_info) + _orgInfoModel.getPhone());
+            mAddress.setText(mContext.getResources().getString(R.string.address_info) + _orgInfoModel.getAddress());
         }
 
         @Override
         public void onClick(View v) {
-            Intent intent;
+            int itemID = Constants.MENU_ITEM_LINK;
             switch (v.getId()) {
                 case R.id.ivLink_OC:
-                    intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mCurrentModel.getLink()));
-                    mContext.startActivity(intent);
+                    itemID = Constants.MENU_ITEM_LINK;
                     break;
                 case R.id.ivCall_OC:
-                    intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + mCurrentModel.getPhone()));
-                    mContext.startActivity(intent);
+                    itemID = Constants.MENU_ITEM_PHONE;
                     break;
                 case R.id.ivMap_OC:
-                    //TODO show map
-                    showOnMap(mCurrentModel);
+                    itemID = Constants.MENU_ITEM_MAP;
                     break;
                 case R.id.ivMore_OC:
-                    intent = new Intent(mContext, DetailActivity.class);
-                    intent.putExtra(Constants.ORG_INFO_MODEL_ARG, mCurrentModel);
-                    mContext.startActivity(intent);
+                    itemID = Constants.MENU_ITEM_MORE;
                     break;
 
             }
-        }
-
-        private void showOnMap(OrgInfoModel _currentModel) {
-            String address = _currentModel.getRegionTitle();
-            if (!address.equals(_currentModel.getCityTitle())) {
-                address = address + " " + _currentModel.getCityTitle();
-            }
-            address = address + " " + _currentModel.getAddress();
-            Uri uri = Uri.parse("geo:0,0?q=" + address);
-            Log.d(Constants.TAG, "Show on map uri: " + uri.toString());
-
-            mContext.startActivity(new Intent(Intent.ACTION_VIEW, uri));
+            new MenuActionHandler(mContext).itemClickAction(itemID, mCurrentModel);
         }
     }
 }

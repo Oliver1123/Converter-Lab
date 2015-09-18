@@ -2,13 +2,11 @@ package com.example.oliver.someexample.Activities;
 
 import android.app.DialogFragment;
 import android.app.LoaderManager;
-import android.content.Intent;
 import android.content.Loader;
-import android.net.Uri;
+import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.Pair;
@@ -18,22 +16,21 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.example.oliver.someexample.Adapters.CurrencyAdapter;
 import com.example.oliver.someexample.Constants;
-import com.example.oliver.someexample.Dialogs.ShareDialog;
-import com.example.oliver.someexample.Loaders.Currencies4ORGLoader;
 import com.example.oliver.someexample.CustomView.CurrencyDescriptionCardView;
 import com.example.oliver.someexample.CustomView.OrgInfoCardView;
+import com.example.oliver.someexample.Dialogs.ShareDialog;
 import com.example.oliver.someexample.FABMenuController;
 import com.example.oliver.someexample.Listener.FABMenuActionListener;
+import com.example.oliver.someexample.Loaders.Currencies4ORGLoader;
+import com.example.oliver.someexample.MenuActionHandler;
 import com.example.oliver.someexample.Model.MoneyModel;
 import com.example.oliver.someexample.Model.OrgInfoModel;
 import com.example.oliver.someexample.R;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -92,7 +89,7 @@ public class DetailActivity extends AppCompatActivity implements SwipeRefreshLay
 
         mAdapter = new CurrencyAdapter(this);
         mCurrenciesList.setAdapter(mAdapter);
-        mProgressBar = (ProgressBar) findViewById(R.id.pbLoading);
+        mProgressBar = (ProgressBar) findViewById(R.id.pbLoading_AD);
         mContainer = (LinearLayout) findViewById(R.id.llContainer_AD);
     }
 
@@ -152,34 +149,7 @@ public class DetailActivity extends AppCompatActivity implements SwipeRefreshLay
 
     @Override
     public void menuItemSelected(int itemID) {
-        Intent intent;
-        switch (itemID) {
-            case Constants.MENU_ITEM_LINK:
-                intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mModel.getLink()));
-                startActivity(intent);
-                break;
-            case Constants.MENU_ITEM_PHONE:
-                if (!mModel.getPhone().isEmpty()) {
-                    intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + mModel.getPhone()));
-                    startActivity(intent);
-                }
-                break;
-            case Constants.MENU_ITEM_MAP:
-                //TODO show map
-                showOnMap(mModel);
-                break;
-        }
-    }
-    private void showOnMap(OrgInfoModel _currentModel) {
-        String address = _currentModel.getRegionTitle();
-        if (!address.equals(_currentModel.getCityTitle())) {
-            address = address + " " + _currentModel.getCityTitle();
-        }
-        address = address + " " + _currentModel.getAddress();
-        Uri uri = Uri.parse("geo:0,0?q=" + address);
-        Log.d(Constants.TAG, "Show on map uri: " + uri.toString());
-
-        startActivity(new Intent(Intent.ACTION_VIEW, uri));
+        new MenuActionHandler(this).itemClickAction(itemID, mModel);
     }
 
     @Override

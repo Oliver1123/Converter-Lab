@@ -144,7 +144,7 @@ public class ShareDialog extends DialogFragment implements DialogInterface.OnCli
             canvas.drawText(value, bitmap_width - padding - p.measureText(value), startY, p);
         }
 
-        Log.d(Constants.TAG, "Bitmap.bytes: " + bitmap.getByteCount() +
+        Log.d(Constants.TAG, "Bitmap.KB: " + bitmap.getByteCount() / 1024 +
                 " w: " + bitmap.getWidth() + " h:" + bitmap.getHeight());
         return  bitmap;
     }
