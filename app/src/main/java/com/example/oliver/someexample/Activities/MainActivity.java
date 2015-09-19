@@ -1,6 +1,7 @@
 package com.example.oliver.someexample.Activities;
 
 import android.app.LoaderManager;
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -16,8 +17,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.ProgressBar;
 
 import com.example.oliver.someexample.Adapters.OrgAdapter;
 import com.example.oliver.someexample.Constants;
@@ -39,7 +38,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     private List<OrgInfoModel> mData;
     private SwipeRefreshLayout mSwipeLayout;
-    private ProgressBar mProgressBar;
+    private ProgressDialog mProgressDialog;
     private MenuItem searchItem;
     private BroadcastReceiver br;
 
@@ -61,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             @Override
             public void onReceive(Context context, Intent intent) {
                 Log.d(Constants.TAG, "MainActivity onReceive callback from DataLoadService");
-                mProgressBar.setVisibility(View.VISIBLE);
+                mProgressDialog.show();
                 String action = intent.getAction();
                 if (Constants.ACTION_LOADING_CALLBACK.equals(action)) {
                     getLoaderManager().getLoader(ORG_INFO_LOADER).forceLoad();
@@ -80,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         super.onStart();
         Log.d(Constants.TAG, "MainActivity onStart");
         createReceiver();
-        mProgressBar.setVisibility(View.VISIBLE);
+
         startService(new Intent(this, DataLoadService.class));
 
     }
@@ -96,8 +95,10 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
          mToolbar = (Toolbar) findViewById(R.id.toolbar_AM);
         setSupportActionBar(mToolbar);
 
-        mProgressBar = (ProgressBar) findViewById(R.id.pbLoading_AM);
-
+        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setMessage(getResources().getString(R.string.notification_ticker));
+        mProgressDialog.setCanceledOnTouchOutside(false);
+        mProgressDialog.setIndeterminate(true);
 
         mSwipeLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_layout_AM);
         mSwipeLayout.setOnRefreshListener(this);
@@ -160,7 +161,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     @Override
     public void onLoadFinished(Loader<List<OrgInfoModel>> loader, List<OrgInfoModel> data) {
-        mProgressBar.setVisibility(View.GONE);
+        mProgressDialog.dismiss();
         mData = data;
         mAdapter.setData(mData);
         mSwipeLayout.setRefreshing(false);

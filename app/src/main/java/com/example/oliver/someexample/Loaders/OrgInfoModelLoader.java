@@ -35,8 +35,9 @@ public class OrgInfoModelLoader extends Loader<List<OrgInfoModel>> {
 
     @Override
     protected void onForceLoad() {
-        Log.d(Constants.TAG, "OrgInfoModelLoader onForceLoad");
         super.onForceLoad();
+        Log.d(Constants.TAG, "OrgInfoModelLoader onForceLoad");
+
         if (mTask != null) {
             mTask.cancel(true);
         }
