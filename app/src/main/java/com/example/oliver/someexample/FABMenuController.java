@@ -1,8 +1,8 @@
 package com.example.oliver.someexample;
 
 
-import android.util.Log;
 import android.view.View;
+
 import com.example.oliver.someexample.Activities.DetailActivity;
 import com.example.oliver.someexample.Listener.FABMenuActionListener;
 import com.github.clans.fab.FloatingActionButton;

@@ -100,7 +100,7 @@ public class DataLoadService extends Service {
         AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
         am.cancel(pendingIntent);// cancel previous alarm
 
-        int frequencyValue = Integer.valueOf(mPreferences.getString(getString(R.string.sync_frequency), "-1"));
+        int frequencyValue = Integer.valueOf(mPreferences.getString(getString(R.string.sync_frequency), "30"));
         Log.d(Constants.TAG, "Set alarm in " + frequencyValue + " min");
         if (frequencyValue != -1) {
             int frequencyMillis = 1000/*ms*/ * 60/*sec*/ * frequencyValue/*min*/;

@@ -147,7 +147,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     @Override
     public void onRefresh() {
-        // TODO refresh Data
         Log.d(Constants.TAG, "Start refreshing");
         getLoaderManager().getLoader(ORG_INFO_LOADER).forceLoad();
     }

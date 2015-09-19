@@ -164,12 +164,8 @@ public class DetailActivity extends AppCompatActivity implements SwipeRefreshLay
         mCurrenciesDescription = data.first;
         mModel.setCurrencies(data.second);
         Log.d(Constants.TAG, "End refreshing");
-        mSwipeLayout.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mSwipeLayout.setRefreshing(false);
-            }
-        }, 2000);
+
+        mSwipeLayout.setRefreshing(false);
         setData();
     }
 
