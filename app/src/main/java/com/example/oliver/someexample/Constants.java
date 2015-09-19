@@ -14,19 +14,19 @@ public class Constants {
     public static final String LAST_DATE_UPGRADE = "lastDate";
     public static final String ORG_ID_ARG = "org_id_arg";
     public static final String TAG = "tag";
-    public static final String DB_TAG = "db_tag";
+    public static final String DB_TAG = "db";
     public static final int MENU_ITEM_MAP   = 100;
     public static final int MENU_ITEM_LINK  = 101;
     public static final int MENU_ITEM_PHONE = 102;
     public static final int MENU_ITEM_MORE  = 103;
     public static final String UNKNOWN_VALUE = "-";
 
-    public static String getLastUpgrateDate(Context _context) {
+    public static String getLastUpgradeDate(Context _context) {
         SharedPreferences sPref = _context.getSharedPreferences(_context.getPackageName(), Context.MODE_PRIVATE);
         return sPref.getString(Constants.LAST_DATE_UPGRADE, "");
     }
 
-    public static void setLastUpgrateDate(Context _context, String lastDate) {
+    public static void setLastUpgradeDate(Context _context, String lastDate) {
         SharedPreferences sPref = _context.getSharedPreferences(_context.getPackageName(), Context.MODE_PRIVATE);
         SharedPreferences.Editor ed = sPref.edit();
         ed.putString(Constants.LAST_DATE_UPGRADE, lastDate);

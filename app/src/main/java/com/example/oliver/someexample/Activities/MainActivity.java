@@ -1,6 +1,10 @@
 package com.example.oliver.someexample.Activities;
 
 import android.app.LoaderManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.Loader;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -17,6 +21,7 @@ import android.widget.ProgressBar;
 
 import com.example.oliver.someexample.Adapters.OrgAdapter;
 import com.example.oliver.someexample.Constants;
+import com.example.oliver.someexample.DataLoadService;
 import com.example.oliver.someexample.Loaders.OrgInfoModelLoader;
 import com.example.oliver.someexample.Model.OrgInfoModel;
 import com.example.oliver.someexample.R;
@@ -36,26 +41,55 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     private SwipeRefreshLayout mSwipeLayout;
     private ProgressBar mProgressBar;
     private MenuItem searchItem;
+    private BroadcastReceiver br;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(Constants.TAG, "MainActivity onCreate");
         setContentView(R.layout.activity_main);
 
-        initUI();
         getLoaderManager().initLoader(ORG_INFO_LOADER, null, this);
-        getLoaderManager().getLoader(ORG_INFO_LOADER).forceLoad();
+
+        initUI();
+
+    }
+
+    private void createReceiver() {
+        br = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Log.d(Constants.TAG, "MainActivity onReceive callback from DataLoadService");
+                mProgressBar.setVisibility(View.VISIBLE);
+                String action = intent.getAction();
+                if (Constants.ACTION_LOADING_CALLBACK.equals(action)) {
+                    getLoaderManager().getLoader(ORG_INFO_LOADER).forceLoad();
+                }
+            }
+        };
+        // Create filter
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(Constants.ACTION_LOADING_CALLBACK);
+        registerReceiver(br, intentFilter);
+        Log.d(Constants.TAG, "MainActivity Receiver created");
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        Log.d(Constants.TAG, "MainActivity onStart");
+        createReceiver();
+        mProgressBar.setVisibility(View.VISIBLE);
+        startService(new Intent(this, DataLoadService.class));
+
     }
 
     @Override
     protected void onStop() {
         super.onStop();
+        Log.d(Constants.TAG, "MainActivity onStop");
+        unregisterReceiver(br);
     }
 
     private void initUI() {
@@ -63,6 +97,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         setSupportActionBar(mToolbar);
 
         mProgressBar = (ProgressBar) findViewById(R.id.pbLoading_AM);
+
 
         mSwipeLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_layout_AM);
         mSwipeLayout.setOnRefreshListener(this);
@@ -120,7 +155,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             loader = new OrgInfoModelLoader(this, args);
             Log.d(Constants.TAG, "Loader created");
         }
-        mProgressBar.setVisibility(View.VISIBLE);
         return loader;
     }
 
@@ -133,7 +167,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         if (searchItem.isActionViewExpanded()) {
             searchItem.collapseActionView();
         }
-        Log.d(Constants.TAG, "End refreshing");
+        Log.d(Constants.TAG, "MainActivity onLoadFinished");
     }
 
     @Override

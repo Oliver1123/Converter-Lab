@@ -48,7 +48,7 @@
             android:id="@+id/tvPhoneInfo_OIC"
             android:layout_alignTop="@+id/tvPhoneHint"
             android:layout_toRightOf="@+id/tvPhoneHint"
-            android:layout_toEndOf="@+id/tvAddressHint"
+            android:layout_toEndOf="@+id/tvPhoneHint"
             style="@style/text_view_org_info"/>
         <TextView
             android:id="@+id/tvLinkHint"
@@ -62,7 +62,7 @@
             android:id="@+id/tvLink_Info_OIC"
             android:layout_alignTop="@+id/tvLinkHint"
             android:layout_toRightOf="@+id/tvLinkHint"
-            android:layout_toEndOf="@+id/tvAddressHint"
+            android:layout_toEndOf="@+id/tvLinkHint"
             style="@style/text_view_org_info"/>
     </RelativeLayout>
 

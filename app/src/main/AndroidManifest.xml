@@ -16,18 +16,15 @@
             android:value="AIzaSyA62BKLoz8VPyYD-wu4IllI8DDin-vT5wI" />
 
         <activity
-            android:name=".TestActivity"
-            android:label="@string/app_name" >
+            android:name=".Activities.MainActivity"
+            android:label="@string/title_activity_main">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".Activities.MainActivity"
-            android:label="@string/title_activity_main" >
-        </activity>
+
         <activity
             android:name=".Activities.DetailActivity"
             android:label="@string/title_activity_detail" >
@@ -35,8 +32,14 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.oliver.someexample.Activities.MainActivity" />
-
         </activity>
+
+        <service
+            android:name=".DataLoadService"
+            android:enabled="true"
+            android:exported="false"
+            android:process=":DataLoadingService">
+        </service>
     </application>
 
 </manifest>

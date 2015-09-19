@@ -275,10 +275,10 @@ public class QueryHelper {
 ///////////////////////////////////////////////////////////////////////////////////////////
     public void insertObjectModel(ObjectModel _objectModel) {
 //        clearAll();
-        String lastUpdate = Constants.getLastUpgrateDate(mContext);
+        String lastUpdate = Constants.getLastUpgradeDate(mContext);
         if (!_objectModel.date.equals(lastUpdate)) {
-            Log.d(Constants.DB_TAG, "Update db date: " + _objectModel.date);
-            Constants.setLastUpgrateDate(mContext, _objectModel.date);
+            Log.d(Constants.TAG, "Update db date: " + _objectModel.date);
+            Constants.setLastUpgradeDate(mContext, _objectModel.date);
             insertCities(_objectModel.cities);
             insertRegions(_objectModel.regions);
             insertCurrenciesDesc(_objectModel.currencies);
@@ -287,7 +287,7 @@ public class QueryHelper {
                 insertOrganization(org);
             }
         } else {
-            Log.d(Constants.DB_TAG, "Nothing to update lastUpdate: " + lastUpdate + ", current data date: " + _objectModel.date);
+            Log.d(Constants.TAG, "Nothing to update lastUpdate: " + lastUpdate + ", current data date: " + _objectModel.date);
         }
     }
 

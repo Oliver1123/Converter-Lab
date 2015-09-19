@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.Loader;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 
+import com.example.oliver.someexample.Constants;
 import com.example.oliver.someexample.DB.QueryHelper;
 import com.example.oliver.someexample.Model.OrgInfoModel;
 
@@ -33,6 +35,7 @@ public class OrgInfoModelLoader extends Loader<List<OrgInfoModel>> {
 
     @Override
     protected void onForceLoad() {
+        Log.d(Constants.TAG, "OrgInfoModelLoader onForceLoad");
         super.onForceLoad();
         if (mTask != null) {
             mTask.cancel(true);

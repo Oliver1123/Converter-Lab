@@ -18,4 +18,6 @@
     <string name="fab_phone_title">Позвонить</string>
     <string name="fab_map_title">Карта</string>
     <string name="btn_share">Share</string>
+    <string name="notification_ticker">Loading...</string>
+    <string name="notification_title">Converter Lab: data loading</string>
 </resources>
