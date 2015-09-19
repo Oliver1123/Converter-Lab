@@ -88,8 +88,8 @@ public class OrgAdapter extends RecyclerView.Adapter<OrgAdapter.ViewHolder>{
                 mCityTitle.setText("");
             }
 
-            mPhone.setText(mContext.getResources().getString(R.string.phone_info) + _orgInfoModel.getPhone());
-            mAddress.setText(mContext.getResources().getString(R.string.address_info) + _orgInfoModel.getAddress());
+            mPhone.setText(mContext.getString(R.string.phone_info) + _orgInfoModel.getPhone());
+            mAddress.setText(mContext.getString(R.string.address_info) + _orgInfoModel.getAddress());
         }
 
         @Override

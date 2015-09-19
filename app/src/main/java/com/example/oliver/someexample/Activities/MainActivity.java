@@ -47,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(Constants.TAG, "MainActivity onCreate");
+
         setContentView(R.layout.activity_main);
 
         getLoaderManager().initLoader(ORG_INFO_LOADER, null, this);
@@ -96,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         setSupportActionBar(mToolbar);
 
         mProgressDialog = new ProgressDialog(this);
-        mProgressDialog.setMessage(getResources().getString(R.string.notification_ticker));
+        mProgressDialog.setMessage(getString(R.string.notification_ticker));
         mProgressDialog.setCanceledOnTouchOutside(false);
         mProgressDialog.setIndeterminate(true);
 
@@ -117,10 +118,12 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+
+        menu.findItem(R.id.action_settings).setIntent(new Intent(this, SettingsActivity.class));
         // SearchView options
         searchItem = menu.findItem(R.id.action_search);
         SearchView searchView = (SearchView) searchItem.getActionView();
-        searchView.setQueryHint(getResources().getString(R.string.search_hint));
+        searchView.setQueryHint(getString(R.string.search_hint));
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {

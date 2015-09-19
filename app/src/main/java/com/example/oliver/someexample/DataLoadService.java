@@ -5,8 +5,10 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
@@ -20,8 +22,8 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 public class DataLoadService extends Service {
-    private static final int NOTIFICATION_ID = 111;
-    private static int SERVICE_TIMEOUT_MILISECOND = 1000 * 30;
+    private SharedPreferences mPreferences;
+
     public DataLoadService() {
     }
 
@@ -41,13 +43,9 @@ public class DataLoadService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d(Constants.TAG, "DataLoadService onStartCommand ");
 
-        NotificationCompat.Builder notifBuilder = new NotificationCompat.Builder(getApplication());
-        notifBuilder.setSmallIcon(android.R.drawable.ic_dialog_info)
-                    .setContentTitle(getResources().getString(R.string.notification_title))
-                    .setTicker(getResources().getString(R.string.notification_ticker));
+        mPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
-
-        startForeground(NOTIFICATION_ID, notifBuilder.build());
+        showNotification();
 
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint("http://resources.finance.ua")
@@ -58,7 +56,7 @@ public class DataLoadService extends Service {
             @Override
             public void success(ObjectModel t, Response response) {
                 Log.d(Constants.TAG, "Retrofit success data loaded");
-                new AsyncDBInsert(getApplicationContext()).execute(t);
+                new AsyncDBInsert(getBaseContext()).execute(t);
             }
 
             @Override
@@ -70,20 +68,44 @@ public class DataLoadService extends Service {
         return START_NOT_STICKY;
     }
 
+    private void showNotification() {
+        boolean notificationEnable = mPreferences.getBoolean(getString(R.string.notifications_enable), true);
+        if (notificationEnable) {
+            NotificationCompat.Builder notifBuilder = new NotificationCompat.Builder(getBaseContext());
+            notifBuilder.setSmallIcon(android.R.drawable.ic_dialog_info)
+                    .setContentTitle(getString(R.string.notification_title))
+                    .setTicker(getString(R.string.notification_ticker));
+
+            startForeground(Constants.NOTIFICATION_ID, notifBuilder.build());
+        }
+    }
+
     private void sendCallback() {
         // send callback to Activity
         Log.d(Constants.TAG, "DataLoadService sendCallback");
         Intent intent = new Intent(Constants.ACTION_LOADING_CALLBACK);
         sendBroadcast(intent);
 
-        Intent serviceIntent = new Intent(this, DataLoadService.class);
-        PendingIntent pendingIntent = PendingIntent.getService(this, 0, serviceIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        setAlarm();
 
+        stopForeground(false);
+        stopSelf();
+    }
+
+    private void setAlarm() {
+        Intent serviceIntent = new Intent(getBaseContext(), DataLoadService.class);
+        PendingIntent pendingIntent = PendingIntent.getService(getBaseContext(), 0,
+                                    serviceIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        
         AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
         am.cancel(pendingIntent);// cancel previous alarm
-        am.set(AlarmManager.RTC, System.currentTimeMillis() + SERVICE_TIMEOUT_MILISECOND, pendingIntent);
 
-        stopSelf();
+        int frequencyValue = Integer.valueOf(mPreferences.getString(getString(R.string.sync_frequency), "-1"));
+        Log.d(Constants.TAG, "Set alarm in " + frequencyValue + " min");
+        if (frequencyValue != -1) {
+            int frequencyMillis = 1000/*ms*/ * 60/*sec*/ * frequencyValue/*min*/;
+            am.set(AlarmManager.RTC, System.currentTimeMillis() + frequencyMillis, pendingIntent);
+        }
     }
 
 
