@@ -1,0 +1,37 @@
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    >
+
+
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:id="@+id/map"
+              tools:context=".MapsActivity"
+              android:name="com.google.android.gms.maps.SupportMapFragment"/>
+    <ImageView
+        android:id="@+id/ivMapSatellite"
+        android:src="@drawable/map_satellite"
+        style="@style/map_images"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"/>
+    <ImageView
+        android:id="@+id/ivMapTerrain"
+        android:src="@drawable/map_terrain"
+        style="@style/map_images"
+        android:layout_alignTop="@+id/ivMapSatellite"
+        android:layout_toRightOf="@+id/ivMapSatellite"
+        android:layout_toEndOf="@+id/ivMapSatellite"/>
+    <ImageView
+        android:id="@+id/ivMapHybrid"
+        android:src="@drawable/map_hybrid"
+        style="@style/map_images"
+        android:layout_alignTop="@+id/ivMapSatellite"
+        android:layout_toRightOf="@+id/ivMapTerrain"
+        android:layout_toEndOf="@+id/ivMapSatellite"/>
+
+</RelativeLayout>

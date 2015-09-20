@@ -15,10 +15,14 @@ import android.util.Log;
 
 import com.example.oliver.someexample.DB.QueryHelper;
 import com.example.oliver.someexample.Model.ObjectModel;
+import com.squareup.okhttp.OkHttpClient;
+
+import java.util.concurrent.TimeUnit;
 
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
+import retrofit.client.OkClient;
 import retrofit.client.Response;
 
 public class DataLoadService extends Service {
@@ -47,8 +51,13 @@ public class DataLoadService extends Service {
 
         showNotification();
 
+        final OkHttpClient okHttpClient = new OkHttpClient();
+        okHttpClient.setReadTimeout(15, TimeUnit.SECONDS);
+        okHttpClient.setConnectTimeout(15, TimeUnit.SECONDS);
+
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint("http://resources.finance.ua")
+                .setClient(new OkClient(okHttpClient))
                 .build();
 
         RetrofitInterface retrofitInterface = restAdapter.create(RetrofitInterface.class);
@@ -65,6 +74,7 @@ public class DataLoadService extends Service {
                 sendCallback();
             }
         });
+        Log.d(Constants.TAG, "DataLoadService onStartCommand end");
         return START_NOT_STICKY;
     }
 

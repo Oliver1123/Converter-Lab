@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.util.Log;
 
 import com.example.oliver.someexample.Activities.DetailActivity;
+import com.example.oliver.someexample.Activities.MapsActivity;
 import com.example.oliver.someexample.Model.OrgInfoModel;
 
 /**
@@ -31,8 +32,11 @@ public class MenuActionHandler {
                 }
                 break;
             case Constants.MENU_ITEM_MAP:
+                intent = new Intent(mContext, MapsActivity.class);
+                intent.putExtra(Constants.ORG_INFO_MODEL_ARG, model);
+                mContext.startActivity(intent);
                 //TODO show map
-                showOnMap(model);
+//                showOnMap(model);
                 break;
             case Constants.MENU_ITEM_MORE:
                 intent = new Intent(mContext, DetailActivity.class);

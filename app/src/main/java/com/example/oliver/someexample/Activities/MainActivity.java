@@ -100,6 +100,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         mProgressDialog.setMessage(getString(R.string.notification_ticker));
         mProgressDialog.setCanceledOnTouchOutside(false);
         mProgressDialog.setIndeterminate(true);
+        mProgressDialog.show();
 
         mSwipeLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_layout_AM);
         mSwipeLayout.setOnRefreshListener(this);
