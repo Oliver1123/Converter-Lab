@@ -3,7 +3,6 @@ package com.example.oliver.someexample.Dialogs;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -31,7 +30,7 @@ import java.util.Map;
 /**
  * Created by oliver on 16.09.15.
  */
-public class ShareDialog extends DialogFragment implements DialogInterface.OnClickListener {
+public class ShareDialog extends DialogFragment implements View.OnClickListener {
     private  Bitmap mBitmap;
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -46,21 +45,22 @@ public class ShareDialog extends DialogFragment implements DialogInterface.OnCli
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.share_layout, null);
         ImageView imageView = (ImageView) view.findViewById(R.id.ivShare);
         imageView.setImageBitmap(mBitmap);
+        view.findViewById(R.id.btn_Share).setOnClickListener(this);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setView(view);
-        builder.setPositiveButton(R.string.btn_share, this);
 
         return builder.create();
     }
 
     @Override
-    public void onClick(DialogInterface dialog, int which) {
+    public void onClick(View v) {
         File file = saveBitmapToFile(mBitmap, "file.png");
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_SEND);
         intent.setDataAndType(Uri.fromFile(file), "image/*");
         startActivity(intent);
+        dismiss();
     }
 
     private File saveBitmapToFile(Bitmap _bitmap, String fileName) {
@@ -91,7 +91,6 @@ public class ShareDialog extends DialogFragment implements DialogInterface.OnCli
         }catch (IOException e) {
             e.printStackTrace();
         }
-
 
         return result;
     }
@@ -148,7 +147,6 @@ public class ShareDialog extends DialogFragment implements DialogInterface.OnCli
                 " w: " + bitmap.getWidth() + " h:" + bitmap.getHeight());
         return  bitmap;
     }
-
 
     private int getBitmapHeight(OrgInfoModel _model, int _padding,
                                 int titleTextSize, int infoTextSize, int currenciesTextSize) {
