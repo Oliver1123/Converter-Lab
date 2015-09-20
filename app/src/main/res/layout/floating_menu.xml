@@ -24,19 +24,19 @@
 
     <com.github.clans.fab.FloatingActionButton
         android:id="@+id/fbLink"
-        android:src="@mipmap/ic_link_my"
+        android:src="@mipmap/ic_link.png"
         style="@style/fab_button_style"
         app:fab_label="@string/fab_link_title"/>
 
     <com.github.clans.fab.FloatingActionButton
         android:id="@+id/fbMap"
-        android:src="@mipmap/ic_map_my"
+        android:src="@mipmap/ic_map.png"
         style="@style/fab_button_style"
         app:fab_label="@string/fab_map_title"/>
 
     <com.github.clans.fab.FloatingActionButton
         android:id="@+id/fbPhone"
-        android:src="@mipmap/ic_phone_my"
+        android:src="@mipmap/ic_phone.png"
         style="@style/fab_button_style"
         app:fab_label="@string/fab_phone_title"/>
 

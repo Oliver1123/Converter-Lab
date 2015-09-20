@@ -76,7 +76,7 @@ public class DetailActivity extends AppCompatActivity implements SwipeRefreshLay
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setHomeAsUpIndicator(R.mipmap.ic_back_my);
+            actionBar.setHomeAsUpIndicator(R.mipmap.ic_back);
             actionBar.setTitle(mModel.getTitle());
             actionBar.setSubtitle(mModel.getCityTitle());
         }
