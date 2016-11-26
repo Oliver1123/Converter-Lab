@@ -16,33 +16,32 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
-import com.example.oliver.someexample.adapters.CurrencyAdapter;
 import com.example.oliver.someexample.Constants;
+import com.example.oliver.someexample.FABController;
+import com.example.oliver.someexample.MenuActionHandler;
+import com.example.oliver.someexample.R;
+import com.example.oliver.someexample.adapters.CurrencyAdapter;
 import com.example.oliver.someexample.custom_view.CurrencyDescriptionCardView;
 import com.example.oliver.someexample.custom_view.OrgInfoCardView;
 import com.example.oliver.someexample.dialogs.ShareDialog;
-import com.example.oliver.someexample.FABMenuController;
-import com.example.oliver.someexample.listener.FABMenuActionListener;
 import com.example.oliver.someexample.loaders.Currencies4ORGLoader;
-import com.example.oliver.someexample.MenuActionHandler;
 import com.example.oliver.someexample.models.MoneyModel;
 import com.example.oliver.someexample.models.OrgInfoModel;
-import com.example.oliver.someexample.R;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class DetailActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener,
-        FABMenuActionListener,
-        LoaderManager.LoaderCallbacks<Pair<Map<String, String>, Map<String, MoneyModel>>>{
+        FABController.FABActionListener,
+        LoaderManager.LoaderCallbacks<Pair<Map<String, String>, Map<String, MoneyModel>>> {
     private final int LOADER_CURRENCIES_ID = 0;
     private OrgInfoModel mModel;
     private Toolbar mToolbar;
 
     private ListView mCurrenciesList;
     private SwipeRefreshLayout mSwipeLayout;
-    private FABMenuController mFABMenuController;
+    private FABController mFABMenuController;
     private Map<String, String> mCurrenciesDescription;
     private ProgressBar mProgressBar;
     private CurrencyAdapter mAdapter;
@@ -70,8 +69,8 @@ public class DetailActivity extends AppCompatActivity implements SwipeRefreshLay
         mSwipeLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_layout_AD);
         mSwipeLayout.setOnRefreshListener(this);
 
-        mFABMenuController = new FABMenuController();
-        mFABMenuController.register(this);
+        mFABMenuController = new FABController();
+        mFABMenuController.register(this, findViewById(R.id.fabMenu));
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -102,7 +101,7 @@ public class DetailActivity extends AppCompatActivity implements SwipeRefreshLay
     private void setData() {
 
         List<Pair<String, MoneyModel>> mData = new ArrayList<>(mModel.getCurrencies().size());
-        for (Map.Entry<String, MoneyModel> entry :mModel.getCurrencies().entrySet()) {
+        for (Map.Entry<String, MoneyModel> entry : mModel.getCurrencies().entrySet()) {
             mData.add(new Pair<>(mCurrenciesDescription.get(entry.getKey()), entry.getValue()));
         }
 
@@ -122,16 +121,16 @@ public class DetailActivity extends AppCompatActivity implements SwipeRefreshLay
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-      switch (item.getItemId()) {
-          case R.id.action_share:
-              Bundle args = new Bundle();
-              args.putParcelable(Constants.ORG_INFO_MODEL_ARG, mModel);
+        switch (item.getItemId()) {
+            case R.id.action_share:
+                Bundle args = new Bundle();
+                args.putParcelable(Constants.ORG_INFO_MODEL_ARG, mModel);
 
-              DialogFragment shareDialog = new ShareDialog();
-              shareDialog.setArguments(args);
-              shareDialog.show(getFragmentManager(), "");
-              return true;
-      }
+                DialogFragment shareDialog = new ShareDialog();
+                shareDialog.setArguments(args);
+                shareDialog.show(getFragmentManager(), "");
+                return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -142,7 +141,7 @@ public class DetailActivity extends AppCompatActivity implements SwipeRefreshLay
     }
 
     @Override
-    public void menuItemSelected(int itemID) {
+    public void onItemSelected(int itemID) {
         new MenuActionHandler(this).itemClickAction(itemID, mModel);
     }
 
