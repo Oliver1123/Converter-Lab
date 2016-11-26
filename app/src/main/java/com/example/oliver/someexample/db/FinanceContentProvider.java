@@ -1,0 +1,288 @@
+package com.example.oliver.someexample.db;
+
+import android.content.ContentProvider;
+import android.content.ContentUris;
+import android.content.ContentValues;
+import android.content.UriMatcher;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
+import android.support.annotation.Nullable;
+
+import com.example.oliver.someexample.db.FinanceDBContract.CitiesEntry;
+import com.example.oliver.someexample.db.FinanceDBContract.OrganizationsEntry;
+import com.example.oliver.someexample.db.FinanceDBContract.RegionsEntry;
+
+/**
+ * Created by zolotar on 26/11/16.
+ */
+
+public class FinanceContentProvider extends ContentProvider {
+    // Use an int for each URI we will run, this represents the different queries
+    private static final int ORGANIZATIONS      = 100;
+    private static final int ORGANIZATION_ID    = 101;
+
+    private static final int REGIONS            = 200;
+    private static final int REGION_ID          = 201;
+
+    private static final int CITIES             = 300;
+    private static final int CITY_ID            = 301;
+//
+//    private static final int CURRENCIES_INFO    = 400;
+//    private static final int CURRENCY_INFO_ID   = 401;
+//
+//    private static final int CURRENCIES_DATA    = 500;
+//    private static final int CURRENCY_DATA_ID   = 501;
+
+    private static final UriMatcher sUriMatcher = buildUriMatcher();
+    private FinanceDBHelper mFinanceDBHelper;
+
+
+    @Override
+    public boolean onCreate() {
+        mFinanceDBHelper = new FinanceDBHelper(getContext());
+        return false;
+    }
+
+    /**
+     * Builds a UriMatcher that is used to determine witch database request is being made.
+     */
+    public static UriMatcher buildUriMatcher(){
+        String content = FinanceDBContract.CONTENT_AUTHORITY;
+
+        // All paths to the UriMatcher have a corresponding code to return
+        // when a match is found (the ints above).
+        UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
+        matcher.addURI(content, FinanceDBContract.PATH_ORGANIZATION, ORGANIZATIONS);
+        matcher.addURI(content, FinanceDBContract.PATH_ORGANIZATION + "/#", ORGANIZATION_ID);
+        matcher.addURI(content, FinanceDBContract.PATH_REGION, REGIONS);
+        matcher.addURI(content, FinanceDBContract.PATH_REGION + "/#", REGION_ID);
+        matcher.addURI(content, FinanceDBContract.PATH_CITY, CITIES);
+        matcher.addURI(content, FinanceDBContract.PATH_CITY + "/#", CITY_ID);
+//        matcher.addURI(content, FinanceDBContract.PATH_CURRENCY_INFO, CURRENCIES_INFO);
+//        matcher.addURI(content, FinanceDBContract.PATH_CURRENCY_INFO + "/#", CURRENCY_INFO_ID);
+//        matcher.addURI(content, FinanceDBContract.PATH_CURRENCY_DATA, CURRENCIES_DATA);
+//        matcher.addURI(content, FinanceDBContract.PATH_CURRENCY_DATA + "/#", CURRENCY_DATA_ID);
+
+        return matcher;
+    }
+
+    @Nullable
+    @Override
+    public String getType(Uri uri) {
+        switch(sUriMatcher.match(uri)){
+            case ORGANIZATIONS:
+                return OrganizationsEntry.CONTENT_TYPE;
+            case ORGANIZATION_ID:
+                return OrganizationsEntry.CONTENT_ITEM_TYPE;
+            case REGIONS:
+                return RegionsEntry.CONTENT_TYPE;
+            case REGION_ID:
+                return RegionsEntry.CONTENT_ITEM_TYPE;
+            case CITIES:
+                return CitiesEntry.CONTENT_TYPE;
+            case CITY_ID:
+                return CitiesEntry.CONTENT_ITEM_TYPE;
+//            case CURRENCIES_INFO:
+//                return CurrenciesInfoEntry.CONTENT_TYPE;
+//            case CURRENCY_INFO_ID:
+//                return CurrenciesInfoEntry.CONTENT_ITEM_TYPE;
+//            case CURRENCIES_DATA:
+//                return CurrenciesDataEntry.CONTENT_TYPE;
+//            case CURRENCY_DATA_ID:
+//                return CurrenciesDataEntry.CONTENT_ITEM_TYPE;
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
+        }
+
+    }
+
+
+    @Nullable
+    @Override
+    public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+        final SQLiteDatabase db = mFinanceDBHelper.getWritableDatabase();
+        Cursor retCursor;
+        long _id;
+        switch(sUriMatcher.match(uri)) {
+            case ORGANIZATIONS:
+                retCursor = db.query(
+                        OrganizationsEntry.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+            case ORGANIZATION_ID:
+                _id = ContentUris.parseId(uri);
+                retCursor = db.query(
+                        OrganizationsEntry.TABLE_NAME,
+                        projection,
+                        OrganizationsEntry._ID + " = ?",
+                        new String[]{String.valueOf(_id)},
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+
+            case REGIONS:
+                retCursor = db.query(
+                        RegionsEntry.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+            case REGION_ID:
+                _id = ContentUris.parseId(uri);
+                retCursor = db.query(
+                        RegionsEntry.TABLE_NAME,
+                        projection,
+                        RegionsEntry._ID + " = ?",
+                        new String[]{String.valueOf(_id)},
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+
+            case CITIES:
+                retCursor = db.query(
+                        CitiesEntry.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+            case CITY_ID:
+                _id = ContentUris.parseId(uri);
+                retCursor = db.query(
+                        CitiesEntry.TABLE_NAME,
+                        projection,
+                        CitiesEntry._ID + " = ?",
+                        new String[]{String.valueOf(_id)},
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
+        }
+        // Set the notification URI for the cursor to the one passed into the function. This
+        // causes the cursor to register a content observer to watch for changes that happen to
+        // this URI and any of it's descendants. By descendants, we mean any URI that begins
+        // with this path.
+        retCursor.setNotificationUri(getContext().getContentResolver(), uri);
+        return retCursor;
+
+    }
+
+    @Nullable
+    @Override
+    public Uri insert(Uri uri, ContentValues values) {
+        final SQLiteDatabase db = mFinanceDBHelper.getWritableDatabase();
+        long _id;
+        Uri returnUri;
+        switch(sUriMatcher.match(uri)){
+            case ORGANIZATIONS:
+                _id = db.insert(OrganizationsEntry.TABLE_NAME, null, values);
+                if(_id > 0){
+                    returnUri =  OrganizationsEntry.buildOrganizationUri(_id);
+                } else{
+                    throw new UnsupportedOperationException("Unable to insert rows into: " + uri);
+                }
+                break;
+            case REGIONS:
+                _id = db.insert(RegionsEntry.TABLE_NAME, null, values);
+                if(_id > 0){
+                    returnUri =  RegionsEntry.buildRegionUri(_id);
+                } else{
+                    throw new UnsupportedOperationException("Unable to insert rows into: " + uri);
+                }
+                break;
+            case CITIES:
+                _id = db.insert(CitiesEntry.TABLE_NAME, null, values);
+                if(_id > 0){
+                    returnUri =  CitiesEntry.buildCityUri(_id);
+                } else{
+                    throw new UnsupportedOperationException("Unable to insert rows into: " + uri);
+                }
+                break;
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
+        }
+
+        // Use this on the URI passed into the function to notify any observers that the uri has
+        // changed.
+        getContext().getContentResolver().notifyChange(uri, null);
+        return returnUri;
+
+    }
+
+    @Override
+    public int delete(Uri uri, String selection, String[] selectionArgs) {
+        final SQLiteDatabase db = mFinanceDBHelper.getWritableDatabase();
+        int rows; // Number of rows effected
+
+        switch(sUriMatcher.match(uri)){
+            case ORGANIZATIONS:
+                rows = db.delete(OrganizationsEntry.TABLE_NAME, selection, selectionArgs);
+                break;
+            case REGIONS:
+                rows = db.delete(RegionsEntry.TABLE_NAME, selection, selectionArgs);
+                break;
+            case CITIES:
+                rows = db.delete(CitiesEntry.TABLE_NAME, selection, selectionArgs);
+                break;
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
+        }
+
+        // Because null could delete all rows:
+        if(selection == null || rows != 0){
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
+
+        return rows;
+
+    }
+
+    @Override
+    public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+        final SQLiteDatabase db = mFinanceDBHelper.getWritableDatabase();
+        int rows;
+
+        switch(sUriMatcher.match(uri)){
+            case ORGANIZATIONS:
+                rows = db.update(OrganizationsEntry.TABLE_NAME, values, selection, selectionArgs);
+                break;
+            case REGIONS:
+                rows = db.update(RegionsEntry.TABLE_NAME, values, selection, selectionArgs);
+                break;
+            case CITIES:
+                rows = db.update(CitiesEntry.TABLE_NAME, values, selection, selectionArgs);
+                break;
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
+        }
+
+        if(rows != 0){
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
+
+        return rows;
+
+    }
+}

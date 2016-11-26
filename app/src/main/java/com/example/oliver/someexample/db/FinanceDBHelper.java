@@ -4,11 +4,9 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.example.oliver.someexample.db.FinanceDBContract.CitiesEntry;
 import com.example.oliver.someexample.db.FinanceDBContract.OrganizationsEntry;
 import com.example.oliver.someexample.db.FinanceDBContract.RegionsEntry;
-import com.example.oliver.someexample.db.FinanceDBContract.CitiesEntry;
-import com.example.oliver.someexample.db.FinanceDBContract.CurrenciesInfoEntry;
-import com.example.oliver.someexample.db.FinanceDBContract.CurrenciesDataEntry;
 
 
 /**
@@ -42,27 +40,27 @@ public class FinanceDBHelper extends SQLiteOpenHelper {
                     CitiesEntry._ID              + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     CitiesEntry.COLUMN_ID        + " TEXT UNIQUE NOT NULL, " +
                     CitiesEntry.COLUMN_TITLE     + " TEXT);";
-
-
-    private static final String CURRENCIES_INFO_TABLE_CREATE =
-            "CREATE TABLE " + CurrenciesInfoEntry.TABLE_NAME + " (" +
-                    CurrenciesInfoEntry._ID              + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    CurrenciesInfoEntry.COLUMN_ABB       + " TEXT UNIQUE NOT NULL, " +
-                    CurrenciesInfoEntry.COLUMN_TITLE     + " TEXT);";
-
-    private static final String CURRENCIES_DATA_TABLE_CREATE =
-            "CREATE TABLE " + CurrenciesDataEntry.TABLE_NAME + " (" +
-                    CurrenciesDataEntry._ID                  + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    CurrenciesDataEntry.COLUMN_ORG_ID        + " TEXT, " +
-                    CurrenciesDataEntry.COLUMN_CURRENCY_ABB  + " TEXT," +
-                    CurrenciesDataEntry.COLUMN_ASK           + " REAL," +
-                    CurrenciesDataEntry.COLUMN_BID           + " REAL," +
-                    CurrenciesDataEntry.COLUMN_DATE          + " TEXT," +
-
-                    // it's created a UNIQUE constraint with REPLACE strategy
-                    " UNIQUE (" + CurrenciesDataEntry.COLUMN_ORG_ID + ", " +
-                    CurrenciesDataEntry.COLUMN_CURRENCY_ABB + ", " +
-                    CurrenciesDataEntry.COLUMN_DATE + ") ON CONFLICT REPLACE);";
+//
+//
+//    private static final String CURRENCIES_INFO_TABLE_CREATE =
+//            "CREATE TABLE " + CurrenciesInfoEntry.TABLE_NAME + " (" +
+//                    CurrenciesInfoEntry._ID              + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+//                    CurrenciesInfoEntry.COLUMN_ABB       + " TEXT UNIQUE NOT NULL, " +
+//                    CurrenciesInfoEntry.COLUMN_TITLE     + " TEXT);";
+//
+//    private static final String CURRENCIES_DATA_TABLE_CREATE =
+//            "CREATE TABLE " + CurrenciesDataEntry.TABLE_NAME + " (" +
+//                    CurrenciesDataEntry._ID                  + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+//                    CurrenciesDataEntry.COLUMN_ORG_ID        + " TEXT, " +
+//                    CurrenciesDataEntry.COLUMN_CURRENCY_ABB  + " TEXT," +
+//                    CurrenciesDataEntry.COLUMN_ASK           + " REAL," +
+//                    CurrenciesDataEntry.COLUMN_BID           + " REAL," +
+//                    CurrenciesDataEntry.COLUMN_DATE          + " TEXT," +
+//
+//                    // it's created a UNIQUE constraint with REPLACE strategy
+//                    " UNIQUE (" + CurrenciesDataEntry.COLUMN_ORG_ID + ", " +
+//                    CurrenciesDataEntry.COLUMN_CURRENCY_ABB + ", " +
+//                    CurrenciesDataEntry.COLUMN_DATE + ") ON CONFLICT REPLACE);";
 
 
 
@@ -75,8 +73,8 @@ public class FinanceDBHelper extends SQLiteOpenHelper {
         db.execSQL(ORGANIZATIONS_TABLE_CREATE);
         db.execSQL(REGIONS_TABLE_CREATE);
         db.execSQL(CITIES_TABLE_CREATE);
-        db.execSQL(CURRENCIES_INFO_TABLE_CREATE);
-        db.execSQL(CURRENCIES_DATA_TABLE_CREATE);
+//        db.execSQL(CURRENCIES_INFO_TABLE_CREATE);
+//        db.execSQL(CURRENCIES_DATA_TABLE_CREATE);
 
     }
 
@@ -85,8 +83,8 @@ public class FinanceDBHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + FinanceDBContract.OrganizationsEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + FinanceDBContract.RegionsEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + FinanceDBContract.CitiesEntry.TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + FinanceDBContract.CurrenciesInfoEntry.TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + FinanceDBContract.CurrenciesDataEntry.TABLE_NAME);
+//        db.execSQL("DROP TABLE IF EXISTS " + FinanceDBContract.CurrenciesInfoEntry.TABLE_NAME);
+//        db.execSQL("DROP TABLE IF EXISTS " + FinanceDBContract.CurrenciesDataEntry.TABLE_NAME);
         onCreate(db);
     }
 }

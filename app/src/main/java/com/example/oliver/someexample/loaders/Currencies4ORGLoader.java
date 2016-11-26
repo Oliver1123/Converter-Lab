@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.util.Pair;
 
 import com.example.oliver.someexample.Constants;
-import com.example.oliver.someexample.db.QueryHelper;
 import com.example.oliver.someexample.models.MoneyModel;
 
 import java.util.Map;
@@ -60,17 +59,18 @@ public class Currencies4ORGLoader extends Loader<Pair<Map<String, String>, Map<S
         }
         @Override
         protected Pair<Map<String, String>, Map<String, MoneyModel>> doInBackground(String... params) {
-            QueryHelper helper = new QueryHelper(mContext);
-            helper.open();
-
-            Map<String, String> resultFirst = helper.getCurrenciesDescription();
-            Map<String, MoneyModel> resultSecond = null;
-
-            if (params != null) {
-                 resultSecond = helper.getCurrencies4ORG(params[0]);
-            }
-            helper.close();
-            return new Pair<>(resultFirst, resultSecond);
+//            QueryHelper helper = new QueryHelper(mContext);
+//            helper.open();
+//
+//            Map<String, String> resultFirst = helper.getCurrenciesDescription();
+//            Map<String, MoneyModel> resultSecond = null;
+//
+//            if (params != null) {
+//                 resultSecond = helper.getCurrencies4ORG(params[0]);
+//            }
+//            helper.close();
+//            return new Pair<>(resultFirst, resultSecond);
+            return null;
         }
 
         @Override

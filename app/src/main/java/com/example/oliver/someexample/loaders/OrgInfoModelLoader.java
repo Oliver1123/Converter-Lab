@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.example.oliver.someexample.Constants;
-import com.example.oliver.someexample.db.QueryHelper;
 import com.example.oliver.someexample.models.OrgInfoModel;
 
 import java.util.List;
@@ -59,13 +58,14 @@ public class OrgInfoModelLoader extends Loader<List<OrgInfoModel>> {
         }
         @Override
         protected List<OrgInfoModel>doInBackground(Void... params) {
-            QueryHelper helper = new QueryHelper(mContext);
-            helper.open();
-
-            List<OrgInfoModel> result = helper.getOrganizations();
-
-            helper.close();
-            return result;
+//            QueryHelper helper = new QueryHelper(mContext);
+//            helper.open();
+//
+//            List<OrgInfoModel> result = helper.getOrganizations();
+//
+//            helper.close();
+//            return result;
+            return null;
         }
 
         @Override

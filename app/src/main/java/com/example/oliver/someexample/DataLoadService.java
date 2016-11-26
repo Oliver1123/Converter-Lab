@@ -13,7 +13,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
-import com.example.oliver.someexample.db.QueryHelper;
 import com.example.oliver.someexample.models.ObjectModel;
 import com.squareup.okhttp.OkHttpClient;
 
@@ -136,12 +135,12 @@ public class DataLoadService extends Service {
         @Override
         protected Void doInBackground(ObjectModel... params) {
             Log.d(Constants.TAG, "Start write to base");
-            QueryHelper helper = new QueryHelper(mContext);
-            if (params != null) {
-                helper.open();
-                helper.insertObjectModel(params[0]);
-                helper.close();
-            }
+//            QueryHelper helper = new QueryHelper(mContext);
+//            if (params != null) {
+//                helper.open();
+//                helper.insertObjectModel(params[0]);
+//                helper.close();
+//            }
             return null;
         }
         @Override

@@ -60,6 +60,13 @@
             android:name=".activities.MapsActivity"
             android:label="@string/title_activity_maps" >
         </activity>
+
+        <provider
+            android:name=".db.FinanceContentProvider"
+            android:authorities="com.example.oliver.someexample"
+            android:exported="false"
+            android:protectionLevel="signature"
+            android:syncable="true"/>
     </application>
 
 </manifest>
