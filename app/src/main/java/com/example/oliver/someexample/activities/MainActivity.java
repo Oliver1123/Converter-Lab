@@ -28,8 +28,8 @@ import com.example.oliver.someexample.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener,
-        LoaderManager.LoaderCallbacks<List<OrgInfoModel>>{
+public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener{
+
     private static final int ORG_INFO_LOADER = 33;
     private Toolbar mToolbar;
     private LinearLayoutManager mLayoutManager;
@@ -41,6 +41,35 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     private ProgressDialog mProgressDialog;
     private MenuItem searchItem;
     private BroadcastReceiver br;
+    private LoaderManager.LoaderCallbacks<List<OrgInfoModel>> mLoadersCallBack = new LoaderManager.LoaderCallbacks<List<OrgInfoModel>>() {
+
+        @Override
+        public Loader<List<OrgInfoModel>> onCreateLoader(int id, Bundle args) {
+            Loader<List<OrgInfoModel>> loader = null;
+            if (id == ORG_INFO_LOADER) {
+                loader = new OrgInfoModelLoader(MainActivity.this, args);
+                Log.d(Constants.TAG, "Loader created");
+            }
+            return loader;
+        }
+
+        @Override
+        public void onLoadFinished(Loader<List<OrgInfoModel>> loader, List<OrgInfoModel> data) {
+            mProgressDialog.dismiss();
+            mData = data;
+            mAdapter.setData(mData);
+            mSwipeLayout.setRefreshing(false);
+            if (searchItem.isActionViewExpanded()) {
+                searchItem.collapseActionView();
+            }
+            Log.d(Constants.TAG, "MainActivity onLoadFinished");
+        }
+
+        @Override
+        public void onLoaderReset(Loader<List<OrgInfoModel>> loader) {
+
+        }
+    };
 
 
     @Override
@@ -50,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
         setContentView(R.layout.activity_main);
 
-        getLoaderManager().initLoader(ORG_INFO_LOADER, null, this);
+        getLoaderManager().initLoader(ORG_INFO_LOADER, null, mLoadersCallBack);
 
         initUI();
 
@@ -152,31 +181,5 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         getLoaderManager().getLoader(ORG_INFO_LOADER).forceLoad();
     }
 
-    @Override
-    public Loader<List<OrgInfoModel>> onCreateLoader(int id, Bundle args) {
-        Loader<List<OrgInfoModel>> loader = null;
-        if (id == ORG_INFO_LOADER) {
-            loader = new OrgInfoModelLoader(this, args);
-            Log.d(Constants.TAG, "Loader created");
-        }
-        return loader;
-    }
-
-    @Override
-    public void onLoadFinished(Loader<List<OrgInfoModel>> loader, List<OrgInfoModel> data) {
-        mProgressDialog.dismiss();
-        mData = data;
-        mAdapter.setData(mData);
-        mSwipeLayout.setRefreshing(false);
-        if (searchItem.isActionViewExpanded()) {
-            searchItem.collapseActionView();
-        }
-        Log.d(Constants.TAG, "MainActivity onLoadFinished");
-    }
-
-    @Override
-    public void onLoaderReset(Loader<List<OrgInfoModel>> loader) {
-
-    }
 
 }
