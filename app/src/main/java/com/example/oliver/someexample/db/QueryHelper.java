@@ -22,7 +22,7 @@ import java.util.Map;
  */
 public class QueryHelper {
     private Context mContext;
-    private DBHelper mDBHelper;
+    private FinanceDBHelper mFinanceDBHelper;
     private SQLiteDatabase mDataBase;
 
     public QueryHelper(Context context) {
@@ -30,12 +30,12 @@ public class QueryHelper {
     }
 
     public void open(){
-        mDBHelper = new DBHelper(mContext);
-        mDataBase = mDBHelper.getWritableDatabase();
+        mFinanceDBHelper = new FinanceDBHelper(mContext);
+        mDataBase = mFinanceDBHelper.getWritableDatabase();
     }
 
     public void close(){
-        if (mDBHelper != null) mDBHelper.close();
+        if (mFinanceDBHelper != null) mFinanceDBHelper.close();
     }
 
     /**
@@ -52,7 +52,7 @@ public class QueryHelper {
 
     ////////////////////////    CURRENCIES DESCRIPTION
     private void clearCurrenciesDesc() {
-        mDataBase.delete(DBHelper.CURRENCIES_TABLE_NAME, null, null);
+        mDataBase.delete(FinanceDBHelper.CURRENCIES_TABLE_NAME, null, null);
     }
 
     private void insertCurrencyDesc(Map.Entry<String, String> currency) {
@@ -61,10 +61,10 @@ public class QueryHelper {
         try {
             ContentValues cv = new ContentValues();
 
-            cv.put(DBHelper.CURRENCY_ABB,   currency.getKey());
-            cv.put(DBHelper.CURRENCY_TITLE, capWord(currency.getValue()));
+            cv.put(FinanceDBHelper.CURRENCY_ABB,   currency.getKey());
+            cv.put(FinanceDBHelper.CURRENCY_TITLE, capWord(currency.getValue()));
 
-            mDataBase.insert(DBHelper.CURRENCIES_TABLE_NAME, null, cv);
+            mDataBase.insert(FinanceDBHelper.CURRENCIES_TABLE_NAME, null, cv);
 
             mDataBase.setTransactionSuccessful();
             resultTAG = "inserted currency abb: " + currency.getKey() + ", title: " + currency.getValue();
@@ -85,9 +85,9 @@ public class QueryHelper {
     public String getCurrencyDescription(String currencyABB) {
         String result = null;
 
-        Cursor c = mDataBase.query(DBHelper.CURRENCIES_TABLE_NAME,
+        Cursor c = mDataBase.query(FinanceDBHelper.CURRENCIES_TABLE_NAME,
                 null,
-                DBHelper.CURRENCY_ABB + " = ?",
+                FinanceDBHelper.CURRENCY_ABB + " = ?",
                 new String[]{currencyABB},
                 null,
                 null,
@@ -95,7 +95,7 @@ public class QueryHelper {
 
         if (c != null) {
             while (c.moveToNext()) {
-                result = c.getString(c.getColumnIndex(DBHelper.CURRENCY_TITLE));
+                result = c.getString(c.getColumnIndex(FinanceDBHelper.CURRENCY_TITLE));
             }
             c.close();
         }
@@ -103,7 +103,7 @@ public class QueryHelper {
     }
     ////////////////////////    REGIONS
     private void clearRegions() {
-        mDataBase.delete(DBHelper.REGIONS_TABLE_NAME, null, null);
+        mDataBase.delete(FinanceDBHelper.REGIONS_TABLE_NAME, null, null);
     }
 
     private void insertRegion(Map.Entry<String, String> region) {
@@ -112,10 +112,10 @@ public class QueryHelper {
         try {
             ContentValues cv = new ContentValues();
 
-            cv.put(DBHelper.REGION_ID,      region.getKey());
-            cv.put(DBHelper.REGION_TITLE,   region.getValue());
+            cv.put(FinanceDBHelper.REGION_ID,      region.getKey());
+            cv.put(FinanceDBHelper.REGION_TITLE,   region.getValue());
 
-            mDataBase.insert(DBHelper.REGIONS_TABLE_NAME, null, cv);
+            mDataBase.insert(FinanceDBHelper.REGIONS_TABLE_NAME, null, cv);
 
             mDataBase.setTransactionSuccessful();
             resultTAG = "inserted region id: " + region.getKey() + ", title: " + region.getValue();
@@ -135,7 +135,7 @@ public class QueryHelper {
 ////////////////////////    CITIES
 
     private void clearCities () {
-        mDataBase.delete(DBHelper.CITIES_TABLE_NAME, null, null);
+        mDataBase.delete(FinanceDBHelper.CITIES_TABLE_NAME, null, null);
     }
 
     private void insertCity(Map.Entry<String, String> city) {
@@ -144,10 +144,10 @@ public class QueryHelper {
         try {
             ContentValues cv = new ContentValues();
 
-            cv.put(DBHelper.CITY_ID, city.getKey());
-            cv.put(DBHelper.CITY_TITLE, city.getValue());
+            cv.put(FinanceDBHelper.CITY_ID, city.getKey());
+            cv.put(FinanceDBHelper.CITY_TITLE, city.getValue());
 
-            mDataBase.insert(DBHelper.CITIES_TABLE_NAME, null, cv);
+            mDataBase.insert(FinanceDBHelper.CITIES_TABLE_NAME, null, cv);
 
             mDataBase.setTransactionSuccessful();
             resultTAG = "inserted city id: " + city.getKey() + ", title: " + city.getValue();
@@ -167,12 +167,12 @@ public class QueryHelper {
 ///////////////////////// CURRENCIES4ORG
 
     private void clearCurrencies4ORG() {
-        mDataBase.delete(DBHelper.CURRENCIES4ORG_TABLE_NAME, null, null);
+        mDataBase.delete(FinanceDBHelper.CURRENCIES4ORG_TABLE_NAME, null, null);
     }
 
     private void deleteCurrencies4ORG(String organizationID) {
-        int deleted = mDataBase.delete(DBHelper.CURRENCIES4ORG_TABLE_NAME,
-                                       DBHelper.CURRENCIES4ORG_ID + " = ?",
+        int deleted = mDataBase.delete(FinanceDBHelper.CURRENCIES4ORG_TABLE_NAME,
+                                       FinanceDBHelper.CURRENCIES4ORG_ID + " = ?",
                                        new String[]{organizationID});
         Log.d(Constants.DB_TAG, "Currencies4ORG id: " + organizationID + " deleted " + deleted + "records");
     }
@@ -183,14 +183,14 @@ public class QueryHelper {
         try {
             ContentValues cv = new ContentValues();
 
-            cv.put(DBHelper.CURRENCIES4ORG_ID,  orgID);
-            cv.put(DBHelper.CURRENCIES4ORG_ABB, currencyABB);
-            cv.put(DBHelper.CURRENCIES4ORG_ASK, money.ask);
-            cv.put(DBHelper.CURRENCIES4ORG_BID, money.bid);
-            cv.put(DBHelper.CURRENCIES4ORG_ASK_RATE, money.ask_rate);
-            cv.put(DBHelper.CURRENCIES4ORG_BID_RATE, money.bid_rate);
+            cv.put(FinanceDBHelper.CURRENCIES4ORG_ID,  orgID);
+            cv.put(FinanceDBHelper.CURRENCIES4ORG_ABB, currencyABB);
+            cv.put(FinanceDBHelper.CURRENCIES4ORG_ASK, money.ask);
+            cv.put(FinanceDBHelper.CURRENCIES4ORG_BID, money.bid);
+            cv.put(FinanceDBHelper.CURRENCIES4ORG_ASK_RATE, money.ask_rate);
+            cv.put(FinanceDBHelper.CURRENCIES4ORG_BID_RATE, money.bid_rate);
 
-            mDataBase.insert(DBHelper.CURRENCIES4ORG_TABLE_NAME, null, cv);
+            mDataBase.insert(FinanceDBHelper.CURRENCIES4ORG_TABLE_NAME, null, cv);
 
             mDataBase.setTransactionSuccessful();
             resultTAG = "inserted currency4ORG id: " + orgID + ", ABB: " + currencyABB + "[" + money + "]";
@@ -203,9 +203,9 @@ public class QueryHelper {
     public Map<String, MoneyModel> getCurrencies4ORG(String orgID) {
         Map<String, MoneyModel> result = new LinkedHashMap<>();
 
-        Cursor c = mDataBase.query(DBHelper.CURRENCIES4ORG_TABLE_NAME,
+        Cursor c = mDataBase.query(FinanceDBHelper.CURRENCIES4ORG_TABLE_NAME,
                 null,
-                DBHelper.CURRENCIES4ORG_ID + " = ?",
+                FinanceDBHelper.CURRENCIES4ORG_ID + " = ?",
                 new String[]{orgID},
                 null,
                 null,
@@ -214,11 +214,11 @@ public class QueryHelper {
         if (c != null) {
             while (c.moveToNext()) {
 
-                String  _ABB = c.getString(c.getColumnIndex(DBHelper.CURRENCIES4ORG_ABB));
-                String  _ask = c.getString(c.getColumnIndex(DBHelper.CURRENCIES4ORG_ASK));
-                String  _bid = c.getString(c.getColumnIndex(DBHelper.CURRENCIES4ORG_BID));
-                int _ask_rate = c.getInt(c.getColumnIndex(DBHelper.CURRENCIES4ORG_ASK_RATE));
-                int _bid_rate = c.getInt(c.getColumnIndex(DBHelper.CURRENCIES4ORG_BID_RATE));
+                String  _ABB = c.getString(c.getColumnIndex(FinanceDBHelper.CURRENCIES4ORG_ABB));
+                String  _ask = c.getString(c.getColumnIndex(FinanceDBHelper.CURRENCIES4ORG_ASK));
+                String  _bid = c.getString(c.getColumnIndex(FinanceDBHelper.CURRENCIES4ORG_BID));
+                int _ask_rate = c.getInt(c.getColumnIndex(FinanceDBHelper.CURRENCIES4ORG_ASK_RATE));
+                int _bid_rate = c.getInt(c.getColumnIndex(FinanceDBHelper.CURRENCIES4ORG_BID_RATE));
 
                 MoneyModel value = new MoneyModel(_ask, _bid, _ask_rate, _bid_rate);
                 result.put(_ABB, value);
@@ -233,7 +233,7 @@ public class QueryHelper {
 //////////////////////////////ORGANIZATIONS
 
     private void clearOrganizations() {
-        mDataBase.delete(DBHelper.ORGANIZATIONS_TABLE_NAME, null, null);
+        mDataBase.delete(FinanceDBHelper.ORGANIZATIONS_TABLE_NAME, null, null);
     }
 
     private void insertOrganization(OrganizationModel org) {
@@ -242,15 +242,15 @@ public class QueryHelper {
         try {
             ContentValues cv = new ContentValues();
 
-            cv.put(DBHelper.ORGANIZATION_ID,        org.getId());
-            cv.put(DBHelper.ORGANIZATION_TITLE,     org.getTitle());
-            cv.put(DBHelper.ORGANIZATION_REGION_ID, org.getRegionId());
-            cv.put(DBHelper.ORGANIZATION_CITY_ID,   org.getCityId());
-            cv.put(DBHelper.ORGANIZATION_PHONE,     org.getPhone());
-            cv.put(DBHelper.ORGANIZATION_ADDRESS,   org.getAddress());
-            cv.put(DBHelper.ORGANIZATION_LINK,      org.getLink());
+            cv.put(FinanceDBHelper.ORGANIZATION_ID,        org.getId());
+            cv.put(FinanceDBHelper.ORGANIZATION_TITLE,     org.getTitle());
+            cv.put(FinanceDBHelper.ORGANIZATION_REGION_ID, org.getRegionId());
+            cv.put(FinanceDBHelper.ORGANIZATION_CITY_ID,   org.getCityId());
+            cv.put(FinanceDBHelper.ORGANIZATION_PHONE,     org.getPhone());
+            cv.put(FinanceDBHelper.ORGANIZATION_ADDRESS,   org.getAddress());
+            cv.put(FinanceDBHelper.ORGANIZATION_LINK,      org.getLink());
 
-            mDataBase.insert(DBHelper.ORGANIZATIONS_TABLE_NAME, null, cv);
+            mDataBase.insert(FinanceDBHelper.ORGANIZATIONS_TABLE_NAME, null, cv);
 
             /////// insert organization currencies
                 Map<String, MoneyModel> prevValues = getCurrencies4ORG(org.getId());
@@ -294,7 +294,7 @@ public class QueryHelper {
     public Map<String, String> getCurrenciesDescription(){
         Map<String, String> result = new LinkedHashMap<>();
 
-        Cursor c = mDataBase.query(DBHelper.CURRENCIES_TABLE_NAME,
+        Cursor c = mDataBase.query(FinanceDBHelper.CURRENCIES_TABLE_NAME,
                 null,
                 null,
                 null,
@@ -305,8 +305,8 @@ public class QueryHelper {
         if (c != null) {
             while (c.moveToNext()) {
 
-                String  currency_ABB = c.getString(c.getColumnIndex(DBHelper.CURRENCY_ABB));
-                String  currency_Title = c.getString(c.getColumnIndex(DBHelper.CURRENCY_TITLE));
+                String  currency_ABB = c.getString(c.getColumnIndex(FinanceDBHelper.CURRENCY_ABB));
+                String  currency_Title = c.getString(c.getColumnIndex(FinanceDBHelper.CURRENCY_TITLE));
 
                 result.put(currency_ABB, currency_Title);
                 Log.d(Constants.DB_TAG, "get " + currency_ABB+ ": " + currency_Title);
@@ -321,21 +321,21 @@ public class QueryHelper {
     public List<OrgInfoModel> getOrganizations() {
         List<OrgInfoModel> result = new ArrayList<>();
 
-        String table = DBHelper.ORGANIZATIONS_TABLE_NAME +
-                " inner join " + DBHelper.REGIONS_TABLE_NAME + " on " +
-                            DBHelper.ORGANIZATIONS_TABLE_NAME + "." + DBHelper.ORGANIZATION_REGION_ID + " = " +
-                            DBHelper.REGIONS_TABLE_NAME + "." + DBHelper.REGION_ID +
-                " inner join " + DBHelper.CITIES_TABLE_NAME + " on " +
-                            DBHelper.ORGANIZATIONS_TABLE_NAME + "." + DBHelper.ORGANIZATION_CITY_ID + " = " +
-                            DBHelper.CITIES_TABLE_NAME + "." + DBHelper.CITY_ID;
+        String table = FinanceDBHelper.ORGANIZATIONS_TABLE_NAME +
+                " inner join " + FinanceDBHelper.REGIONS_TABLE_NAME + " on " +
+                            FinanceDBHelper.ORGANIZATIONS_TABLE_NAME + "." + FinanceDBHelper.ORGANIZATION_REGION_ID + " = " +
+                            FinanceDBHelper.REGIONS_TABLE_NAME + "." + FinanceDBHelper.REGION_ID +
+                " inner join " + FinanceDBHelper.CITIES_TABLE_NAME + " on " +
+                            FinanceDBHelper.ORGANIZATIONS_TABLE_NAME + "." + FinanceDBHelper.ORGANIZATION_CITY_ID + " = " +
+                            FinanceDBHelper.CITIES_TABLE_NAME + "." + FinanceDBHelper.CITY_ID;
 
-        String columns[] = {/*0*/DBHelper.ORGANIZATIONS_TABLE_NAME + "." + DBHelper.ORGANIZATION_ID,
-                            /*1*/DBHelper.ORGANIZATIONS_TABLE_NAME + "." + DBHelper.ORGANIZATION_TITLE,
-                            /*2*/DBHelper.REGIONS_TABLE_NAME + "." + DBHelper.REGION_TITLE,
-                            /*3*/DBHelper.CITIES_TABLE_NAME + "." + DBHelper.CITY_TITLE,
-                            /*4*/DBHelper.ORGANIZATIONS_TABLE_NAME + "." + DBHelper.ORGANIZATION_PHONE,
-                            /*5*/DBHelper.ORGANIZATIONS_TABLE_NAME + "." + DBHelper.ORGANIZATION_ADDRESS,
-                            /*6*/DBHelper.ORGANIZATIONS_TABLE_NAME + "." + DBHelper.ORGANIZATION_LINK};
+        String columns[] = {/*0*/FinanceDBHelper.ORGANIZATIONS_TABLE_NAME + "." + FinanceDBHelper.ORGANIZATION_ID,
+                            /*1*/FinanceDBHelper.ORGANIZATIONS_TABLE_NAME + "." + FinanceDBHelper.ORGANIZATION_TITLE,
+                            /*2*/FinanceDBHelper.REGIONS_TABLE_NAME + "." + FinanceDBHelper.REGION_TITLE,
+                            /*3*/FinanceDBHelper.CITIES_TABLE_NAME + "." + FinanceDBHelper.CITY_TITLE,
+                            /*4*/FinanceDBHelper.ORGANIZATIONS_TABLE_NAME + "." + FinanceDBHelper.ORGANIZATION_PHONE,
+                            /*5*/FinanceDBHelper.ORGANIZATIONS_TABLE_NAME + "." + FinanceDBHelper.ORGANIZATION_ADDRESS,
+                            /*6*/FinanceDBHelper.ORGANIZATIONS_TABLE_NAME + "." + FinanceDBHelper.ORGANIZATION_LINK};
         Cursor c = mDataBase.query(table, columns, null, null, null, null, null);
         if (c != null) {
             while (c.moveToNext()) {
