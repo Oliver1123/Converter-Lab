@@ -5,9 +5,9 @@ import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
 
-import com.example.oliver.someexample.Activities.DetailActivity;
-import com.example.oliver.someexample.Activities.MapsActivity;
-import com.example.oliver.someexample.Model.OrgInfoModel;
+import com.example.oliver.someexample.activities.DetailActivity;
+import com.example.oliver.someexample.activities.MapsActivity;
+import com.example.oliver.someexample.models.OrgInfoModel;
 
 /**
  * Created by oliver on 18.09.15.

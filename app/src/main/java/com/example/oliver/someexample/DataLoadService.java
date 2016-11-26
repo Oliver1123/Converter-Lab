@@ -13,8 +13,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
-import com.example.oliver.someexample.DB.QueryHelper;
-import com.example.oliver.someexample.Model.ObjectModel;
+import com.example.oliver.someexample.db.QueryHelper;
+import com.example.oliver.someexample.models.ObjectModel;
 import com.squareup.okhttp.OkHttpClient;
 
 import java.util.concurrent.TimeUnit;

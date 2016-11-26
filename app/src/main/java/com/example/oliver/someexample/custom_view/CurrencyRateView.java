@@ -1,17 +1,12 @@
-package com.example.oliver.someexample.CustomView;
+package com.example.oliver.someexample.custom_view;
 
 import android.content.Context;
-import android.graphics.Typeface;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.example.oliver.someexample.Model.MoneyModel;
+import com.example.oliver.someexample.models.MoneyModel;
 import com.example.oliver.someexample.R;
-
-import org.w3c.dom.Comment;
-
-import java.text.Format;
 
 /**
  * Created by oliver on 16.09.15.

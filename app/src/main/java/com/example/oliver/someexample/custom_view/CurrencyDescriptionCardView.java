@@ -1,4 +1,4 @@
-package com.example.oliver.someexample.CustomView;
+package com.example.oliver.someexample.custom_view;
 
 import android.content.Context;
 import android.widget.RelativeLayout;

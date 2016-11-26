@@ -3,7 +3,7 @@ package com.example.oliver.someexample;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.example.oliver.someexample.Listener.GetLocationListener;
+import com.example.oliver.someexample.listener.GetLocationListener;
 import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONArray;

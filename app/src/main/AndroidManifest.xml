@@ -21,7 +21,7 @@
         android:theme="@style/AppTheme" >
 
         <activity
-            android:name=".Activities.MainActivity"
+            android:name=".activities.MainActivity"
             android:label="@string/title_activity_main" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -30,12 +30,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Activities.DetailActivity"
+            android:name=".activities.DetailActivity"
             android:label="@string/title_activity_detail" >
             android:parentActivityName="com.example.oliver.someexample.Activities.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.oliver.someexample.Activities.MainActivity" />
+                android:value="com.example.oliver.someexample.activities.MainActivity" />
         </activity>
 
         <service
@@ -45,7 +45,7 @@
         </service>
 
         <activity
-            android:name=".Activities.SettingsActivity"
+            android:name=".activities.SettingsActivity"
             android:label="@string/title_activity_settings" >
         </activity>
 
@@ -57,7 +57,7 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".Activities.MapsActivity"
+            android:name=".activities.MapsActivity"
             android:label="@string/title_activity_maps" >
         </activity>
     </application>

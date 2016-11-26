@@ -1,4 +1,4 @@
-package com.example.oliver.someexample.CustomView;
+package com.example.oliver.someexample.custom_view;
 
 import android.content.Context;
 import android.text.Html;
@@ -6,7 +6,7 @@ import android.text.method.LinkMovementMethod;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.example.oliver.someexample.Model.OrgInfoModel;
+import com.example.oliver.someexample.models.OrgInfoModel;
 import com.example.oliver.someexample.R;
 
 /**
