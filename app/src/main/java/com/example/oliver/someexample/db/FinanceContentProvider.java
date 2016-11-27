@@ -102,6 +102,7 @@ public class FinanceContentProvider extends ContentProvider {
     }
 
 
+    // todo handle queries
     @Nullable
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
@@ -312,6 +313,12 @@ public class FinanceContentProvider extends ContentProvider {
             case CITIES:
                 table = CitiesEntry.TABLE_NAME;
                 break;
+            case CURRENCIES_INFO:
+                table = CitiesEntry.TABLE_NAME;
+                break;
+            case CURRENCIES_DATA:
+                table = CitiesEntry.TABLE_NAME;
+                break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -338,6 +345,12 @@ public class FinanceContentProvider extends ContentProvider {
                 table = RegionsEntry.TABLE_NAME;
                 break;
             case CITIES:
+                table = CitiesEntry.TABLE_NAME;
+                break;
+            case CURRENCIES_INFO:
+                table = CitiesEntry.TABLE_NAME;
+                break;
+            case CURRENCIES_DATA:
                 table = CitiesEntry.TABLE_NAME;
                 break;
             default:

@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.example.oliver.someexample.db.FinanceDBContract.CitiesEntry;
 import com.example.oliver.someexample.db.FinanceDBContract.CurrenciesDataEntry;
+import com.example.oliver.someexample.db.FinanceDBContract.CurrenciesInfoEntry;
 import com.example.oliver.someexample.db.FinanceDBContract.OrganizationsEntry;
 import com.example.oliver.someexample.db.FinanceDBContract.RegionsEntry;
 import com.example.oliver.someexample.models.pojo.CurrencyPOJO;
@@ -64,6 +65,22 @@ public class FinanceDBEndpointContentProvider implements FinanceDBEndpoint{
         endTime = System.currentTimeMillis();
         Log.d(TAG, "insertCities: total " + cities.size() + " take: " + (endTime - startTime) + " ms");
     }
+    @Override
+    public void insertCurrenciesInfo(Map<String, String> currenciesInfoMap) {
+        long startTime, endTime;
+        startTime = System.currentTimeMillis();
+        ContentValues[] values = new ContentValues[currenciesInfoMap.size()];
+        int i = 0;
+        for (Map.Entry<String, String> pair : currenciesInfoMap.entrySet()) {
+            ContentValues value = new ContentValues();
+            value.put(CurrenciesInfoEntry.COLUMN_ABB, pair.getKey());
+            value.put(CurrenciesInfoEntry.COLUMN_TITLE, pair.getValue());
+            values[i++] = value;
+        }
+        mContext.getContentResolver().bulkInsert(CurrenciesInfoEntry.CONTENT_URI, values);
+        endTime = System.currentTimeMillis();
+        Log.d(TAG, "insertCurrenciesInfo: total " + currenciesInfoMap.size() + " take: " + (endTime - startTime) + " ms");
+    }
 
     @Override
     public void insertOrganizations(List<OrganizationPOJO> organizationsList) {
@@ -110,12 +127,17 @@ public class FinanceDBEndpointContentProvider implements FinanceDBEndpoint{
 
     @Override
     public void insertFinanceSnapshot(FinanceSnapshotPOJO financeSnapshot) {
-        insertCities(financeSnapshot.cities);
         insertRegions(financeSnapshot.regions);
+        insertCities(financeSnapshot.cities);
+        insertCurrenciesInfo(financeSnapshot.currencies);
 
         insertOrganizationsWithCurrencies(financeSnapshot);
     }
 
+    /**
+     * Insert data in table organizations info and currencies data on a single pass
+     * @param financeSnapshot
+     */
     private void insertOrganizationsWithCurrencies(FinanceSnapshotPOJO financeSnapshot) {
         long startTime, endTime;
         startTime = System.currentTimeMillis();

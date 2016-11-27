@@ -17,5 +17,6 @@ public interface FinanceDBEndpoint {
     void insertCities(Map<String, String> cities);
     void insertOrganizations(List<OrganizationPOJO> organizationsList);
     void insertCurrenciesData(String orgID, Map<String, CurrencyPOJO> currencies, String data);
+    void insertCurrenciesInfo(Map<String, String> currencies);
     void insertFinanceSnapshot(FinanceSnapshotPOJO financeSnapshot);
 }
