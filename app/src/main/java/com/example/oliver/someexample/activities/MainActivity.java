@@ -4,6 +4,7 @@ import android.app.LoaderManager;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.Loader;
@@ -23,7 +24,7 @@ import com.example.oliver.someexample.Constants;
 import com.example.oliver.someexample.DataLoadService;
 import com.example.oliver.someexample.R;
 import com.example.oliver.someexample.adapters.OrgAdapter;
-import com.example.oliver.someexample.loaders.TestDataLoader;
+import com.example.oliver.someexample.db.FinanceDBContract;
 import com.example.oliver.someexample.models.OrgInfoModel;
 
 import java.util.ArrayList;
@@ -47,17 +48,16 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
         @Override
         public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-            Loader<Cursor> loader = null;
-            if (id == ORG_INFO_LOADER) {
-                loader = new TestDataLoader(MainActivity.this);
-                Log.d(Constants.TAG, "Loader created");
-            }
-            return loader;
+            return new CursorLoader(
+                    MainActivity.this,
+                    FinanceDBContract.OrganizationsEntry.CONTENT_URI,
+                    null, null, null, null);
         }
 
         @Override
         public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
             Log.d(TAG, "MainActivity onLoadFinished");
+            onOrganizationsLoaded(data);
 
         }
 
@@ -66,6 +66,29 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
         }
     };
+
+    private void onOrganizationsLoaded(Cursor cursor) {
+        if (cursor.moveToFirst()){
+            do{
+                String data0 = cursor.getString(0);
+                String data1 = cursor.getString(1);
+                String data2 = cursor.getString(2);
+                String data3 = cursor.getString(3);
+                String data4 = cursor.getString(4);
+                String data5 = cursor.getString(5);
+                // do what ever you want here
+                Log.d(TAG, "parseCursor: "
+                        + " d0: " + data0
+                        + " d1: " + data1
+                        + " d2: " + data2
+                        + " d3: " + data3
+                        + " d4: " + data4
+                        + " d5: " + data5
+                );
+            }while(cursor.moveToNext());
+        }
+        cursor.close();
+    }
 
 
     @Override

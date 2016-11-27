@@ -33,13 +33,14 @@ public class FinanceDBContract {
     public static final class OrganizationsEntry implements BaseColumns {
         public static final String TABLE_NAME = "organization";
 
-        public static final String COLUMN_ID              = "org_id";
+        public static final String COLUMN_ORG_ID = "org_id";
         public static final String COLUMN_TITLE           = "title";
         public static final String COLUMN_REGION_ID       = "region_id";
         public static final String COLUMN_CITY_ID         = "city_id";
         public static final String COLUMN_PHONE           = "phone";
         public static final String COLUMN_ADDRESS         = "address";
         public static final String COLUMN_LINK            = "link";
+
 
 
         public static final Uri CONTENT_URI =

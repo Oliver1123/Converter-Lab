@@ -101,12 +101,10 @@ public class FinanceContentProvider extends ContentProvider {
 
     }
 
-
-    // todo handle queries
     @Nullable
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
-        final SQLiteDatabase db = mFinanceDBHelper.getWritableDatabase();
+        final SQLiteDatabase db = mFinanceDBHelper.getReadableDatabase();
         Cursor retCursor;
         switch(sUriMatcher.match(uri)) {
             case ORGANIZATIONS:
@@ -202,7 +200,7 @@ public class FinanceContentProvider extends ContentProvider {
         // this URI and any of it's descendants. By descendants, we mean any URI that begins
         // with this path.
         retCursor.setNotificationUri(getContext().getContentResolver(), uri);
-        db.close();
+//        db.close();
         return retCursor;
 
     }

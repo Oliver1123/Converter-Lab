@@ -91,7 +91,7 @@ public class FinanceDBEndpointContentProvider implements FinanceDBEndpoint{
 
         for (OrganizationPOJO model : organizationsList) {
             ContentValues value = new ContentValues();
-            value.put(OrganizationsEntry.COLUMN_ID,         model.id);
+            value.put(OrganizationsEntry.COLUMN_ORG_ID,         model.id);
             value.put(OrganizationsEntry.COLUMN_TITLE,      model.title);
             value.put(OrganizationsEntry.COLUMN_REGION_ID,  model.regionId);
             value.put(OrganizationsEntry.COLUMN_CITY_ID,    model.cityId);
@@ -147,7 +147,7 @@ public class FinanceDBEndpointContentProvider implements FinanceDBEndpoint{
         ArrayList<ContentValues> currenciesDataValues = new ArrayList<>();
         for (OrganizationPOJO model : financeSnapshot.organizations) {
             ContentValues value = new ContentValues();
-            value.put(OrganizationsEntry.COLUMN_ID,         model.id);
+            value.put(OrganizationsEntry.COLUMN_ORG_ID,         model.id);
             value.put(OrganizationsEntry.COLUMN_TITLE,      model.title);
             value.put(OrganizationsEntry.COLUMN_REGION_ID,  model.regionId);
             value.put(OrganizationsEntry.COLUMN_CITY_ID,    model.cityId);

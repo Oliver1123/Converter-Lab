@@ -22,16 +22,14 @@ public class FinanceDBHelper extends SQLiteOpenHelper {
     private static final String ORGANIZATIONS_TABLE_CREATE =
             "CREATE TABLE " + OrganizationsEntry.TABLE_NAME + " (" +
                     OrganizationsEntry._ID               + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    OrganizationsEntry.COLUMN_ID         + " TEXT UNIQUE NOT NULL, " +
+                    OrganizationsEntry.COLUMN_ORG_ID     + " TEXT UNIQUE NOT NULL, " +
                     OrganizationsEntry.COLUMN_TITLE      + " TEXT, " +
                     OrganizationsEntry.COLUMN_REGION_ID  + " TEXT NOT NULL, " +
                     OrganizationsEntry.COLUMN_CITY_ID    + " TEXT NOT NULL, " +
                     OrganizationsEntry.COLUMN_PHONE      + " TEXT, " +
                     OrganizationsEntry.COLUMN_ADDRESS    + " TEXT, " +
-                    OrganizationsEntry.COLUMN_LINK       + " TEXT);";
-    // todo find out why it crashes on unique COLUMN_REGION_ID
-//                    OrganizationsEntry.COLUMN_LINK       + " TEXT," +
-//                    " UNIQUE (" + OrganizationsEntry.COLUMN_REGION_ID + ") ON CONFLICT REPLACE);";
+                    OrganizationsEntry.COLUMN_LINK       + " TEXT," +
+                    " UNIQUE (" + OrganizationsEntry.COLUMN_ORG_ID + ") ON CONFLICT REPLACE);";
 
     private static final String REGIONS_TABLE_CREATE =
             "CREATE TABLE " + RegionsEntry.TABLE_NAME + " (" +
