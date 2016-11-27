@@ -5,9 +5,12 @@ import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.example.oliver.someexample.db.FinanceDBContract.CitiesEntry;
 import com.example.oliver.someexample.db.FinanceDBContract.OrganizationsEntry;
@@ -185,6 +188,7 @@ public class FinanceContentProvider extends ContentProvider {
         // this URI and any of it's descendants. By descendants, we mean any URI that begins
         // with this path.
         retCursor.setNotificationUri(getContext().getContentResolver(), uri);
+        db.close();
         return retCursor;
 
     }
@@ -227,34 +231,74 @@ public class FinanceContentProvider extends ContentProvider {
         // Use this on the URI passed into the function to notify any observers that the uri has
         // changed.
         getContext().getContentResolver().notifyChange(uri, null);
+        db.close();
         return returnUri;
 
+    }
+
+    @Override
+    public int bulkInsert(@NonNull Uri uri, @NonNull ContentValues[] values) {
+        int numInserted = 0;
+        String table;
+
+        int uriType = sUriMatcher.match(uri);
+
+        switch (uriType) {
+            case ORGANIZATIONS:
+                table = OrganizationsEntry.TABLE_NAME;
+                break;
+            case REGIONS:
+                table = RegionsEntry.TABLE_NAME;
+                break;
+            case CITIES:
+                table = CitiesEntry.TABLE_NAME;
+                break;
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
+        }
+        SQLiteDatabase sqlDB = mFinanceDBHelper.getWritableDatabase();
+        sqlDB.beginTransaction();
+        try {
+            for (ContentValues cv : values) {
+                Log.d("PROVIDER", "bulkInsert: " + cv.toString());
+                long newID = sqlDB.insertOrThrow(table, null, cv);
+                if (newID <= 0) {
+                    throw new SQLException("Failed to insert row into " + uri);
+                }
+            }
+            sqlDB.setTransactionSuccessful();
+            getContext().getContentResolver().notifyChange(uri, null);
+            numInserted = values.length;
+        } finally {
+            sqlDB.endTransaction();
+        }
+        return numInserted;
     }
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
         final SQLiteDatabase db = mFinanceDBHelper.getWritableDatabase();
         int rows; // Number of rows effected
-
+        String table;
         switch(sUriMatcher.match(uri)){
             case ORGANIZATIONS:
-                rows = db.delete(OrganizationsEntry.TABLE_NAME, selection, selectionArgs);
+                table = OrganizationsEntry.TABLE_NAME;
                 break;
             case REGIONS:
-                rows = db.delete(RegionsEntry.TABLE_NAME, selection, selectionArgs);
+                table = RegionsEntry.TABLE_NAME;
                 break;
             case CITIES:
-                rows = db.delete(CitiesEntry.TABLE_NAME, selection, selectionArgs);
+                table = CitiesEntry.TABLE_NAME;
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
-
+        rows = db.delete(table, selection, selectionArgs);
         // Because null could delete all rows:
         if(selection == null || rows != 0){
             getContext().getContentResolver().notifyChange(uri, null);
         }
-
+        db.close();
         return rows;
 
     }
@@ -263,25 +307,25 @@ public class FinanceContentProvider extends ContentProvider {
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
         final SQLiteDatabase db = mFinanceDBHelper.getWritableDatabase();
         int rows;
-
+        String table;
         switch(sUriMatcher.match(uri)){
             case ORGANIZATIONS:
-                rows = db.update(OrganizationsEntry.TABLE_NAME, values, selection, selectionArgs);
+                table = OrganizationsEntry.TABLE_NAME;
                 break;
             case REGIONS:
-                rows = db.update(RegionsEntry.TABLE_NAME, values, selection, selectionArgs);
+                table = RegionsEntry.TABLE_NAME;
                 break;
             case CITIES:
-                rows = db.update(CitiesEntry.TABLE_NAME, values, selection, selectionArgs);
+                table = CitiesEntry.TABLE_NAME;
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
-
+        rows = db.update(table, values, selection, selectionArgs);
         if(rows != 0){
             getContext().getContentResolver().notifyChange(uri, null);
         }
-
+        db.close();
         return rows;
 
     }

@@ -3,6 +3,8 @@ package com.example.oliver.someexample.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.example.oliver.someexample.models.pojo.OrganizationPOJOModel;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,7 +15,7 @@ import java.util.Map;
  */
 public class ObjectModel implements Parcelable{
     public String date;
-    public List<OrganizationModel> organizations   = new ArrayList<>();
+    public List<OrganizationPOJOModel> organizations   = new ArrayList<>();
         // money USD = доллары США
     public Map<String, String> currencies          = new HashMap<>();
         // region ua,7oiylpmiow8iy1smaci = Днепропетровская область
@@ -24,7 +26,7 @@ public class ObjectModel implements Parcelable{
     @Override
     public String toString() {
         StringBuilder organizationsString = new StringBuilder();
-        for (OrganizationModel model: organizations) {
+        for (OrganizationPOJOModel model: organizations) {
             organizationsString.append(model + "\n");
         }
         return "ObjectModel{" +
@@ -44,12 +46,12 @@ public class ObjectModel implements Parcelable{
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(date);
-        if (organizations != null) {
-            dest.writeInt(organizations.size());
-            for (OrganizationModel org : organizations) {
-                dest.writeParcelable(org, 0);
-            }
-        } else {dest.writeInt(-1);}
+//        if (organizations != null) {
+//            dest.writeInt(organizations.size());
+//            for (OrganizationPOJOModel org : organizations) {
+//                dest.writeParcelable(org, 0);
+//            }
+//        } else {dest.writeInt(-1);}
 
         if (currencies != null) {
             dest.writeInt(currencies.size());
@@ -86,9 +88,9 @@ public class ObjectModel implements Parcelable{
 
             int orgSize = source.readInt();
             if (orgSize > -1) {
-                List<OrganizationModel> listOrg = new ArrayList<>(orgSize);
+                List<OrganizationPOJOModel> listOrg = new ArrayList<>(orgSize);
                 for (int i = 0; i < orgSize; i++) {
-                    listOrg.add((OrganizationModel) source.readParcelable(OrganizationModel.class.getClassLoader()));
+                    listOrg.add((OrganizationPOJOModel) source.readParcelable(OrganizationPOJOModel.class.getClassLoader()));
                 }
                 model.organizations = listOrg;
             }else {model.organizations = null;}

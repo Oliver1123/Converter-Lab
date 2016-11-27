@@ -15,7 +15,7 @@ import com.example.oliver.someexample.db.FinanceDBContract.RegionsEntry;
 public class FinanceDBHelper extends SQLiteOpenHelper {
     private static final String DB_NAME = "db_finance";
 
-    private static final int DB_VERSION = 1;
+    private static final int DB_VERSION = 2;
 
     private static final String ORGANIZATIONS_TABLE_CREATE =
             "CREATE TABLE " + OrganizationsEntry.TABLE_NAME + " (" +
@@ -27,19 +27,24 @@ public class FinanceDBHelper extends SQLiteOpenHelper {
                     OrganizationsEntry.COLUMN_PHONE      + " TEXT, " +
                     OrganizationsEntry.COLUMN_ADDRESS    + " TEXT, " +
                     OrganizationsEntry.COLUMN_LINK       + " TEXT);";
+    // todo find out why it crashes on unique COLUMN_ID
+//                    OrganizationsEntry.COLUMN_LINK       + " TEXT," +
+//                    " UNIQUE (" + OrganizationsEntry.COLUMN_ID + ") ON CONFLICT REPLACE);";
 
     private static final String REGIONS_TABLE_CREATE =
             "CREATE TABLE " + RegionsEntry.TABLE_NAME + " (" +
                     RegionsEntry._ID             + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     RegionsEntry.COLUMN_ID       + " TEXT UNIQUE NOT NULL, " +
-                    RegionsEntry.COLUMN_TITLE    + " TEXT);";
+                    RegionsEntry.COLUMN_TITLE    + " TEXT," +
+                    " UNIQUE (" + RegionsEntry.COLUMN_ID + ") ON CONFLICT REPLACE);";
 
 
     private static final String CITIES_TABLE_CREATE =
             "CREATE TABLE " + CitiesEntry.TABLE_NAME + " (" +
                     CitiesEntry._ID              + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     CitiesEntry.COLUMN_ID        + " TEXT UNIQUE NOT NULL, " +
-                    CitiesEntry.COLUMN_TITLE     + " TEXT);";
+                    CitiesEntry.COLUMN_TITLE     + " TEXT, " +
+                    " UNIQUE (" + CitiesEntry.COLUMN_ID + ") ON CONFLICT REPLACE);";
 //
 //
 //    private static final String CURRENCIES_INFO_TABLE_CREATE =

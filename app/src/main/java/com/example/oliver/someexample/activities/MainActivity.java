@@ -18,12 +18,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.example.oliver.someexample.adapters.OrgAdapter;
 import com.example.oliver.someexample.Constants;
 import com.example.oliver.someexample.DataLoadService;
+import com.example.oliver.someexample.R;
+import com.example.oliver.someexample.adapters.OrgAdapter;
 import com.example.oliver.someexample.loaders.OrgInfoModelLoader;
 import com.example.oliver.someexample.models.OrgInfoModel;
-import com.example.oliver.someexample.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -129,7 +129,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         mProgressDialog.setMessage(getString(R.string.notification_ticker));
         mProgressDialog.setCanceledOnTouchOutside(false);
         mProgressDialog.setIndeterminate(true);
-        mProgressDialog.show();
+//        mProgressDialog.show();
 
         mSwipeLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_layout_AM);
         mSwipeLayout.setOnRefreshListener(this);

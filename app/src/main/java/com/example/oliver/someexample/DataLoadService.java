@@ -13,6 +13,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import com.example.oliver.someexample.db.FinanceDBEndpoint;
+import com.example.oliver.someexample.db.FinanceDBEndpointContentProvider;
 import com.example.oliver.someexample.models.ObjectModel;
 import com.squareup.okhttp.OkHttpClient;
 
@@ -126,6 +128,7 @@ public class DataLoadService extends Service {
 
     public class AsyncDBInsert extends AsyncTask<ObjectModel, Void, Void> {
 
+        private final String TAG = AsyncDBInsert.class.getSimpleName();
         Context mContext;
 
         public AsyncDBInsert(Context _context) {
@@ -134,7 +137,16 @@ public class DataLoadService extends Service {
 
         @Override
         protected Void doInBackground(ObjectModel... params) {
-            Log.d(Constants.TAG, "Start write to base");
+//            Log.d(Constants.TAG, "Start write to base model " + params[0]);
+            ObjectModel model = params[0];
+            Log.d(TAG, "doInBackground: model currencies : "+ model.currencies);
+            Log.d(TAG, "doInBackground: model regions : "+ model.regions);
+            Log.d(TAG, "doInBackground: model cities : "+ model.cities);
+
+            FinanceDBEndpoint dbEndpoint = new FinanceDBEndpointContentProvider(mContext);
+            dbEndpoint.insertRegions(model.regions);
+            dbEndpoint.insertCities(model.cities);
+            dbEndpoint.insertOrganizations(model.organizations);
 //            QueryHelper helper = new QueryHelper(mContext);
 //            if (params != null) {
 //                helper.open();
