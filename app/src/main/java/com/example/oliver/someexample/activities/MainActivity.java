@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.Loader;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -22,7 +23,7 @@ import com.example.oliver.someexample.Constants;
 import com.example.oliver.someexample.DataLoadService;
 import com.example.oliver.someexample.R;
 import com.example.oliver.someexample.adapters.OrgAdapter;
-import com.example.oliver.someexample.loaders.OrgInfoModelLoader;
+import com.example.oliver.someexample.loaders.TestDataLoader;
 import com.example.oliver.someexample.models.OrgInfoModel;
 
 import java.util.ArrayList;
@@ -31,6 +32,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener{
 
     private static final int ORG_INFO_LOADER = 33;
+    private static final String TAG = MainActivity.class.getSimpleName();
     private Toolbar mToolbar;
     private LinearLayoutManager mLayoutManager;
     private RecyclerView mOrgList;
@@ -41,32 +43,26 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     private ProgressDialog mProgressDialog;
     private MenuItem searchItem;
     private BroadcastReceiver br;
-    private LoaderManager.LoaderCallbacks<List<OrgInfoModel>> mLoadersCallBack = new LoaderManager.LoaderCallbacks<List<OrgInfoModel>>() {
+    private LoaderManager.LoaderCallbacks<Cursor> mLoadersCallBack = new LoaderManager.LoaderCallbacks<Cursor>() {
 
         @Override
-        public Loader<List<OrgInfoModel>> onCreateLoader(int id, Bundle args) {
-            Loader<List<OrgInfoModel>> loader = null;
+        public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+            Loader<Cursor> loader = null;
             if (id == ORG_INFO_LOADER) {
-                loader = new OrgInfoModelLoader(MainActivity.this, args);
+                loader = new TestDataLoader(MainActivity.this);
                 Log.d(Constants.TAG, "Loader created");
             }
             return loader;
         }
 
         @Override
-        public void onLoadFinished(Loader<List<OrgInfoModel>> loader, List<OrgInfoModel> data) {
-            mProgressDialog.dismiss();
-            mData = data;
-            mAdapter.setData(mData);
-            mSwipeLayout.setRefreshing(false);
-            if (searchItem.isActionViewExpanded()) {
-                searchItem.collapseActionView();
-            }
-            Log.d(Constants.TAG, "MainActivity onLoadFinished");
+        public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+            Log.d(TAG, "MainActivity onLoadFinished");
+
         }
 
         @Override
-        public void onLoaderReset(Loader<List<OrgInfoModel>> loader) {
+        public void onLoaderReset(Loader<Cursor> loader) {
 
         }
     };

@@ -50,16 +50,23 @@ public class FinanceDBContract {
         public static final String CONTENT_ITEM_TYPE =
                 ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_ORGANIZATION;
 
-        // todo its right?
         public static Uri buildOrganizationUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
+        }
+
+        public static Uri buildOrganizationUri(String orgID) {
+            return CONTENT_URI.buildUpon().appendEncodedPath(orgID).build();
+        }
+
+        public static String getOrgIDFromUri(Uri uri) {
+            return uri.getPathSegments().get(1);
         }
     }
 
     public static final class RegionsEntry implements BaseColumns {
         public static final String TABLE_NAME = "regions";
 
-        public static final String COLUMN_ID              = "region_id";
+        public static final String COLUMN_REGION_ID = "region_id";
         public static final String COLUMN_TITLE           = "title";
 
 
@@ -71,9 +78,16 @@ public class FinanceDBContract {
         public static final String CONTENT_ITEM_TYPE =
                 ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_REGION;
 
-        // todo its right?
         public static Uri buildRegionUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
+        }
+
+        public static Uri buildRegionUri(String regionID) {
+            return CONTENT_URI.buildUpon().appendEncodedPath(regionID).build();
+        }
+
+        public static String getRegionIDFromUri(Uri uri) {
+            return uri.getPathSegments().get(1);
         }
     }
 
@@ -81,7 +95,7 @@ public class FinanceDBContract {
         public static final String TABLE_NAME = "cities";
 
 
-        public static final String COLUMN_ID              = "city_id";
+        public static final String COLUMN_CITY_ID = "city_id";
         public static final String COLUMN_TITLE           = "title";
 
         public static final Uri CONTENT_URI =
@@ -92,9 +106,16 @@ public class FinanceDBContract {
         public static final String CONTENT_ITEM_TYPE =
                 ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_CITY;
 
-        // todo its right?
         public static Uri buildCityUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
+        }
+
+        public static Uri buildCityUri(String cityID) {
+            return CONTENT_URI.buildUpon().appendEncodedPath(cityID).build();
+        }
+
+        public static String getCityIDFromUri(Uri uri) {
+            return uri.getPathSegments().get(1);
         }
     }
 
@@ -113,9 +134,16 @@ public class FinanceDBContract {
         public static final String CONTENT_ITEM_TYPE =
                 ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_CURRENCY_INFO;
 
-        // todo its right?
         public static Uri buildCurrencyInfoUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
+        }
+
+        public static Uri buildCurrencyInfoUri(String currencyABB) {
+            return CONTENT_URI.buildUpon().appendEncodedPath(currencyABB).build();
+        }
+
+        public static String getCurrencyABBFromUri(Uri uri) {
+            return uri.getPathSegments().get(1);
         }
     }
 
@@ -137,9 +165,17 @@ public class FinanceDBContract {
         public static final String CONTENT_ITEM_TYPE =
                 ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_CURRENCY_DATA;
 
-        // todo its right?
+
         public static Uri buildCurrencyDataUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
+        }
+
+        public static Uri buildCurrencyDataUri(String orgID) {
+            return CONTENT_URI.buildUpon().appendEncodedPath(orgID).build();
+        }
+
+        public static String getOrganizaionIDFromUri(Uri uri) {
+            return uri.getPathSegments().get(1);
         }
     }
 }

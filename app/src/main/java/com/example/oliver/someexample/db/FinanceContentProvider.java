@@ -1,7 +1,7 @@
 package com.example.oliver.someexample.db;
 
+import android.annotation.TargetApi;
 import android.content.ContentProvider;
-import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
@@ -33,10 +33,11 @@ public class FinanceContentProvider extends ContentProvider {
     private static final int CITY_ID            = 301;
 
     private static final int CURRENCIES_INFO    = 400;
-    private static final int CURRENCY_INFO_ID   = 401;
+    private static final int CURRENCY_INFO_ABB   = 401;
 
-    private static final int CURRENCIES_DATA    = 500;
-    private static final int CURRENCY_DATA_ID   = 501;
+    private static final int CURRENCIES_DATA            = 500;
+//    private static final int CURRENCY_DATA_BY_ORG_ID    = 501;
+//    private static final int CURRENCY_DATA_BY_DATE      = 502;
 
     private static final UriMatcher sUriMatcher = buildUriMatcher();
     private FinanceDBHelper mFinanceDBHelper;
@@ -58,15 +59,16 @@ public class FinanceContentProvider extends ContentProvider {
         // when a match is found (the ints above).
         UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
         matcher.addURI(content, FinanceDBContract.PATH_ORGANIZATION, ORGANIZATIONS);
-        matcher.addURI(content, FinanceDBContract.PATH_ORGANIZATION + "/#", ORGANIZATION_ID);
+        matcher.addURI(content, FinanceDBContract.PATH_ORGANIZATION + "/*", ORGANIZATION_ID);
         matcher.addURI(content, FinanceDBContract.PATH_REGION, REGIONS);
-        matcher.addURI(content, FinanceDBContract.PATH_REGION + "/#", REGION_ID);
+        matcher.addURI(content, FinanceDBContract.PATH_REGION + "/*", REGION_ID);
         matcher.addURI(content, FinanceDBContract.PATH_CITY, CITIES);
-        matcher.addURI(content, FinanceDBContract.PATH_CITY + "/#", CITY_ID);
+        matcher.addURI(content, FinanceDBContract.PATH_CITY + "/*", CITY_ID);
         matcher.addURI(content, FinanceDBContract.PATH_CURRENCY_INFO, CURRENCIES_INFO);
-        matcher.addURI(content, FinanceDBContract.PATH_CURRENCY_INFO + "/#", CURRENCY_INFO_ID);
+        matcher.addURI(content, FinanceDBContract.PATH_CURRENCY_INFO + "/*", CURRENCY_INFO_ABB);
         matcher.addURI(content, FinanceDBContract.PATH_CURRENCY_DATA, CURRENCIES_DATA);
-        matcher.addURI(content, FinanceDBContract.PATH_CURRENCY_DATA + "/#", CURRENCY_DATA_ID);
+//        matcher.addURI(content, FinanceDBContract.PATH_CURRENCY_DATA + "/byOrg/*", CURRENCY_DATA_BY_ORG_ID);
+//        matcher.addURI(content, FinanceDBContract.PATH_CURRENCY_DATA + "/byDate/*", CURRENCY_DATA_BY_DATE);
 
         return matcher;
     }
@@ -89,12 +91,10 @@ public class FinanceContentProvider extends ContentProvider {
                 return CitiesEntry.CONTENT_ITEM_TYPE;
             case CURRENCIES_INFO:
                 return CurrenciesInfoEntry.CONTENT_TYPE;
-            case CURRENCY_INFO_ID:
+            case CURRENCY_INFO_ABB:
                 return CurrenciesInfoEntry.CONTENT_ITEM_TYPE;
             case CURRENCIES_DATA:
                 return CurrenciesDataEntry.CONTENT_TYPE;
-            case CURRENCY_DATA_ID:
-                return CurrenciesDataEntry.CONTENT_ITEM_TYPE;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -108,7 +108,6 @@ public class FinanceContentProvider extends ContentProvider {
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         final SQLiteDatabase db = mFinanceDBHelper.getWritableDatabase();
         Cursor retCursor;
-        long _id;
         switch(sUriMatcher.match(uri)) {
             case ORGANIZATIONS:
                 retCursor = db.query(
@@ -122,18 +121,9 @@ public class FinanceContentProvider extends ContentProvider {
                 );
                 break;
             case ORGANIZATION_ID:
-                _id = ContentUris.parseId(uri);
-                retCursor = db.query(
-                        OrganizationsEntry.TABLE_NAME,
-                        projection,
-                        OrganizationsEntry._ID + " = ?",
-                        new String[]{String.valueOf(_id)},
-                        null,
-                        null,
-                        sortOrder
-                );
+                String orgID = OrganizationsEntry.getOrgIDFromUri(uri);
+                retCursor = getOrganizationByID(db, orgID, projection, selection, selectionArgs, sortOrder);
                 break;
-
             case REGIONS:
                 retCursor = db.query(
                         RegionsEntry.TABLE_NAME,
@@ -146,12 +136,12 @@ public class FinanceContentProvider extends ContentProvider {
                 );
                 break;
             case REGION_ID:
-                _id = ContentUris.parseId(uri);
+                String regionID = RegionsEntry.getRegionIDFromUri(uri);
                 retCursor = db.query(
                         RegionsEntry.TABLE_NAME,
                         projection,
-                        RegionsEntry._ID + " = ?",
-                        new String[]{String.valueOf(_id)},
+                        RegionsEntry.COLUMN_REGION_ID + " = ?",
+                        new String[]{regionID},
                         null,
                         null,
                         sortOrder
@@ -170,18 +160,40 @@ public class FinanceContentProvider extends ContentProvider {
                 );
                 break;
             case CITY_ID:
-                _id = ContentUris.parseId(uri);
+                String cityID = CitiesEntry.getCityIDFromUri(uri);
                 retCursor = db.query(
                         CitiesEntry.TABLE_NAME,
                         projection,
-                        CitiesEntry._ID + " = ?",
-                        new String[]{String.valueOf(_id)},
+                        CitiesEntry.COLUMN_CITY_ID + " = ?",
+                        new String[]{cityID},
                         null,
                         null,
                         sortOrder
                 );
                 break;
-
+            case CURRENCIES_INFO:
+                retCursor = db.query(
+                        CurrenciesInfoEntry.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+            case CURRENCY_INFO_ABB:
+                String currencyAbb = CurrenciesInfoEntry.getCurrencyABBFromUri(uri);
+                retCursor = db.query(
+                        CurrenciesInfoEntry.TABLE_NAME,
+                        projection,
+                        CurrenciesInfoEntry.COLUMN_ABB + " = ?",
+                        new String[]{currencyAbb},
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -193,6 +205,19 @@ public class FinanceContentProvider extends ContentProvider {
         db.close();
         return retCursor;
 
+    }
+
+    private Cursor getOrganizationByID(SQLiteDatabase db, String orgID, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+//        return db.query(
+//                OrganizationsEntry.TABLE_NAME,
+//                projection,
+//                OrganizationsEntry._ID + " = ?",
+//                new String[]{String.valueOf(_id)},
+//                null,
+//                null,
+//                sortOrder
+//        );
+        return null;
     }
 
     @Nullable
@@ -362,6 +387,13 @@ public class FinanceContentProvider extends ContentProvider {
         }
         db.close();
         return rows;
+    }
 
+
+    @Override
+    @TargetApi(11)
+    public void shutdown() {
+        mFinanceDBHelper.close();
+        super.shutdown();
     }
 }

@@ -39,7 +39,7 @@ public class FinanceDBEndpointContentProvider implements FinanceDBEndpoint{
         int i = 0;
         for (Map.Entry<String, String> pair : regions.entrySet()) {
             ContentValues value = new ContentValues();
-            value.put(RegionsEntry.COLUMN_ID, pair.getKey());
+            value.put(RegionsEntry.COLUMN_REGION_ID, pair.getKey());
             value.put(RegionsEntry.COLUMN_TITLE, pair.getValue());
             values[i++] = value;
 
@@ -57,7 +57,7 @@ public class FinanceDBEndpointContentProvider implements FinanceDBEndpoint{
         int i = 0;
         for (Map.Entry<String, String> pair : cities.entrySet()) {
             ContentValues value = new ContentValues();
-            value.put(CitiesEntry.COLUMN_ID, pair.getKey());
+            value.put(CitiesEntry.COLUMN_CITY_ID, pair.getKey());
             value.put(CitiesEntry.COLUMN_TITLE, pair.getValue());
             values[i++] = value;
         }
