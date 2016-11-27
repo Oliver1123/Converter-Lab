@@ -15,7 +15,7 @@ import android.util.Log;
 
 import com.example.oliver.someexample.db.FinanceDBEndpoint;
 import com.example.oliver.someexample.db.FinanceDBEndpointContentProvider;
-import com.example.oliver.someexample.models.ObjectModel;
+import com.example.oliver.someexample.models.pojo.FinanceSnapshotPOJO;
 import com.squareup.okhttp.OkHttpClient;
 
 import java.util.concurrent.TimeUnit;
@@ -62,9 +62,9 @@ public class DataLoadService extends Service {
                 .build();
 
         RetrofitInterface retrofitInterface = restAdapter.create(RetrofitInterface.class);
-        retrofitInterface.getObjectModel(new Callback<ObjectModel>() {
+        retrofitInterface.getObjectModel(new Callback<FinanceSnapshotPOJO>() {
             @Override
-            public void success(ObjectModel t, Response response) {
+            public void success(FinanceSnapshotPOJO t, Response response) {
                 Log.d(Constants.TAG, "Retrofit success data loaded");
                 new AsyncDBInsert(getBaseContext()).execute(t);
             }
@@ -126,7 +126,7 @@ public class DataLoadService extends Service {
         return null;
     }
 
-    public class AsyncDBInsert extends AsyncTask<ObjectModel, Void, Void> {
+    public class AsyncDBInsert extends AsyncTask<FinanceSnapshotPOJO, Void, Void> {
 
         private final String TAG = AsyncDBInsert.class.getSimpleName();
         Context mContext;
@@ -136,23 +136,19 @@ public class DataLoadService extends Service {
         }
 
         @Override
-        protected Void doInBackground(ObjectModel... params) {
+        protected Void doInBackground(FinanceSnapshotPOJO... params) {
 //            Log.d(Constants.TAG, "Start write to base model " + params[0]);
-            ObjectModel model = params[0];
-            Log.d(TAG, "doInBackground: model currencies : "+ model.currencies);
-            Log.d(TAG, "doInBackground: model regions : "+ model.regions);
-            Log.d(TAG, "doInBackground: model cities : "+ model.cities);
+            FinanceSnapshotPOJO model = params[0];
+//            Log.d(TAG, "doInBackground: model currencies : "+ model.currencies);
+//            Log.d(TAG, "doInBackground: model regions : "+ model.regions);
+//            Log.d(TAG, "doInBackground: model cities : "+ model.cities);
 
             FinanceDBEndpoint dbEndpoint = new FinanceDBEndpointContentProvider(mContext);
-            dbEndpoint.insertRegions(model.regions);
-            dbEndpoint.insertCities(model.cities);
-            dbEndpoint.insertOrganizations(model.organizations);
-//            QueryHelper helper = new QueryHelper(mContext);
-//            if (params != null) {
-//                helper.open();
-//                helper.insertObjectModel(params[0]);
-//                helper.close();
-//            }
+            dbEndpoint.insertFinanceSnapshot(model);
+//            dbEndpoint.insertRegions(model.regions);
+//            dbEndpoint.insertCities(model.cities);
+//            dbEndpoint.insertOrganizations(model.organizations);
+
             return null;
         }
         @Override

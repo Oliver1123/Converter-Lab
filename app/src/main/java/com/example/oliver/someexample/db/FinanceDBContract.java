@@ -97,49 +97,49 @@ public class FinanceDBContract {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
     }
-//
-//    public static final class CurrenciesInfoEntry implements BaseColumns {
-//
-//        public static final String TABLE_NAME    = "currencies_info";
-//
-//        public static final String COLUMN_ABB             = "abbreviation";
-//        public static final String COLUMN_TITLE           = "title";
-//
-//        public static final Uri CONTENT_URI =
-//                BASE_CONTENT_URI.buildUpon().appendPath(PATH_CURRENCY_INFO).build();
-//
-//        public static final String CONTENT_TYPE =
-//                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_CURRENCY_INFO;
-//        public static final String CONTENT_ITEM_TYPE =
-//                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_CURRENCY_INFO;
-//
-//        // todo its right?
-//        public static Uri buildCurrencyInfoUri(long id) {
-//            return ContentUris.withAppendedId(CONTENT_URI, id);
-//        }
-//    }
-//
-//    public static final class CurrenciesDataEntry implements BaseColumns {
-//        public static final String TABLE_NAME    = "currencies_data";
-//
-//        public static final String COLUMN_ORG_ID        = "org_id";
-//        public static final String COLUMN_CURRENCY_ABB  = "abb";
-//        public static final String COLUMN_ASK           = "ask";
-//        public static final String COLUMN_BID           = "bid";
-//        public static final String COLUMN_DATE          = "date";
-//
-//
-//        public static final Uri CONTENT_URI =
-//                BASE_CONTENT_URI.buildUpon().appendPath(PATH_CURRENCY_DATA).build();
-//
-//        public static final String CONTENT_TYPE =
-//                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_CURRENCY_DATA;
-//        public static final String CONTENT_ITEM_TYPE =
-//                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_CURRENCY_DATA;
-//
-//        // todo its right?
-//        public static Uri buildCurrencyDataUri(long id) {
-//            return ContentUris.withAppendedId(CONTENT_URI, id);
-//        }
-//    }
+
+    public static final class CurrenciesInfoEntry implements BaseColumns {
+
+        public static final String TABLE_NAME    = "currencies_info";
+
+        public static final String COLUMN_ABB             = "abbreviation";
+        public static final String COLUMN_TITLE           = "title";
+
+        public static final Uri CONTENT_URI =
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_CURRENCY_INFO).build();
+
+        public static final String CONTENT_TYPE =
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_CURRENCY_INFO;
+        public static final String CONTENT_ITEM_TYPE =
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_CURRENCY_INFO;
+
+        // todo its right?
+        public static Uri buildCurrencyInfoUri(long id) {
+            return ContentUris.withAppendedId(CONTENT_URI, id);
+        }
+    }
+
+    public static final class CurrenciesDataEntry implements BaseColumns {
+        public static final String TABLE_NAME    = "currencies_data";
+
+        public static final String COLUMN_ORG_ID        = "org_id";
+        public static final String COLUMN_CURRENCY_ABB  = "abb";
+        public static final String COLUMN_ASK           = "ask";
+        public static final String COLUMN_BID           = "bid";
+        public static final String COLUMN_DATE          = "date";
+
+
+        public static final Uri CONTENT_URI =
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_CURRENCY_DATA).build();
+
+        public static final String CONTENT_TYPE =
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_CURRENCY_DATA;
+        public static final String CONTENT_ITEM_TYPE =
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_CURRENCY_DATA;
+
+        // todo its right?
+        public static Uri buildCurrencyDataUri(long id) {
+            return ContentUris.withAppendedId(CONTENT_URI, id);
+        }
+    }
 }

@@ -10,9 +10,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.example.oliver.someexample.db.FinanceDBContract.CitiesEntry;
+import com.example.oliver.someexample.db.FinanceDBContract.CurrenciesDataEntry;
+import com.example.oliver.someexample.db.FinanceDBContract.CurrenciesInfoEntry;
 import com.example.oliver.someexample.db.FinanceDBContract.OrganizationsEntry;
 import com.example.oliver.someexample.db.FinanceDBContract.RegionsEntry;
 
@@ -30,12 +31,12 @@ public class FinanceContentProvider extends ContentProvider {
 
     private static final int CITIES             = 300;
     private static final int CITY_ID            = 301;
-//
-//    private static final int CURRENCIES_INFO    = 400;
-//    private static final int CURRENCY_INFO_ID   = 401;
-//
-//    private static final int CURRENCIES_DATA    = 500;
-//    private static final int CURRENCY_DATA_ID   = 501;
+
+    private static final int CURRENCIES_INFO    = 400;
+    private static final int CURRENCY_INFO_ID   = 401;
+
+    private static final int CURRENCIES_DATA    = 500;
+    private static final int CURRENCY_DATA_ID   = 501;
 
     private static final UriMatcher sUriMatcher = buildUriMatcher();
     private FinanceDBHelper mFinanceDBHelper;
@@ -62,10 +63,10 @@ public class FinanceContentProvider extends ContentProvider {
         matcher.addURI(content, FinanceDBContract.PATH_REGION + "/#", REGION_ID);
         matcher.addURI(content, FinanceDBContract.PATH_CITY, CITIES);
         matcher.addURI(content, FinanceDBContract.PATH_CITY + "/#", CITY_ID);
-//        matcher.addURI(content, FinanceDBContract.PATH_CURRENCY_INFO, CURRENCIES_INFO);
-//        matcher.addURI(content, FinanceDBContract.PATH_CURRENCY_INFO + "/#", CURRENCY_INFO_ID);
-//        matcher.addURI(content, FinanceDBContract.PATH_CURRENCY_DATA, CURRENCIES_DATA);
-//        matcher.addURI(content, FinanceDBContract.PATH_CURRENCY_DATA + "/#", CURRENCY_DATA_ID);
+        matcher.addURI(content, FinanceDBContract.PATH_CURRENCY_INFO, CURRENCIES_INFO);
+        matcher.addURI(content, FinanceDBContract.PATH_CURRENCY_INFO + "/#", CURRENCY_INFO_ID);
+        matcher.addURI(content, FinanceDBContract.PATH_CURRENCY_DATA, CURRENCIES_DATA);
+        matcher.addURI(content, FinanceDBContract.PATH_CURRENCY_DATA + "/#", CURRENCY_DATA_ID);
 
         return matcher;
     }
@@ -86,14 +87,14 @@ public class FinanceContentProvider extends ContentProvider {
                 return CitiesEntry.CONTENT_TYPE;
             case CITY_ID:
                 return CitiesEntry.CONTENT_ITEM_TYPE;
-//            case CURRENCIES_INFO:
-//                return CurrenciesInfoEntry.CONTENT_TYPE;
-//            case CURRENCY_INFO_ID:
-//                return CurrenciesInfoEntry.CONTENT_ITEM_TYPE;
-//            case CURRENCIES_DATA:
-//                return CurrenciesDataEntry.CONTENT_TYPE;
-//            case CURRENCY_DATA_ID:
-//                return CurrenciesDataEntry.CONTENT_ITEM_TYPE;
+            case CURRENCIES_INFO:
+                return CurrenciesInfoEntry.CONTENT_TYPE;
+            case CURRENCY_INFO_ID:
+                return CurrenciesInfoEntry.CONTENT_ITEM_TYPE;
+            case CURRENCIES_DATA:
+                return CurrenciesDataEntry.CONTENT_TYPE;
+            case CURRENCY_DATA_ID:
+                return CurrenciesDataEntry.CONTENT_ITEM_TYPE;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -224,6 +225,22 @@ public class FinanceContentProvider extends ContentProvider {
                     throw new UnsupportedOperationException("Unable to insert rows into: " + uri);
                 }
                 break;
+            case CURRENCIES_INFO:
+                _id = db.insert(CurrenciesInfoEntry.TABLE_NAME, null, values);
+                if(_id > 0){
+                    returnUri =  CurrenciesInfoEntry.buildCurrencyInfoUri(_id);
+                } else{
+                    throw new UnsupportedOperationException("Unable to insert rows into: " + uri);
+                }
+                break;
+            case CURRENCIES_DATA:
+                _id = db.insert(CurrenciesDataEntry.TABLE_NAME, null, values);
+                if(_id > 0){
+                    returnUri =  CurrenciesDataEntry.buildCurrencyDataUri(_id);
+                } else{
+                    throw new UnsupportedOperationException("Unable to insert rows into: " + uri);
+                }
+                break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -253,6 +270,12 @@ public class FinanceContentProvider extends ContentProvider {
             case CITIES:
                 table = CitiesEntry.TABLE_NAME;
                 break;
+            case CURRENCIES_INFO:
+                table = CurrenciesInfoEntry.TABLE_NAME;
+                break;
+             case CURRENCIES_DATA:
+                table = CurrenciesDataEntry.TABLE_NAME;
+                break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -260,7 +283,6 @@ public class FinanceContentProvider extends ContentProvider {
         sqlDB.beginTransaction();
         try {
             for (ContentValues cv : values) {
-                Log.d("PROVIDER", "bulkInsert: " + cv.toString());
                 long newID = sqlDB.insertOrThrow(table, null, cv);
                 if (newID <= 0) {
                     throw new SQLException("Failed to insert row into " + uri);
