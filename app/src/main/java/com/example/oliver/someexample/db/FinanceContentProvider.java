@@ -23,8 +23,13 @@ import com.example.oliver.someexample.db.FinanceDBContract.RegionsEntry;
 
 public class FinanceContentProvider extends ContentProvider {
     // Use an int for each URI we will run, this represents the different queries
+
+    private static final String TAG = FinanceContentProvider.class.getSimpleName();
+
     private static final int ORGANIZATIONS      = 100;
     private static final int ORGANIZATION_ID    = 101;
+    private static final int ORGANIZATIONS_READABLE = 102;
+    private static final int ORGANIZATION_READABLE_ID    = 103;
 
     private static final int REGIONS            = 200;
     private static final int REGION_ID          = 201;
@@ -58,15 +63,19 @@ public class FinanceContentProvider extends ContentProvider {
         // All paths to the UriMatcher have a corresponding code to return
         // when a match is found (the ints above).
         UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
-        matcher.addURI(content, FinanceDBContract.PATH_ORGANIZATION, ORGANIZATIONS);
-        matcher.addURI(content, FinanceDBContract.PATH_ORGANIZATION + "/*", ORGANIZATION_ID);
-        matcher.addURI(content, FinanceDBContract.PATH_REGION, REGIONS);
-        matcher.addURI(content, FinanceDBContract.PATH_REGION + "/*", REGION_ID);
-        matcher.addURI(content, FinanceDBContract.PATH_CITY, CITIES);
-        matcher.addURI(content, FinanceDBContract.PATH_CITY + "/*", CITY_ID);
-        matcher.addURI(content, FinanceDBContract.PATH_CURRENCY_INFO, CURRENCIES_INFO);
-        matcher.addURI(content, FinanceDBContract.PATH_CURRENCY_INFO + "/*", CURRENCY_INFO_ABB);
-        matcher.addURI(content, FinanceDBContract.PATH_CURRENCY_DATA, CURRENCIES_DATA);
+        matcher.addURI(content, OrganizationsEntry.PATH, ORGANIZATIONS);
+        matcher.addURI(content, OrganizationsEntry.PATH_ID, ORGANIZATION_ID);
+
+        matcher.addURI(content, RegionsEntry.PATH, REGIONS);
+        matcher.addURI(content, RegionsEntry.PATH_ID, REGION_ID);
+
+        matcher.addURI(content, CitiesEntry.PATH, CITIES);
+        matcher.addURI(content, CitiesEntry.PATH_ID, CITY_ID);
+
+        matcher.addURI(content, CurrenciesInfoEntry.PATH, CURRENCIES_INFO);
+        matcher.addURI(content, CurrenciesInfoEntry.PATH_ID, CURRENCY_INFO_ABB);
+
+        matcher.addURI(content, CurrenciesDataEntry.PATH, CURRENCIES_DATA);
 //        matcher.addURI(content, FinanceDBContract.PATH_CURRENCY_DATA + "/byOrg/*", CURRENCY_DATA_BY_ORG_ID);
 //        matcher.addURI(content, FinanceDBContract.PATH_CURRENCY_DATA + "/byDate/*", CURRENCY_DATA_BY_DATE);
 
@@ -120,7 +129,15 @@ public class FinanceContentProvider extends ContentProvider {
                 break;
             case ORGANIZATION_ID:
                 String orgID = OrganizationsEntry.getOrgIDFromUri(uri);
-                retCursor = getOrganizationByID(db, orgID, projection, selection, selectionArgs, sortOrder);
+                retCursor = db.query(
+                        OrganizationsEntry.TABLE_NAME,
+                        projection,
+                        OrganizationsEntry._ID+ " = ?",
+                        new String[]{orgID},
+                        null,
+                        null,
+                        sortOrder
+                );
                 break;
             case REGIONS:
                 retCursor = db.query(
@@ -138,7 +155,7 @@ public class FinanceContentProvider extends ContentProvider {
                 retCursor = db.query(
                         RegionsEntry.TABLE_NAME,
                         projection,
-                        RegionsEntry.COLUMN_REGION_ID + " = ?",
+                        RegionsEntry._ID + " = ?",
                         new String[]{regionID},
                         null,
                         null,
@@ -162,7 +179,7 @@ public class FinanceContentProvider extends ContentProvider {
                 retCursor = db.query(
                         CitiesEntry.TABLE_NAME,
                         projection,
-                        CitiesEntry.COLUMN_CITY_ID + " = ?",
+                        CitiesEntry._ID + " = ?",
                         new String[]{cityID},
                         null,
                         null,
@@ -185,7 +202,7 @@ public class FinanceContentProvider extends ContentProvider {
                 retCursor = db.query(
                         CurrenciesInfoEntry.TABLE_NAME,
                         projection,
-                        CurrenciesInfoEntry.COLUMN_ABB + " = ?",
+                        CurrenciesInfoEntry._ID + " = ?",
                         new String[]{currencyAbb},
                         null,
                         null,
@@ -227,8 +244,9 @@ public class FinanceContentProvider extends ContentProvider {
         switch(sUriMatcher.match(uri)){
             case ORGANIZATIONS:
                 _id = db.insert(OrganizationsEntry.TABLE_NAME, null, values);
+
                 if(_id > 0){
-                    returnUri =  OrganizationsEntry.buildOrganizationUri(_id);
+                    returnUri =  OrganizationsEntry.buildOrganizationUri(values.getAsString(OrganizationsEntry._ID));
                 } else{
                     throw new UnsupportedOperationException("Unable to insert rows into: " + uri);
                 }
@@ -236,7 +254,7 @@ public class FinanceContentProvider extends ContentProvider {
             case REGIONS:
                 _id = db.insert(RegionsEntry.TABLE_NAME, null, values);
                 if(_id > 0){
-                    returnUri =  RegionsEntry.buildRegionUri(_id);
+                    returnUri =  RegionsEntry.buildRegionUri(values.getAsString(RegionsEntry._ID));
                 } else{
                     throw new UnsupportedOperationException("Unable to insert rows into: " + uri);
                 }
@@ -244,7 +262,7 @@ public class FinanceContentProvider extends ContentProvider {
             case CITIES:
                 _id = db.insert(CitiesEntry.TABLE_NAME, null, values);
                 if(_id > 0){
-                    returnUri =  CitiesEntry.buildCityUri(_id);
+                    returnUri =  CitiesEntry.buildCityUri(values.getAsString(CitiesEntry._ID));
                 } else{
                     throw new UnsupportedOperationException("Unable to insert rows into: " + uri);
                 }
@@ -252,7 +270,7 @@ public class FinanceContentProvider extends ContentProvider {
             case CURRENCIES_INFO:
                 _id = db.insert(CurrenciesInfoEntry.TABLE_NAME, null, values);
                 if(_id > 0){
-                    returnUri =  CurrenciesInfoEntry.buildCurrencyInfoUri(_id);
+                    returnUri =  CurrenciesInfoEntry.buildCurrencyInfoUri(values.getAsString(CurrenciesInfoEntry._ID));
                 } else{
                     throw new UnsupportedOperationException("Unable to insert rows into: " + uri);
                 }
@@ -268,7 +286,6 @@ public class FinanceContentProvider extends ContentProvider {
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
-
         // Use this on the URI passed into the function to notify any observers that the uri has
         // changed.
         getContext().getContentResolver().notifyChange(uri, null);

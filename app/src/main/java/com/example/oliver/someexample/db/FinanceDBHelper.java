@@ -17,41 +17,43 @@ import com.example.oliver.someexample.db.FinanceDBContract.RegionsEntry;
 public class FinanceDBHelper extends SQLiteOpenHelper {
     private static final String DB_NAME = "db_finance";
 
-    private static final int DB_VERSION = 5;
+    private static final int DB_VERSION = 7;
 
     private static final String ORGANIZATIONS_TABLE_CREATE =
             "CREATE TABLE " + OrganizationsEntry.TABLE_NAME + " (" +
-                    OrganizationsEntry._ID               + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    OrganizationsEntry.COLUMN_ORG_ID     + " TEXT UNIQUE NOT NULL, " +
+                    OrganizationsEntry._ID               + " TEXT UNIQUE NOT NULL, " +
                     OrganizationsEntry.COLUMN_TITLE      + " TEXT, " +
                     OrganizationsEntry.COLUMN_REGION_ID  + " TEXT NOT NULL, " +
                     OrganizationsEntry.COLUMN_CITY_ID    + " TEXT NOT NULL, " +
                     OrganizationsEntry.COLUMN_PHONE      + " TEXT, " +
                     OrganizationsEntry.COLUMN_ADDRESS    + " TEXT, " +
                     OrganizationsEntry.COLUMN_LINK       + " TEXT," +
-                    " UNIQUE (" + OrganizationsEntry.COLUMN_ORG_ID + ") ON CONFLICT REPLACE);";
+
+                    // Set up the COLUMN_REGION_ID column as a foreign key to Regions table.
+                    " FOREIGN KEY (" + OrganizationsEntry.COLUMN_REGION_ID+ ") REFERENCES " +
+                    RegionsEntry.TABLE_NAME + " (" + RegionsEntry._ID + "), " +
+                    " FOREIGN KEY (" + OrganizationsEntry.COLUMN_CITY_ID+ ") REFERENCES " +
+                    CitiesEntry.TABLE_NAME + " (" + CitiesEntry._ID + "), " +
+                    " UNIQUE (" + OrganizationsEntry._ID + ") ON CONFLICT REPLACE);";
 
     private static final String REGIONS_TABLE_CREATE =
             "CREATE TABLE " + RegionsEntry.TABLE_NAME + " (" +
-                    RegionsEntry._ID             + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    RegionsEntry.COLUMN_REGION_ID + " TEXT UNIQUE NOT NULL, " +
+                    RegionsEntry._ID             + " TEXT UNIQUE NOT NULL, " +
                     RegionsEntry.COLUMN_TITLE    + " TEXT," +
-                    " UNIQUE (" + RegionsEntry.COLUMN_REGION_ID + ") ON CONFLICT REPLACE);";
+                    " UNIQUE (" + RegionsEntry._ID + ") ON CONFLICT REPLACE);";
 
 
     private static final String CITIES_TABLE_CREATE =
             "CREATE TABLE " + CitiesEntry.TABLE_NAME + " (" +
-                    CitiesEntry._ID              + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    CitiesEntry.COLUMN_CITY_ID + " TEXT UNIQUE NOT NULL, " +
+                    CitiesEntry._ID              + " TEXT UNIQUE NOT NULL, " +
                     CitiesEntry.COLUMN_TITLE     + " TEXT, " +
-                    " UNIQUE (" + CitiesEntry.COLUMN_CITY_ID + ") ON CONFLICT REPLACE);";
+                    " UNIQUE (" + CitiesEntry._ID + ") ON CONFLICT REPLACE);";
 
     private static final String CURRENCIES_INFO_TABLE_CREATE =
             "CREATE TABLE " + CurrenciesInfoEntry.TABLE_NAME + " (" +
-                    CurrenciesInfoEntry._ID              + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    CurrenciesInfoEntry.COLUMN_ABB       + " TEXT UNIQUE NOT NULL, " +
-                    CurrenciesInfoEntry.COLUMN_TITLE     + " TEXT, " +
-                    " UNIQUE (" + CurrenciesInfoEntry.COLUMN_ABB + ") ON CONFLICT REPLACE);";
+                    CurrenciesInfoEntry._ID             + " TEXT UNIQUE NOT NULL, " +
+                    CurrenciesInfoEntry.COLUMN_TITLE    + " TEXT, " +
+                    " UNIQUE (" + CurrenciesInfoEntry._ID + ") ON CONFLICT REPLACE);";
 
     private static final String CURRENCIES_DATA_TABLE_CREATE =
             "CREATE TABLE " + CurrenciesDataEntry.TABLE_NAME + " (" +

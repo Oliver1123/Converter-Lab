@@ -23,17 +23,16 @@ public class FinanceDBContract {
     // the content provider.
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
 
-    // Possible paths (appended to base content URI for possible URI's)
-    public static final String PATH_ORGANIZATION    = "organization";
-    public static final String PATH_REGION          = "region";
-    public static final String PATH_CITY            = "city";
-    public static final String PATH_CURRENCY_INFO   = "currency.info";
-    public static final String PATH_CURRENCY_DATA   = "currency.data";
-
     public static final class OrganizationsEntry implements BaseColumns {
         public static final String TABLE_NAME = "organization";
+        public static final String PATH_SUFICS_READABLE = "readable";
 
-        public static final String COLUMN_ORG_ID = "org_id";
+        public static final String PATH = "organization";
+        public static final String PATH_ID = PATH + "/*";
+        public static final String PATH_READABLE = PATH + "/readable";
+        public static final String PATH_READABLE_ID = PATH_READABLE + "/*";
+
+
         public static final String COLUMN_TITLE           = "title";
         public static final String COLUMN_REGION_ID       = "region_id";
         public static final String COLUMN_CITY_ID         = "city_id";
@@ -41,22 +40,30 @@ public class FinanceDBContract {
         public static final String COLUMN_ADDRESS         = "address";
         public static final String COLUMN_LINK            = "link";
 
+        public static final String COLUMN_REGION_TITLE = "region_title";
+        public static final String COLUMN_CITY_TITLE = "city_title";
 
+        public static final String PROJECTION_REGION_TITLE =
+                RegionsEntry.TABLE_NAME + "." + RegionsEntry.COLUMN_TITLE + " as " + COLUMN_REGION_TITLE;
+        public static final String PROJECTION_CITY_TITLE =
+                CitiesEntry.TABLE_NAME + "." + CitiesEntry.COLUMN_TITLE + " as " + COLUMN_CITY_TITLE;
 
         public static final Uri CONTENT_URI =
-                BASE_CONTENT_URI.buildUpon().appendPath(PATH_ORGANIZATION).build();
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH).build();
+        public static final Uri CONTENT_URI_READABLE =
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_READABLE).build();
 
         public static final String CONTENT_TYPE =
-                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_ORGANIZATION;
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH;
         public static final String CONTENT_ITEM_TYPE =
-                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_ORGANIZATION;
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH;
 
-        public static Uri buildOrganizationUri(long id) {
-            return ContentUris.withAppendedId(CONTENT_URI, id);
+        public static Uri buildOrganizationRawUri(String id) {
+            return CONTENT_URI.buildUpon().appendEncodedPath(id).build();
         }
 
-        public static Uri buildOrganizationUri(String orgID) {
-            return CONTENT_URI.buildUpon().appendEncodedPath(orgID).build();
+        public static Uri buildOrganizationUri(String id) {
+            return CONTENT_URI_READABLE.buildUpon().appendEncodedPath(id).build();
         }
 
         public static String getOrgIDFromUri(Uri uri) {
@@ -66,22 +73,19 @@ public class FinanceDBContract {
 
     public static final class RegionsEntry implements BaseColumns {
         public static final String TABLE_NAME = "regions";
+        public static final String PATH = "region";
+        public static final String PATH_ID = PATH + "/*";
 
-        public static final String COLUMN_REGION_ID = "region_id";
         public static final String COLUMN_TITLE           = "title";
 
 
         public static final Uri CONTENT_URI =
-                BASE_CONTENT_URI.buildUpon().appendPath(PATH_REGION).build();
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH).build();
 
         public static final String CONTENT_TYPE =
-                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_REGION;
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH;
         public static final String CONTENT_ITEM_TYPE =
-                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_REGION;
-
-        public static Uri buildRegionUri(long id) {
-            return ContentUris.withAppendedId(CONTENT_URI, id);
-        }
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH;
 
         public static Uri buildRegionUri(String regionID) {
             return CONTENT_URI.buildUpon().appendEncodedPath(regionID).build();
@@ -94,22 +98,19 @@ public class FinanceDBContract {
 
     public static final class CitiesEntry implements BaseColumns {
         public static final String TABLE_NAME = "cities";
+        public static final String PATH = "city";
+        public static final String PATH_ID = PATH + "/*";
 
-
-        public static final String COLUMN_CITY_ID = "city_id";
         public static final String COLUMN_TITLE           = "title";
 
         public static final Uri CONTENT_URI =
-                BASE_CONTENT_URI.buildUpon().appendPath(PATH_CITY).build();
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH).build();
 
         public static final String CONTENT_TYPE =
-                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_CITY;
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH;
         public static final String CONTENT_ITEM_TYPE =
-                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_CITY;
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH;
 
-        public static Uri buildCityUri(long id) {
-            return ContentUris.withAppendedId(CONTENT_URI, id);
-        }
 
         public static Uri buildCityUri(String cityID) {
             return CONTENT_URI.buildUpon().appendEncodedPath(cityID).build();
@@ -123,21 +124,19 @@ public class FinanceDBContract {
     public static final class CurrenciesInfoEntry implements BaseColumns {
 
         public static final String TABLE_NAME    = "currencies_info";
+        public static final String PATH = "currencies_info";
+        public static final String PATH_ID = PATH + "/*";
 
-        public static final String COLUMN_ABB             = "abbreviation";
         public static final String COLUMN_TITLE           = "title";
 
         public static final Uri CONTENT_URI =
-                BASE_CONTENT_URI.buildUpon().appendPath(PATH_CURRENCY_INFO).build();
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH).build();
 
         public static final String CONTENT_TYPE =
-                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_CURRENCY_INFO;
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH;
         public static final String CONTENT_ITEM_TYPE =
-                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_CURRENCY_INFO;
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH;
 
-        public static Uri buildCurrencyInfoUri(long id) {
-            return ContentUris.withAppendedId(CONTENT_URI, id);
-        }
 
         public static Uri buildCurrencyInfoUri(String currencyABB) {
             return CONTENT_URI.buildUpon().appendEncodedPath(currencyABB).build();
@@ -150,6 +149,8 @@ public class FinanceDBContract {
 
     public static final class CurrenciesDataEntry implements BaseColumns {
         public static final String TABLE_NAME    = "currencies_data";
+        public static final String PATH = "currencies_data";
+        public static final String PATH_ID = PATH + "/*";
 
         public static final String COLUMN_ORG_ID        = "org_id";
         public static final String COLUMN_CURRENCY_ABB  = "abb";
@@ -159,12 +160,12 @@ public class FinanceDBContract {
 
 
         public static final Uri CONTENT_URI =
-                BASE_CONTENT_URI.buildUpon().appendPath(PATH_CURRENCY_DATA).build();
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH).build();
 
         public static final String CONTENT_TYPE =
-                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_CURRENCY_DATA;
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH;
         public static final String CONTENT_ITEM_TYPE =
-                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_CURRENCY_DATA;
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH;
 
 
         public static Uri buildCurrencyDataUri(long id) {

@@ -39,7 +39,7 @@ public class FinanceDBEndpointContentProvider implements FinanceDBEndpoint{
         int i = 0;
         for (Map.Entry<String, String> pair : regions.entrySet()) {
             ContentValues value = new ContentValues();
-            value.put(RegionsEntry.COLUMN_REGION_ID, pair.getKey());
+            value.put(RegionsEntry._ID, pair.getKey());
             value.put(RegionsEntry.COLUMN_TITLE, pair.getValue());
             values[i++] = value;
 
@@ -57,7 +57,7 @@ public class FinanceDBEndpointContentProvider implements FinanceDBEndpoint{
         int i = 0;
         for (Map.Entry<String, String> pair : cities.entrySet()) {
             ContentValues value = new ContentValues();
-            value.put(CitiesEntry.COLUMN_CITY_ID, pair.getKey());
+            value.put(CitiesEntry._ID, pair.getKey());
             value.put(CitiesEntry.COLUMN_TITLE, pair.getValue());
             values[i++] = value;
         }
@@ -73,7 +73,7 @@ public class FinanceDBEndpointContentProvider implements FinanceDBEndpoint{
         int i = 0;
         for (Map.Entry<String, String> pair : currenciesInfoMap.entrySet()) {
             ContentValues value = new ContentValues();
-            value.put(CurrenciesInfoEntry.COLUMN_ABB, pair.getKey());
+            value.put(CurrenciesInfoEntry._ID, pair.getKey());
             value.put(CurrenciesInfoEntry.COLUMN_TITLE, pair.getValue());
             values[i++] = value;
         }
@@ -91,7 +91,7 @@ public class FinanceDBEndpointContentProvider implements FinanceDBEndpoint{
 
         for (OrganizationPOJO model : organizationsList) {
             ContentValues value = new ContentValues();
-            value.put(OrganizationsEntry.COLUMN_ORG_ID,         model.id);
+            value.put(OrganizationsEntry._ID,         model.id);
             value.put(OrganizationsEntry.COLUMN_TITLE,      model.title);
             value.put(OrganizationsEntry.COLUMN_REGION_ID,  model.regionId);
             value.put(OrganizationsEntry.COLUMN_CITY_ID,    model.cityId);
@@ -99,8 +99,10 @@ public class FinanceDBEndpointContentProvider implements FinanceDBEndpoint{
             value.put(OrganizationsEntry.COLUMN_ADDRESS,    model.address);
             value.put(OrganizationsEntry.COLUMN_LINK,   model.link);
             values[i++] = value;
+            Log.d(TAG, "insertOrganizations: value : " + value + " id: " + model.id);
+            mContext.getContentResolver().insert(OrganizationsEntry.CONTENT_URI, value);
         }
-        mContext.getContentResolver().bulkInsert(OrganizationsEntry.CONTENT_URI, values);
+//        mContext.getContentResolver().bulkInsert(OrganizationsEntry.CONTENT_URI, values);
         endTime = System.currentTimeMillis();
         Log.d(TAG, "insertOrganizations: total " + organizationsList.size() + " take: " + (endTime - startTime) + " ms");
     }
@@ -147,7 +149,7 @@ public class FinanceDBEndpointContentProvider implements FinanceDBEndpoint{
         ArrayList<ContentValues> currenciesDataValues = new ArrayList<>();
         for (OrganizationPOJO model : financeSnapshot.organizations) {
             ContentValues value = new ContentValues();
-            value.put(OrganizationsEntry.COLUMN_ORG_ID,         model.id);
+            value.put(OrganizationsEntry._ID,         model.id);
             value.put(OrganizationsEntry.COLUMN_TITLE,      model.title);
             value.put(OrganizationsEntry.COLUMN_REGION_ID,  model.regionId);
             value.put(OrganizationsEntry.COLUMN_CITY_ID,    model.cityId);
