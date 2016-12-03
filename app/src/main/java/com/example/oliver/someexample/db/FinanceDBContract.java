@@ -25,11 +25,11 @@ public class FinanceDBContract {
 
     public static final class OrganizationsEntry implements BaseColumns {
         public static final String TABLE_NAME = "organization";
-        public static final String PATH_SUFICS_READABLE = "readable";
+        public static final String PATH_SUFFICS_READABLE = "/readable";
 
         public static final String PATH = "organization";
         public static final String PATH_ID = PATH + "/*";
-        public static final String PATH_READABLE = PATH + "/readable";
+        public static final String PATH_READABLE = Uri.encode(PATH + PATH_SUFFICS_READABLE);
         public static final String PATH_READABLE_ID = PATH_READABLE + "/*";
 
 
@@ -47,6 +47,9 @@ public class FinanceDBContract {
                 RegionsEntry.TABLE_NAME + "." + RegionsEntry.COLUMN_TITLE + " as " + COLUMN_REGION_TITLE;
         public static final String PROJECTION_CITY_TITLE =
                 CitiesEntry.TABLE_NAME + "." + CitiesEntry.COLUMN_TITLE + " as " + COLUMN_CITY_TITLE;
+        public static final String PROJECTION_ID = OrganizationsEntry.TABLE_NAME + "." + _ID + " as " + _ID;
+        public static final String PROJECTION_TITLE = OrganizationsEntry.TABLE_NAME + "." + COLUMN_TITLE + " as " + COLUMN_TITLE;
+
 
         public static final Uri CONTENT_URI =
                 BASE_CONTENT_URI.buildUpon().appendPath(PATH).build();
@@ -58,6 +61,23 @@ public class FinanceDBContract {
         public static final String CONTENT_ITEM_TYPE =
                 ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH;
 
+
+        public static final String CONTENT_TYPE_READABLE =
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_READABLE;
+        public static final String CONTENT_ITEM_TYPE_READABLE =
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_READABLE;
+
+        public static final String[] DEFAULT_PROJECTION = {
+                PROJECTION_ID,
+                PROJECTION_TITLE,
+                PROJECTION_REGION_TITLE,
+                PROJECTION_CITY_TITLE,
+                COLUMN_PHONE,
+                COLUMN_ADDRESS,
+                COLUMN_LINK,
+
+        };
+
         public static Uri buildOrganizationRawUri(String id) {
             return CONTENT_URI.buildUpon().appendEncodedPath(id).build();
         }
@@ -66,8 +86,12 @@ public class FinanceDBContract {
             return CONTENT_URI_READABLE.buildUpon().appendEncodedPath(id).build();
         }
 
-        public static String getOrgIDFromUri(Uri uri) {
+        public static String getOrgIDFromRawUri(Uri uri) {
             return uri.getPathSegments().get(1);
+        }
+
+        public static String getOrgIDFromUri(Uri uri) {
+            return uri.getPathSegments().get(2);
         }
     }
 

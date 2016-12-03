@@ -7,6 +7,7 @@ import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -65,6 +66,8 @@ public class FinanceContentProvider extends ContentProvider {
         UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
         matcher.addURI(content, OrganizationsEntry.PATH, ORGANIZATIONS);
         matcher.addURI(content, OrganizationsEntry.PATH_ID, ORGANIZATION_ID);
+        matcher.addURI(content, OrganizationsEntry.PATH_READABLE, ORGANIZATIONS_READABLE);
+        matcher.addURI(content, OrganizationsEntry.PATH_READABLE_ID, ORGANIZATION_READABLE_ID);
 
         matcher.addURI(content, RegionsEntry.PATH, REGIONS);
         matcher.addURI(content, RegionsEntry.PATH_ID, REGION_ID);
@@ -90,6 +93,10 @@ public class FinanceContentProvider extends ContentProvider {
                 return OrganizationsEntry.CONTENT_TYPE;
             case ORGANIZATION_ID:
                 return OrganizationsEntry.CONTENT_ITEM_TYPE;
+            case ORGANIZATIONS_READABLE:
+                return OrganizationsEntry.CONTENT_TYPE_READABLE;
+            case ORGANIZATION_READABLE_ID:
+                return OrganizationsEntry.CONTENT_ITEM_TYPE_READABLE;
             case REGIONS:
                 return RegionsEntry.CONTENT_TYPE;
             case REGION_ID:
@@ -128,7 +135,7 @@ public class FinanceContentProvider extends ContentProvider {
                 );
                 break;
             case ORGANIZATION_ID:
-                String orgID = OrganizationsEntry.getOrgIDFromUri(uri);
+                String orgID = OrganizationsEntry.getOrgIDFromRawUri(uri);
                 retCursor = db.query(
                         OrganizationsEntry.TABLE_NAME,
                         projection,
@@ -139,6 +146,12 @@ public class FinanceContentProvider extends ContentProvider {
                         sortOrder
                 );
                 break;
+            case ORGANIZATIONS_READABLE:
+                retCursor = getOrganizationsReadable(projection, selection, selectionArgs, sortOrder);
+                break;
+            case ORGANIZATION_READABLE_ID:
+                String organizationID = OrganizationsEntry.getOrgIDFromUri(uri);
+                retCursor = getOrganizationByIDReadable(organizationID, projection, selection, selectionArgs, sortOrder);
             case REGIONS:
                 retCursor = db.query(
                         RegionsEntry.TABLE_NAME,
@@ -222,17 +235,25 @@ public class FinanceContentProvider extends ContentProvider {
 
     }
 
-    private Cursor getOrganizationByID(SQLiteDatabase db, String orgID, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
-//        return db.query(
-//                OrganizationsEntry.TABLE_NAME,
-//                projection,
-//                OrganizationsEntry._ID + " = ?",
-//                new String[]{String.valueOf(_id)},
-//                null,
-//                null,
-//                sortOrder
-//        );
+    private Cursor getOrganizationByIDReadable(String organizationID, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         return null;
+    }
+
+    private Cursor getOrganizationsReadable(String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+        SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
+        builder.setTables(
+                OrganizationsEntry.TABLE_NAME + " INNER JOIN " + RegionsEntry.TABLE_NAME
+                        + " ON " + OrganizationsEntry.TABLE_NAME + "." + OrganizationsEntry.COLUMN_REGION_ID + " = "
+                        + RegionsEntry.TABLE_NAME + "." + RegionsEntry._ID
+                +  " INNER JOIN " + CitiesEntry.TABLE_NAME
+                        + " ON " + OrganizationsEntry.TABLE_NAME + "." + OrganizationsEntry.COLUMN_CITY_ID + " = "
+                        + CitiesEntry.TABLE_NAME + "." + CitiesEntry._ID
+
+        );
+        if (projection == null || projection.length == 0) {
+            projection = OrganizationsEntry.DEFAULT_PROJECTION;
+        }
+        return builder.query(mFinanceDBHelper.getReadableDatabase(), projection, selection, selectionArgs, null, null, sortOrder);
     }
 
     @Nullable
@@ -246,7 +267,7 @@ public class FinanceContentProvider extends ContentProvider {
                 _id = db.insert(OrganizationsEntry.TABLE_NAME, null, values);
 
                 if(_id > 0){
-                    returnUri =  OrganizationsEntry.buildOrganizationUri(values.getAsString(OrganizationsEntry._ID));
+                    returnUri =  OrganizationsEntry.buildOrganizationRawUri(values.getAsString(OrganizationsEntry._ID));
                 } else{
                     throw new UnsupportedOperationException("Unable to insert rows into: " + uri);
                 }

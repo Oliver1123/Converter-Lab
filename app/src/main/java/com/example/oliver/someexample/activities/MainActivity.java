@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         public Loader<Cursor> onCreateLoader(int id, Bundle args) {
             return new CursorLoader(
                     MainActivity.this,
-                    FinanceDBContract.OrganizationsEntry.CONTENT_URI,
+                    FinanceDBContract.OrganizationsEntry.CONTENT_URI_READABLE,
                     null, null, null, null);
         }
 
@@ -76,6 +76,8 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 String data3 = cursor.getString(3);
                 String data4 = cursor.getString(4);
                 String data5 = cursor.getString(5);
+                String data6 = cursor.getString(6);
+
                 // do what ever you want here
                 Log.d(TAG, "parseCursor: "
                         + " d0: " + data0
@@ -84,6 +86,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                         + " d3: " + data3
                         + " d4: " + data4
                         + " d5: " + data5
+                        + " d6: " + data6
                 );
             }while(cursor.moveToNext());
         }
