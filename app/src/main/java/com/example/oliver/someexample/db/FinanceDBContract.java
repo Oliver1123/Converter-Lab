@@ -25,12 +25,12 @@ public class FinanceDBContract {
 
     public static final class OrganizationsEntry implements BaseColumns {
         public static final String TABLE_NAME = "organization";
-        public static final String PATH_SUFFICS_READABLE = "/readable";
+        public static final String PATH_SUFFIX_READABLE = "readable";
 
         public static final String PATH = "organization";
         public static final String PATH_ID = PATH + "/*";
-        public static final String PATH_READABLE = Uri.encode(PATH + PATH_SUFFICS_READABLE);
-        public static final String PATH_READABLE_ID = PATH_READABLE + "/*";
+        public static final String PATH_READABLE = Uri.encode(PATH + "/" + PATH_SUFFIX_READABLE);
+        public static final String PATH_READABLE_ID = PATH + "/*/*";
 
 
         public static final String COLUMN_TITLE           = "title";
@@ -54,7 +54,7 @@ public class FinanceDBContract {
         public static final Uri CONTENT_URI =
                 BASE_CONTENT_URI.buildUpon().appendPath(PATH).build();
         public static final Uri CONTENT_URI_READABLE =
-                BASE_CONTENT_URI.buildUpon().appendPath(PATH_READABLE).build();
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH).appendEncodedPath(PATH_SUFFIX_READABLE).build();
 
         public static final String CONTENT_TYPE =
                 ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH;
@@ -77,6 +77,7 @@ public class FinanceDBContract {
                 COLUMN_LINK,
 
         };
+        public static final String ORG_ID_WHERE_ARG = OrganizationsEntry.TABLE_NAME + "." + OrganizationsEntry._ID + " = ?";
 
         public static Uri buildOrganizationRawUri(String id) {
             return CONTENT_URI.buildUpon().appendEncodedPath(id).build();

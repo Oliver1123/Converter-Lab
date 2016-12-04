@@ -38,4 +38,16 @@ public class OrganizationPOJO {
     public Map<String, CurrencyPOJO> currencies = new HashMap<>();
 
 
+    @Override
+    public String toString() {
+        return "OrganizationPOJO{" +
+                "id='" + id + '\'' +
+                ", title='" + title + '\'' +
+                ", regionId='" + regionId + '\'' +
+                ", cityId='" + cityId + '\'' +
+                ", phone='" + phone + '\'' +
+                ", address='" + address + '\'' +
+                ", link='" + link + '\'' +
+                '}';
+    }
 }

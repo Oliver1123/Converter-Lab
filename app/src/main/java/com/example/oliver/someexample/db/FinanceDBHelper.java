@@ -17,7 +17,7 @@ import com.example.oliver.someexample.db.FinanceDBContract.RegionsEntry;
 public class FinanceDBHelper extends SQLiteOpenHelper {
     private static final String DB_NAME = "db_finance";
 
-    private static final int DB_VERSION = 7;
+    private static final int DB_VERSION = 1;
 
     private static final String ORGANIZATIONS_TABLE_CREATE =
             "CREATE TABLE " + OrganizationsEntry.TABLE_NAME + " (" +

@@ -11,6 +11,8 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
+import android.util.Log;
 
 import com.example.oliver.someexample.db.FinanceDBContract.CitiesEntry;
 import com.example.oliver.someexample.db.FinanceDBContract.CurrenciesDataEntry;
@@ -48,6 +50,20 @@ public class FinanceContentProvider extends ContentProvider {
     private static final UriMatcher sUriMatcher = buildUriMatcher();
     private FinanceDBHelper mFinanceDBHelper;
 
+    SQLiteQueryBuilder sOrganizationsQueryBuilder;
+    {
+        sOrganizationsQueryBuilder = new SQLiteQueryBuilder();
+        sOrganizationsQueryBuilder.setTables(
+                OrganizationsEntry.TABLE_NAME + " INNER JOIN " + RegionsEntry.TABLE_NAME
+                        + " ON " + OrganizationsEntry.TABLE_NAME + "." + OrganizationsEntry.COLUMN_REGION_ID + " = "
+                        + RegionsEntry.TABLE_NAME + "." + RegionsEntry._ID
+                        + " INNER JOIN " + CitiesEntry.TABLE_NAME
+                        + " ON " + OrganizationsEntry.TABLE_NAME + "." + OrganizationsEntry.COLUMN_CITY_ID + " = "
+                        + CitiesEntry.TABLE_NAME + "." + CitiesEntry._ID
+
+        );
+    }
+
 
     @Override
     public boolean onCreate() {
@@ -64,10 +80,10 @@ public class FinanceContentProvider extends ContentProvider {
         // All paths to the UriMatcher have a corresponding code to return
         // when a match is found (the ints above).
         UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
-        matcher.addURI(content, OrganizationsEntry.PATH, ORGANIZATIONS);
-        matcher.addURI(content, OrganizationsEntry.PATH_ID, ORGANIZATION_ID);
         matcher.addURI(content, OrganizationsEntry.PATH_READABLE, ORGANIZATIONS_READABLE);
         matcher.addURI(content, OrganizationsEntry.PATH_READABLE_ID, ORGANIZATION_READABLE_ID);
+        matcher.addURI(content, OrganizationsEntry.PATH_ID, ORGANIZATION_ID);
+        matcher.addURI(content, OrganizationsEntry.PATH, ORGANIZATIONS);
 
         matcher.addURI(content, RegionsEntry.PATH, REGIONS);
         matcher.addURI(content, RegionsEntry.PATH_ID, REGION_ID);
@@ -81,7 +97,6 @@ public class FinanceContentProvider extends ContentProvider {
         matcher.addURI(content, CurrenciesDataEntry.PATH, CURRENCIES_DATA);
 //        matcher.addURI(content, FinanceDBContract.PATH_CURRENCY_DATA + "/byOrg/*", CURRENCY_DATA_BY_ORG_ID);
 //        matcher.addURI(content, FinanceDBContract.PATH_CURRENCY_DATA + "/byDate/*", CURRENCY_DATA_BY_DATE);
-
         return matcher;
     }
 
@@ -120,6 +135,7 @@ public class FinanceContentProvider extends ContentProvider {
     @Nullable
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+        Log.d(TAG, "query: uri: " + uri + " match: " + sUriMatcher.match(uri));
         final SQLiteDatabase db = mFinanceDBHelper.getReadableDatabase();
         Cursor retCursor;
         switch(sUriMatcher.match(uri)) {
@@ -139,7 +155,7 @@ public class FinanceContentProvider extends ContentProvider {
                 retCursor = db.query(
                         OrganizationsEntry.TABLE_NAME,
                         projection,
-                        OrganizationsEntry._ID+ " = ?",
+                        OrganizationsEntry._ID + " = ?",
                         new String[]{orgID},
                         null,
                         null,
@@ -152,6 +168,7 @@ public class FinanceContentProvider extends ContentProvider {
             case ORGANIZATION_READABLE_ID:
                 String organizationID = OrganizationsEntry.getOrgIDFromUri(uri);
                 retCursor = getOrganizationByIDReadable(organizationID, projection, selection, selectionArgs, sortOrder);
+                break;
             case REGIONS:
                 retCursor = db.query(
                         RegionsEntry.TABLE_NAME,
@@ -236,24 +253,33 @@ public class FinanceContentProvider extends ContentProvider {
     }
 
     private Cursor getOrganizationByIDReadable(String organizationID, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
-        return null;
-    }
-
-    private Cursor getOrganizationsReadable(String[] projection, String selection, String[] selectionArgs, String sortOrder) {
-        SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
-        builder.setTables(
-                OrganizationsEntry.TABLE_NAME + " INNER JOIN " + RegionsEntry.TABLE_NAME
-                        + " ON " + OrganizationsEntry.TABLE_NAME + "." + OrganizationsEntry.COLUMN_REGION_ID + " = "
-                        + RegionsEntry.TABLE_NAME + "." + RegionsEntry._ID
-                +  " INNER JOIN " + CitiesEntry.TABLE_NAME
-                        + " ON " + OrganizationsEntry.TABLE_NAME + "." + OrganizationsEntry.COLUMN_CITY_ID + " = "
-                        + CitiesEntry.TABLE_NAME + "." + CitiesEntry._ID
-
-        );
+        Log.d(TAG, "getOrganizationByIDReadable: id: " + organizationID);
         if (projection == null || projection.length == 0) {
             projection = OrganizationsEntry.DEFAULT_PROJECTION;
         }
-        return builder.query(mFinanceDBHelper.getReadableDatabase(), projection, selection, selectionArgs, null, null, sortOrder);
+
+        if (TextUtils.isEmpty(selection)) {
+            selection = OrganizationsEntry.ORG_ID_WHERE_ARG;
+            selectionArgs = new String[]{organizationID};
+        } else {
+            selection += " AND " + OrganizationsEntry.ORG_ID_WHERE_ARG;
+            int n = selectionArgs.length + 1;
+            String[] oldSelectionArgs = selectionArgs;
+            selectionArgs = new String[n];
+            System.arraycopy(oldSelectionArgs, 0, selectionArgs, 0, oldSelectionArgs.length);
+            selectionArgs[n - 1] = organizationID;
+        }
+        return sOrganizationsQueryBuilder.query(mFinanceDBHelper.getReadableDatabase(),
+                projection, selection, selectionArgs, null, null, sortOrder);
+    }
+
+    private Cursor getOrganizationsReadable(String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+
+        if (projection == null || projection.length == 0) {
+            projection = OrganizationsEntry.DEFAULT_PROJECTION;
+        }
+        return sOrganizationsQueryBuilder.query(mFinanceDBHelper.getReadableDatabase(),
+                projection, selection, selectionArgs, null, null, sortOrder);
     }
 
     @Nullable

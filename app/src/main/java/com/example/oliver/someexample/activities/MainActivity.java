@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         public Loader<Cursor> onCreateLoader(int id, Bundle args) {
             return new CursorLoader(
                     MainActivity.this,
+//                    FinanceDBContract.OrganizationsEntry.buildOrganizationUri("7oiylpmiow8iy1sma7h"),
                     FinanceDBContract.OrganizationsEntry.CONTENT_URI_READABLE,
                     null, null, null, null);
         }
