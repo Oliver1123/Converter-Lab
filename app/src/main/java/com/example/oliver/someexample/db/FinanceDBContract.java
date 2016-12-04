@@ -174,14 +174,17 @@ public class FinanceDBContract {
 
     public static final class CurrenciesDataEntry implements BaseColumns {
         public static final String TABLE_NAME    = "currencies_data";
+        public static final String PATH_SUFFIX_BY_ORG = "byOrg";
         public static final String PATH = "currencies_data";
-        public static final String PATH_ID = PATH + "/*";
+        public static final String PATH_BY_ORG_ID = PATH +"/" + PATH_SUFFIX_BY_ORG + "/*";
 
         public static final String COLUMN_ORG_ID        = "org_id";
         public static final String COLUMN_CURRENCY_ABB  = "abb";
         public static final String COLUMN_ASK           = "ask";
         public static final String COLUMN_BID           = "bid";
         public static final String COLUMN_DATE          = "date";
+
+        public static final String COLUMN_CURRENCY_TITLE = "title";
 
 
         public static final Uri CONTENT_URI =
@@ -191,6 +194,17 @@ public class FinanceDBContract {
                 ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH;
         public static final String CONTENT_ITEM_TYPE =
                 ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH;
+        private static final String PROJECTION_CURRENCY_TITLE =
+                CurrenciesInfoEntry.TABLE_NAME + "." + CurrenciesInfoEntry.COLUMN_TITLE + " as " + COLUMN_CURRENCY_TITLE;
+        public static final String ORG_ID_WHERE_ARG = CurrenciesDataEntry.TABLE_NAME + "." + CurrenciesDataEntry.COLUMN_ORG_ID + " = ?";
+
+        public static String[] DEFAULT_PROJECTION = new String[] {
+                COLUMN_ORG_ID,
+                PROJECTION_CURRENCY_TITLE,
+                COLUMN_ASK,
+                COLUMN_BID,
+                COLUMN_DATE,
+        };
 
 
         public static Uri buildCurrencyDataUri(long id) {
@@ -198,11 +212,11 @@ public class FinanceDBContract {
         }
 
         public static Uri buildCurrencyDataUri(String orgID) {
-            return CONTENT_URI.buildUpon().appendEncodedPath(orgID).build();
+            return CONTENT_URI.buildUpon().appendEncodedPath(PATH_SUFFIX_BY_ORG).appendEncodedPath(orgID).build();
         }
 
         public static String getOrganizaionIDFromUri(Uri uri) {
-            return uri.getPathSegments().get(1);
+            return uri.getPathSegments().get(2);
         }
     }
 }

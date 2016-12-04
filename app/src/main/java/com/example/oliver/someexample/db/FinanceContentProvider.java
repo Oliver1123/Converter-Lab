@@ -44,7 +44,7 @@ public class FinanceContentProvider extends ContentProvider {
     private static final int CURRENCY_INFO_ABB   = 401;
 
     private static final int CURRENCIES_DATA            = 500;
-//    private static final int CURRENCY_DATA_BY_ORG_ID    = 501;
+    private static final int CURRENCIES_DATA_BY_ORG_ID = 501;
 //    private static final int CURRENCY_DATA_BY_DATE      = 502;
 
     private static final UriMatcher sUriMatcher = buildUriMatcher();
@@ -63,6 +63,21 @@ public class FinanceContentProvider extends ContentProvider {
 
         );
     }
+    SQLiteQueryBuilder sCurrenciesDataQueryBuilder;
+    {
+        sCurrenciesDataQueryBuilder = new SQLiteQueryBuilder();
+        sCurrenciesDataQueryBuilder.setTables(
+                CurrenciesDataEntry.TABLE_NAME + " INNER JOIN " + CurrenciesInfoEntry.TABLE_NAME
+                        + " ON " + CurrenciesDataEntry.TABLE_NAME + "." + CurrenciesDataEntry.COLUMN_CURRENCY_ABB + " = "
+                        + CurrenciesInfoEntry.TABLE_NAME + "." + CurrenciesInfoEntry._ID
+//                        + " INNER JOIN " + CitiesEntry.TABLE_NAME
+//                        + " ON " + OrganizationsEntry.TABLE_NAME + "." + OrganizationsEntry.COLUMN_CITY_ID + " = "
+//                        + CitiesEntry.TABLE_NAME + "." + CitiesEntry._ID
+
+        );
+    }
+
+
 
 
     @Override
@@ -95,7 +110,7 @@ public class FinanceContentProvider extends ContentProvider {
         matcher.addURI(content, CurrenciesInfoEntry.PATH_ID, CURRENCY_INFO_ABB);
 
         matcher.addURI(content, CurrenciesDataEntry.PATH, CURRENCIES_DATA);
-//        matcher.addURI(content, FinanceDBContract.PATH_CURRENCY_DATA + "/byOrg/*", CURRENCY_DATA_BY_ORG_ID);
+        matcher.addURI(content, CurrenciesDataEntry.PATH_BY_ORG_ID, CURRENCIES_DATA_BY_ORG_ID);
 //        matcher.addURI(content, FinanceDBContract.PATH_CURRENCY_DATA + "/byDate/*", CURRENCY_DATA_BY_DATE);
         return matcher;
     }
@@ -126,6 +141,8 @@ public class FinanceContentProvider extends ContentProvider {
                 return CurrenciesInfoEntry.CONTENT_ITEM_TYPE;
             case CURRENCIES_DATA:
                 return CurrenciesDataEntry.CONTENT_TYPE;
+            case CURRENCIES_DATA_BY_ORG_ID:
+                return CurrenciesDataEntry.CONTENT_ITEM_TYPE;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -138,6 +155,7 @@ public class FinanceContentProvider extends ContentProvider {
         Log.d(TAG, "query: uri: " + uri + " match: " + sUriMatcher.match(uri));
         final SQLiteDatabase db = mFinanceDBHelper.getReadableDatabase();
         Cursor retCursor;
+        String orgID;
         switch(sUriMatcher.match(uri)) {
             case ORGANIZATIONS:
                 retCursor = db.query(
@@ -151,7 +169,7 @@ public class FinanceContentProvider extends ContentProvider {
                 );
                 break;
             case ORGANIZATION_ID:
-                String orgID = OrganizationsEntry.getOrgIDFromRawUri(uri);
+                 orgID = OrganizationsEntry.getOrgIDFromRawUri(uri);
                 retCursor = db.query(
                         OrganizationsEntry.TABLE_NAME,
                         projection,
@@ -166,8 +184,8 @@ public class FinanceContentProvider extends ContentProvider {
                 retCursor = getOrganizationsReadable(projection, selection, selectionArgs, sortOrder);
                 break;
             case ORGANIZATION_READABLE_ID:
-                String organizationID = OrganizationsEntry.getOrgIDFromUri(uri);
-                retCursor = getOrganizationByIDReadable(organizationID, projection, selection, selectionArgs, sortOrder);
+                orgID = OrganizationsEntry.getOrgIDFromUri(uri);
+                retCursor = getOrganizationByIDReadable(orgID, projection, selection, selectionArgs, sortOrder);
                 break;
             case REGIONS:
                 retCursor = db.query(
@@ -239,6 +257,21 @@ public class FinanceContentProvider extends ContentProvider {
                         sortOrder
                 );
                 break;
+            case CURRENCIES_DATA:
+                retCursor = db.query(
+                        CurrenciesDataEntry.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+            case CURRENCIES_DATA_BY_ORG_ID:
+                orgID = CurrenciesDataEntry.getOrganizaionIDFromUri(uri);
+                retCursor = getCurrenciesDataByOrgID(orgID, projection, selection, selectionArgs, sortOrder);
+                break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -250,6 +283,27 @@ public class FinanceContentProvider extends ContentProvider {
 //        db.close();
         return retCursor;
 
+    }
+
+    private Cursor getCurrenciesDataByOrgID(String orgID, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+        Log.d(TAG, "getCurrenciesDataByOrgID: id: " + orgID);
+        if (projection == null || projection.length == 0) {
+            projection = CurrenciesDataEntry.DEFAULT_PROJECTION;
+        }
+
+        if (TextUtils.isEmpty(selection)) {
+            selection = CurrenciesDataEntry.ORG_ID_WHERE_ARG;
+            selectionArgs = new String[]{orgID};
+        } else {
+            selection += " AND " + CurrenciesDataEntry.ORG_ID_WHERE_ARG;
+            int n = selectionArgs.length + 1;
+            String[] oldSelectionArgs = selectionArgs;
+            selectionArgs = new String[n];
+            System.arraycopy(oldSelectionArgs, 0, selectionArgs, 0, oldSelectionArgs.length);
+            selectionArgs[n - 1] = orgID;
+        }
+        return sCurrenciesDataQueryBuilder.query(mFinanceDBHelper.getReadableDatabase(),
+                projection, selection, selectionArgs, null, null, sortOrder);
     }
 
     private Cursor getOrganizationByIDReadable(String organizationID, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
