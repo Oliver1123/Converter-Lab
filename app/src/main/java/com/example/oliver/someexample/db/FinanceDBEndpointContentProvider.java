@@ -158,7 +158,7 @@ public class FinanceDBEndpointContentProvider implements FinanceDBEndpoint{
             value.put(OrganizationsEntry.COLUMN_LINK,   model.link);
             orgValues[i++] = value;
 //            Log.d(TAG, "insertOrganizationsWithCurrencies: " + model.title + " currencies: " + model.currencies);
-            updateCurrenciesContentValuesList(currenciesDataValues, model.id, model.currencies, financeSnapshot.date);
+            updateCurrenciesContentValuesList(currenciesDataValues, model.id, model.currencies, financeSnapshot.date.getTime());
         }
         mContext.getContentResolver().bulkInsert(OrganizationsEntry.CONTENT_URI, orgValues);
 
@@ -169,7 +169,7 @@ public class FinanceDBEndpointContentProvider implements FinanceDBEndpoint{
         Log.d(TAG, "insertOrganizationsWithCurrencies: total " + financeSnapshot.organizations.size() + " take: " + (endTime - startTime) + " ms");
     }
 
-    private void updateCurrenciesContentValuesList(List<ContentValues> currenciesList, String orgID, Map<String, CurrencyPOJO> currencies, String date) {
+    private void updateCurrenciesContentValuesList(List<ContentValues> currenciesList, String orgID, Map<String, CurrencyPOJO> currencies, long date) {
         for (Map.Entry<String, CurrencyPOJO> currency : currencies.entrySet()) {
             ContentValues value = new ContentValues();
             value.put(CurrenciesDataEntry.COLUMN_ORG_ID, orgID);

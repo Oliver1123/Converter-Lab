@@ -16,6 +16,8 @@ import android.util.Log;
 import com.example.oliver.someexample.db.FinanceDBEndpoint;
 import com.example.oliver.someexample.db.FinanceDBEndpointContentProvider;
 import com.example.oliver.someexample.models.pojo.FinanceSnapshotPOJO;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.squareup.okhttp.OkHttpClient;
 
 import java.util.concurrent.TimeUnit;
@@ -25,6 +27,7 @@ import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.OkClient;
 import retrofit.client.Response;
+import retrofit.converter.GsonConverter;
 
 public class DataLoadService extends Service {
     private SharedPreferences mPreferences;
@@ -55,10 +58,13 @@ public class DataLoadService extends Service {
         final OkHttpClient okHttpClient = new OkHttpClient();
         okHttpClient.setReadTimeout(15, TimeUnit.SECONDS);
         okHttpClient.setConnectTimeout(15, TimeUnit.SECONDS);
-
+        Gson gson = new GsonBuilder()
+                .setDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+                .create();
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint("http://resources.finance.ua")
                 .setClient(new OkClient(okHttpClient))
+                .setConverter(new GsonConverter(gson))
                 .build();
 
         RetrofitInterface retrofitInterface = restAdapter.create(RetrofitInterface.class);

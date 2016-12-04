@@ -174,9 +174,8 @@ public class FinanceDBContract {
 
     public static final class CurrenciesDataEntry implements BaseColumns {
         public static final String TABLE_NAME    = "currencies_data";
-        public static final String PATH_SUFFIX_BY_ORG = "byOrg";
         public static final String PATH = "currencies_data";
-        public static final String PATH_BY_ORG_ID = PATH +"/" + PATH_SUFFIX_BY_ORG + "/*";
+        public static final String PATH_BY_ORG_ID = PATH + "/*";
 
         public static final String COLUMN_ORG_ID        = "org_id";
         public static final String COLUMN_CURRENCY_ABB  = "abb";
@@ -197,6 +196,7 @@ public class FinanceDBContract {
         private static final String PROJECTION_CURRENCY_TITLE =
                 CurrenciesInfoEntry.TABLE_NAME + "." + CurrenciesInfoEntry.COLUMN_TITLE + " as " + COLUMN_CURRENCY_TITLE;
         public static final String ORG_ID_WHERE_ARG = CurrenciesDataEntry.TABLE_NAME + "." + CurrenciesDataEntry.COLUMN_ORG_ID + " = ?";
+        public static final String DATE_WHERE_ARG = CurrenciesDataEntry.TABLE_NAME + "." + CurrenciesDataEntry.COLUMN_DATE + " = ?";
 
         public static String[] DEFAULT_PROJECTION = new String[] {
                 COLUMN_ORG_ID,
@@ -212,11 +212,19 @@ public class FinanceDBContract {
         }
 
         public static Uri buildCurrencyDataUri(String orgID) {
-            return CONTENT_URI.buildUpon().appendEncodedPath(PATH_SUFFIX_BY_ORG).appendEncodedPath(orgID).build();
+            return CONTENT_URI.buildUpon().appendEncodedPath(orgID).build();
         }
 
-        public static String getOrganizaionIDFromUri(Uri uri) {
-            return uri.getPathSegments().get(2);
+        public static Uri buildCurrencyDataUri(String orgID, long date) {
+            return CONTENT_URI.buildUpon().appendEncodedPath(orgID).appendEncodedPath(String.valueOf(date)).build();
+        }
+
+        public static String getOrganizationIDFromUri(Uri uri) {
+            return uri.getPathSegments().get(1);
+        }
+
+        public static long getDateFromUri(Uri uri) {
+            return Long.parseLong(uri.getPathSegments().get(2));
         }
     }
 }

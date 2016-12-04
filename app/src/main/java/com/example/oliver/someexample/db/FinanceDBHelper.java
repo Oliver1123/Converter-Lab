@@ -17,7 +17,7 @@ import com.example.oliver.someexample.db.FinanceDBContract.RegionsEntry;
 public class FinanceDBHelper extends SQLiteOpenHelper {
     private static final String DB_NAME = "db_finance";
 
-    private static final int DB_VERSION = 1;
+    private static final int DB_VERSION = 2;
 
     private static final String ORGANIZATIONS_TABLE_CREATE =
             "CREATE TABLE " + OrganizationsEntry.TABLE_NAME + " (" +
@@ -62,7 +62,7 @@ public class FinanceDBHelper extends SQLiteOpenHelper {
                     CurrenciesDataEntry.COLUMN_CURRENCY_ABB  + " TEXT," +
                     CurrenciesDataEntry.COLUMN_ASK           + " TEXT," +
                     CurrenciesDataEntry.COLUMN_BID           + " TEXT," +
-                    CurrenciesDataEntry.COLUMN_DATE          + " TEXT," +
+                    CurrenciesDataEntry.COLUMN_DATE          + " INTEGER," +
 
                     // it's created a UNIQUE constraint with REPLACE strategy
                     " UNIQUE (" + CurrenciesDataEntry.COLUMN_ORG_ID + ", " +

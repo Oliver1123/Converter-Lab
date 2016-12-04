@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 //                    FinanceDBContract.OrganizationsEntry.CONTENT_URI_READABLE,
 //                    FinanceDBContract.CurrenciesDataEntry.CONTENT_URI,
                     FinanceDBContract.CurrenciesDataEntry.buildCurrencyDataUri("7oiylpmiow8iy1sma7h"),
+//                    FinanceDBContract.CurrenciesDataEntry.buildCurrencyDataUri("7oiylpmiow8iy1sma7h", 1480847316000L),
                     null, null, null, null);
         }
 

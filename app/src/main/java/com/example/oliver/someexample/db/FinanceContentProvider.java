@@ -44,8 +44,8 @@ public class FinanceContentProvider extends ContentProvider {
     private static final int CURRENCY_INFO_ABB   = 401;
 
     private static final int CURRENCIES_DATA            = 500;
-    private static final int CURRENCIES_DATA_BY_ORG_ID = 501;
-//    private static final int CURRENCY_DATA_BY_DATE      = 502;
+    private static final int CURRENCIES_DATA_BY_ORG_ID  = 501;
+    private static final int CURRENCIES_DATA_BY_ORG_ID_AND_DATE = 502;
 
     private static final UriMatcher sUriMatcher = buildUriMatcher();
     private FinanceDBHelper mFinanceDBHelper;
@@ -111,7 +111,7 @@ public class FinanceContentProvider extends ContentProvider {
 
         matcher.addURI(content, CurrenciesDataEntry.PATH, CURRENCIES_DATA);
         matcher.addURI(content, CurrenciesDataEntry.PATH_BY_ORG_ID, CURRENCIES_DATA_BY_ORG_ID);
-//        matcher.addURI(content, FinanceDBContract.PATH_CURRENCY_DATA + "/byDate/*", CURRENCY_DATA_BY_DATE);
+        matcher.addURI(content, CurrenciesDataEntry.PATH + "/*/#", CURRENCIES_DATA_BY_ORG_ID_AND_DATE);
         return matcher;
     }
 
@@ -142,7 +142,9 @@ public class FinanceContentProvider extends ContentProvider {
             case CURRENCIES_DATA:
                 return CurrenciesDataEntry.CONTENT_TYPE;
             case CURRENCIES_DATA_BY_ORG_ID:
-                return CurrenciesDataEntry.CONTENT_ITEM_TYPE;
+                return CurrenciesDataEntry.CONTENT_TYPE;
+            case CURRENCIES_DATA_BY_ORG_ID_AND_DATE:
+                return CurrenciesDataEntry.CONTENT_TYPE;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -269,8 +271,13 @@ public class FinanceContentProvider extends ContentProvider {
                 );
                 break;
             case CURRENCIES_DATA_BY_ORG_ID:
-                orgID = CurrenciesDataEntry.getOrganizaionIDFromUri(uri);
+                orgID = CurrenciesDataEntry.getOrganizationIDFromUri(uri);
                 retCursor = getCurrenciesDataByOrgID(orgID, projection, selection, selectionArgs, sortOrder);
+                break;
+            case CURRENCIES_DATA_BY_ORG_ID_AND_DATE:
+                orgID = CurrenciesDataEntry.getOrganizationIDFromUri(uri);
+                long date = CurrenciesDataEntry.getDateFromUri(uri);
+                retCursor = getCurrenciesDataByOrgIDAndDate(orgID, date, projection, selection, selectionArgs, sortOrder);
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
@@ -283,6 +290,28 @@ public class FinanceContentProvider extends ContentProvider {
 //        db.close();
         return retCursor;
 
+    }
+
+    private Cursor getCurrenciesDataByOrgIDAndDate(String orgID, long date, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+        Log.d(TAG, "getCurrenciesDataByOrgID: id: " + orgID);
+        if (projection == null || projection.length == 0) {
+            projection = CurrenciesDataEntry.DEFAULT_PROJECTION;
+        }
+
+        if (TextUtils.isEmpty(selection)) {
+            selection = CurrenciesDataEntry.ORG_ID_WHERE_ARG + " AND " + CurrenciesDataEntry.DATE_WHERE_ARG;
+            selectionArgs = new String[]{orgID, String.valueOf(date)};
+        } else {
+            selection += " AND " + CurrenciesDataEntry.ORG_ID_WHERE_ARG + " AND " + CurrenciesDataEntry.DATE_WHERE_ARG;
+            int n = selectionArgs.length + 2;
+            String[] oldSelectionArgs = selectionArgs;
+            selectionArgs = new String[n];
+            System.arraycopy(oldSelectionArgs, 0, selectionArgs, 0, oldSelectionArgs.length);
+            selectionArgs[n - 2] = orgID;
+            selectionArgs[n - 1] = String.valueOf(date);
+        }
+        return sCurrenciesDataQueryBuilder.query(mFinanceDBHelper.getReadableDatabase(),
+                projection, selection, selectionArgs, null, null, sortOrder);
     }
 
     private Cursor getCurrenciesDataByOrgID(String orgID, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
